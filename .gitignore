@@ -1,0 +1,12 @@
+# 忽略所有 armgcc 目录下的中间文件
+**/armgcc/*.txt
+**/armgcc/*.map
+!**/armgcc/CMakeLists.txt
+**/armgcc/Makefile
+**/armgcc/cmake_install.cmake
+**/armgcc/CMakeCache.txt
+**/armgcc/CMakeFiles/
+**/armgcc/release/
+**/armgcc/debug/      # 如果有debug目录也可以加上
+
+OK8MP_RTOS_BIN/
