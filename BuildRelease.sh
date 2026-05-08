@@ -26,6 +26,7 @@ if ! echo "$VALID_MODES" | grep -qw "$MODE"; then
 fi
 
 RTOS_HOME_DIR=$(pwd)
+export ARMGCC_DIR=$RTOS_HOME_DIR/tools/gcc-arm-none-eabi-10-2020-q4-major
 
 # ========== 工具链路径设置（仅构建时需要） ==========
 if [ "$MODE" != "clean" ]; then
@@ -63,35 +64,34 @@ find boards/ -type d -name "armgcc" -print0 | while IFS= read -r -d '' armgcc_di
     cd "$armgcc_dir"
 
     if [ "$MODE" = "clean" ]; then
-        # 清理模式
-        if [ ! -x "./clean.sh" ]; then
-            echo "Warning: clean.sh not found or not executable in $armgcc_dir, skipping"
-            cd "$RTOS_HOME_DIR"
-            continue
-        fi
-        if ! ./clean.sh; then
-            echo "Error: clean.sh failed in $armgcc_dir"
-            exit 1
-        fi
-        echo "Cleaned: $armgcc_dir"
-    else
-        # 构建模式
-        if [ ! -x "./$BUILD_SCRIPT" ]; then
-            echo "Error: $BUILD_SCRIPT not found or not executable in $armgcc_dir"
-            exit 1
-        fi
-        # 执行构建脚本
-        if ! ./"$BUILD_SCRIPT"; then
-            echo "Error: $BUILD_SCRIPT failed in $armgcc_dir"
-            exit 1
-        fi
-        # 复制产物：假设产物位于 $ARTIFACT_DIR 目录下
-        if [ -d "$ARTIFACT_DIR" ]; then
-            # 复制所有文件到输出目录，保留文件名，如果重名则覆盖
-            cp -f "$ARTIFACT_DIR"/* "$OUTPUT_DIR/" 2>/dev/null || echo "No files in $ARTIFACT_DIR/ or copy failed"
-            echo "Artifacts copied from $armgcc_dir/$ARTIFACT_DIR"
+        # 清理模式：检查 clean.sh 是否存在
+        if [ -f "./clean.sh" ] && [ -x "./clean.sh" ]; then
+            if ! ./clean.sh; then
+                echo "Error: clean.sh failed in $armgcc_dir"
+                exit 1
+            fi
+            echo "Cleaned: $armgcc_dir"
         else
-            echo "Warning: $ARTIFACT_DIR directory not found in $armgcc_dir, no artifacts copied"
+            echo "Skipping: clean.sh not found or not executable in $armgcc_dir"
+        fi
+    else
+        # 构建模式：检查对应的构建脚本是否存在
+        if [ -f "./$BUILD_SCRIPT" ] && [ -x "./$BUILD_SCRIPT" ]; then
+            # 执行构建脚本
+            if ! ./"$BUILD_SCRIPT"; then
+                echo "Error: $BUILD_SCRIPT failed in $armgcc_dir"
+                exit 1
+            fi
+            # 复制产物：假设产物位于 $ARTIFACT_DIR 目录下
+            if [ -d "$ARTIFACT_DIR" ]; then
+                # 复制所有文件到输出目录，保留文件名，如果重名则覆盖
+                cp -f "$ARTIFACT_DIR"/* "$OUTPUT_DIR/" 2>/dev/null || echo "No files in $ARTIFACT_DIR/ or copy failed"
+                echo "Artifacts copied from $armgcc_dir/$ARTIFACT_DIR"
+            else
+                echo "Warning: $ARTIFACT_DIR directory not found in $armgcc_dir, no artifacts copied"
+            fi
+        else
+            echo "Skipping: $BUILD_SCRIPT not found or not executable in $armgcc_dir"
         fi
     fi
 
