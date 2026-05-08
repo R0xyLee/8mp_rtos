@@ -169,15 +169,15 @@ extern "C"
 \brief MCI Status
 */
 typedef volatile struct _ARM_MCI_STATUS {
-  uint32_t command_active   : 1;        ///< Command active flag
-  uint32_t command_timeout  : 1;        ///< Command timeout flag (cleared on start of next command)
-  uint32_t command_error    : 1;        ///< Command error flag (cleared on start of next command)
-  uint32_t transfer_active  : 1;        ///< Transfer active flag
-  uint32_t transfer_timeout : 1;        ///< Transfer timeout flag (cleared on start of next command)
-  uint32_t transfer_error   : 1;        ///< Transfer error flag (cleared on start of next command)
-  uint32_t sdio_interrupt   : 1;        ///< SD I/O Interrupt flag (cleared on start of monitoring)
-  uint32_t ccs              : 1;        ///< CCS flag (cleared on start of next command)
-  uint32_t reserved         : 24;
+	uint32_t command_active   : 1;        ///< Command active flag
+	uint32_t command_timeout  : 1;        ///< Command timeout flag (cleared on start of next command)
+	uint32_t command_error    : 1;        ///< Command error flag (cleared on start of next command)
+	uint32_t transfer_active  : 1;        ///< Transfer active flag
+	uint32_t transfer_timeout : 1;        ///< Transfer timeout flag (cleared on start of next command)
+	uint32_t transfer_error   : 1;        ///< Transfer error flag (cleared on start of next command)
+	uint32_t sdio_interrupt   : 1;        ///< SD I/O Interrupt flag (cleared on start of monitoring)
+	uint32_t ccs              : 1;        ///< CCS flag (cleared on start of next command)
+	uint32_t reserved         : 24;
 } ARM_MCI_STATUS;
 
 
@@ -288,43 +288,44 @@ typedef volatile struct _ARM_MCI_STATUS {
   \return        none
 */
 
-typedef void (*ARM_MCI_SignalEvent_t) (uint32_t event);  ///< Pointer to \ref ARM_MCI_SignalEvent : Signal MCI Card Event.
+typedef void (*ARM_MCI_SignalEvent_t)(uint32_t
+        event);   ///< Pointer to \ref ARM_MCI_SignalEvent : Signal MCI Card Event.
 
 
 /**
 \brief  MCI Driver Capabilities.
 */
 typedef struct _ARM_MCI_CAPABILITIES {
-  uint32_t cd_state          : 1;       ///< Card Detect State available
-  uint32_t cd_event          : 1;       ///< Signal Card Detect change event
-  uint32_t wp_state          : 1;       ///< Write Protect State available
-  uint32_t vdd               : 1;       ///< Supports VDD Card Power Supply Control
-  uint32_t vdd_1v8           : 1;       ///< Supports 1.8 VDD Card Power Supply
-  uint32_t vccq              : 1;       ///< Supports VCCQ Card Power Supply Control (eMMC)
-  uint32_t vccq_1v8          : 1;       ///< Supports 1.8 VCCQ Card Power Supply (eMMC)
-  uint32_t vccq_1v2          : 1;       ///< Supports 1.2 VCCQ Card Power Supply (eMMC)
-  uint32_t data_width_4      : 1;       ///< Supports 4-bit data
-  uint32_t data_width_8      : 1;       ///< Supports 8-bit data
-  uint32_t data_width_4_ddr  : 1;       ///< Supports 4-bit data, DDR (Dual Data Rate) - MMC only
-  uint32_t data_width_8_ddr  : 1;       ///< Supports 8-bit data, DDR (Dual Data Rate) - MMC only
-  uint32_t high_speed        : 1;       ///< Supports SD/MMC High Speed Mode
-  uint32_t uhs_signaling     : 1;       ///< Supports SD UHS-I (Ultra High Speed) 1.8V signaling 
-  uint32_t uhs_tuning        : 1;       ///< Supports SD UHS-I tuning 
-  uint32_t uhs_sdr50         : 1;       ///< Supports SD UHS-I SDR50  (Single Data Rate) up to  50MB/s
-  uint32_t uhs_sdr104        : 1;       ///< Supports SD UHS-I SDR104 (Single Data Rate) up to 104MB/s
-  uint32_t uhs_ddr50         : 1;       ///< Supports SD UHS-I DDR50  (Dual   Data Rate) up to  50MB/s
-  uint32_t uhs_driver_type_a : 1;       ///< Supports SD UHS-I Driver Type A
-  uint32_t uhs_driver_type_c : 1;       ///< Supports SD UHS-I Driver Type C
-  uint32_t uhs_driver_type_d : 1;       ///< Supports SD UHS-I Driver Type D 
-  uint32_t sdio_interrupt    : 1;       ///< Supports SD I/O Interrupt 
-  uint32_t read_wait         : 1;       ///< Supports Read Wait (SD I/O)
-  uint32_t suspend_resume    : 1;       ///< Supports Suspend/Resume (SD I/O)
-  uint32_t mmc_interrupt     : 1;       ///< Supports MMC Interrupt 
-  uint32_t mmc_boot          : 1;       ///< Supports MMC Boot 
-  uint32_t rst_n             : 1;       ///< Supports RST_n Pin Control (eMMC)
-  uint32_t ccs               : 1;       ///< Supports Command Completion Signal (CCS) for CE-ATA
-  uint32_t ccs_timeout       : 1;       ///< Supports Command Completion Signal (CCS) timeout for CE-ATA
-  uint32_t reserved          : 3;       ///< Reserved (must be zero)
+	uint32_t cd_state          : 1;       ///< Card Detect State available
+	uint32_t cd_event          : 1;       ///< Signal Card Detect change event
+	uint32_t wp_state          : 1;       ///< Write Protect State available
+	uint32_t vdd               : 1;       ///< Supports VDD Card Power Supply Control
+	uint32_t vdd_1v8           : 1;       ///< Supports 1.8 VDD Card Power Supply
+	uint32_t vccq              : 1;       ///< Supports VCCQ Card Power Supply Control (eMMC)
+	uint32_t vccq_1v8          : 1;       ///< Supports 1.8 VCCQ Card Power Supply (eMMC)
+	uint32_t vccq_1v2          : 1;       ///< Supports 1.2 VCCQ Card Power Supply (eMMC)
+	uint32_t data_width_4      : 1;       ///< Supports 4-bit data
+	uint32_t data_width_8      : 1;       ///< Supports 8-bit data
+	uint32_t data_width_4_ddr  : 1;       ///< Supports 4-bit data, DDR (Dual Data Rate) - MMC only
+	uint32_t data_width_8_ddr  : 1;       ///< Supports 8-bit data, DDR (Dual Data Rate) - MMC only
+	uint32_t high_speed        : 1;       ///< Supports SD/MMC High Speed Mode
+	uint32_t uhs_signaling     : 1;       ///< Supports SD UHS-I (Ultra High Speed) 1.8V signaling
+	uint32_t uhs_tuning        : 1;       ///< Supports SD UHS-I tuning
+	uint32_t uhs_sdr50         : 1;       ///< Supports SD UHS-I SDR50  (Single Data Rate) up to  50MB/s
+	uint32_t uhs_sdr104        : 1;       ///< Supports SD UHS-I SDR104 (Single Data Rate) up to 104MB/s
+	uint32_t uhs_ddr50         : 1;       ///< Supports SD UHS-I DDR50  (Dual   Data Rate) up to  50MB/s
+	uint32_t uhs_driver_type_a : 1;       ///< Supports SD UHS-I Driver Type A
+	uint32_t uhs_driver_type_c : 1;       ///< Supports SD UHS-I Driver Type C
+	uint32_t uhs_driver_type_d : 1;       ///< Supports SD UHS-I Driver Type D
+	uint32_t sdio_interrupt    : 1;       ///< Supports SD I/O Interrupt
+	uint32_t read_wait         : 1;       ///< Supports Read Wait (SD I/O)
+	uint32_t suspend_resume    : 1;       ///< Supports Suspend/Resume (SD I/O)
+	uint32_t mmc_interrupt     : 1;       ///< Supports MMC Interrupt
+	uint32_t mmc_boot          : 1;       ///< Supports MMC Boot
+	uint32_t rst_n             : 1;       ///< Supports RST_n Pin Control (eMMC)
+	uint32_t ccs               : 1;       ///< Supports Command Completion Signal (CCS) for CE-ATA
+	uint32_t ccs_timeout       : 1;       ///< Supports Command Completion Signal (CCS) timeout for CE-ATA
+	uint32_t reserved          : 3;       ///< Reserved (must be zero)
 } ARM_MCI_CAPABILITIES;
 
 
@@ -332,25 +333,36 @@ typedef struct _ARM_MCI_CAPABILITIES {
 \brief  Access structure of the MCI Driver.
 */
 typedef struct _ARM_DRIVER_MCI {
-  ARM_DRIVER_VERSION   (*GetVersion)     (void);                           ///< Pointer to \ref ARM_MCI_GetVersion : Get driver version.
-  ARM_MCI_CAPABILITIES (*GetCapabilities)(void);                           ///< Pointer to \ref ARM_MCI_GetCapabilities : Get driver capabilities.
-  int32_t              (*Initialize)     (ARM_MCI_SignalEvent_t cb_event); ///< Pointer to \ref ARM_MCI_Initialize : Initialize MCI Interface.
-  int32_t              (*Uninitialize)   (void);                           ///< Pointer to \ref ARM_MCI_Uninitialize : De-initialize MCI Interface.
-  int32_t              (*PowerControl)   (ARM_POWER_STATE state);          ///< Pointer to \ref ARM_MCI_PowerControl : Control MCI Interface Power.
-  int32_t              (*CardPower)      (uint32_t voltage);               ///< Pointer to \ref ARM_MCI_CardPower : Set card power supply voltage.
-  int32_t              (*ReadCD)         (void);                           ///< Pointer to \ref ARM_MCI_ReadCD : Read Card Detect (CD) state.
-  int32_t              (*ReadWP)         (void);                           ///< Pointer to \ref ARM_MCI_ReadWP : Read Write Protect (WP) state.
-  int32_t              (*SendCommand)    (uint32_t cmd, 
-                                          uint32_t arg, 
-                                          uint32_t flags,
-                                          uint32_t *response);             ///< Pointer to \ref ARM_MCI_SendCommand : Send Command to card and get the response.
-  int32_t              (*SetupTransfer)  (uint8_t *data,
-                                          uint32_t block_count,
-                                          uint32_t block_size,
-                                          uint32_t mode);                  ///< Pointer to \ref ARM_MCI_SetupTransfer : Setup data transfer operation.
-  int32_t              (*AbortTransfer)  (void);                           ///< Pointer to \ref ARM_MCI_AbortTransfer : Abort current data transfer.
-  int32_t              (*Control)        (uint32_t control, uint32_t arg); ///< Pointer to \ref ARM_MCI_Control : Control MCI Interface.
-  ARM_MCI_STATUS       (*GetStatus)      (void);                           ///< Pointer to \ref ARM_MCI_GetStatus : Get MCI status.
+	ARM_DRIVER_VERSION(*GetVersion)(
+	        void);                                   ///< Pointer to \ref ARM_MCI_GetVersion : Get driver version.
+	ARM_MCI_CAPABILITIES(*GetCapabilities)(
+	        void);                            ///< Pointer to \ref ARM_MCI_GetCapabilities : Get driver capabilities.
+	int32_t (*Initialize)(ARM_MCI_SignalEvent_t
+	        cb_event);                   ///< Pointer to \ref ARM_MCI_Initialize : Initialize MCI Interface.
+	int32_t (*Uninitialize)(
+	        void);                                           ///< Pointer to \ref ARM_MCI_Uninitialize : De-initialize MCI Interface.
+	int32_t (*PowerControl)(ARM_POWER_STATE
+	        state);                          ///< Pointer to \ref ARM_MCI_PowerControl : Control MCI Interface Power.
+	int32_t (*CardPower)(uint32_t
+	        voltage);                                  ///< Pointer to \ref ARM_MCI_CardPower : Set card power supply voltage.
+	int32_t (*ReadCD)(
+	        void);                                                 ///< Pointer to \ref ARM_MCI_ReadCD : Read Card Detect (CD) state.
+	int32_t (*ReadWP)(
+	        void);                                                 ///< Pointer to \ref ARM_MCI_ReadWP : Read Write Protect (WP) state.
+	int32_t (*SendCommand)(uint32_t cmd,
+	        uint32_t arg,
+	        uint32_t flags,
+	        uint32_t *response);             ///< Pointer to \ref ARM_MCI_SendCommand : Send Command to card and get the response.
+	int32_t (*SetupTransfer)(uint8_t *data,
+	        uint32_t block_count,
+	        uint32_t block_size,
+	        uint32_t mode);                  ///< Pointer to \ref ARM_MCI_SetupTransfer : Setup data transfer operation.
+	int32_t (*AbortTransfer)(
+	        void);                                          ///< Pointer to \ref ARM_MCI_AbortTransfer : Abort current data transfer.
+	int32_t (*Control)(uint32_t control,
+	        uint32_t arg);                      ///< Pointer to \ref ARM_MCI_Control : Control MCI Interface.
+	ARM_MCI_STATUS(*GetStatus)(
+	        void);                                        ///< Pointer to \ref ARM_MCI_GetStatus : Get MCI status.
 } const ARM_DRIVER_MCI;
 
 #ifdef  __cplusplus

@@ -66,20 +66,18 @@ static const clock_ip_name_t s_sema4Clocks[] = SEMA4_CLOCKS;
 #if defined(SEMA4_CLOCKS)
 uint32_t SEMA4_GetInstance(SEMA4_Type *base)
 {
-    uint32_t instance;
+	uint32_t instance;
 
-    /* Find the instance index from base address mappings. */
-    for (instance = 0; instance < ARRAY_SIZE(s_sema4Bases); instance++)
-    {
-        if (s_sema4Bases[instance] == base)
-        {
-            break;
-        }
-    }
+	/* Find the instance index from base address mappings. */
+	for (instance = 0; instance < ARRAY_SIZE(s_sema4Bases); instance++) {
+		if (s_sema4Bases[instance] == base) {
+			break;
+		}
+	}
 
-    assert(instance < ARRAY_SIZE(s_sema4Bases));
+	assert(instance < ARRAY_SIZE(s_sema4Bases));
 
-    return instance;
+	return instance;
 }
 #endif
 
@@ -97,7 +95,7 @@ void SEMA4_Init(SEMA4_Type *base)
 {
 #if !(defined(FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL) && FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL)
 #if defined(SEMA4_CLOCKS)
-    CLOCK_EnableClock(s_sema4Clocks[SEMA4_GetInstance(base)]);
+	CLOCK_EnableClock(s_sema4Clocks[SEMA4_GetInstance(base)]);
 #endif
 #endif /* FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL */
 }
@@ -113,7 +111,7 @@ void SEMA4_Deinit(SEMA4_Type *base)
 {
 #if !(defined(FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL) && FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL)
 #if defined(SEMA4_CLOCKS)
-    CLOCK_DisableClock(s_sema4Clocks[SEMA4_GetInstance(base)]);
+	CLOCK_DisableClock(s_sema4Clocks[SEMA4_GetInstance(base)]);
 #endif
 #endif /* FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL */
 }
@@ -133,26 +131,23 @@ void SEMA4_Deinit(SEMA4_Type *base)
  */
 status_t SEMA4_TryLock(SEMA4_Type *base, uint8_t gateNum, uint8_t procNum)
 {
-    status_t status;
+	status_t status;
 
-    assert(gateNum < (uint8_t)FSL_FEATURE_SEMA4_GATE_COUNT);
+	assert(gateNum < (uint8_t)FSL_FEATURE_SEMA4_GATE_COUNT);
 
-    ++procNum;
+	++procNum;
 
-    /* Try to lock. */
-    SEMA4_GATEn(base, gateNum) = procNum;
+	/* Try to lock. */
+	SEMA4_GATEn(base, gateNum) = procNum;
 
-    /* Check locked or not. */
-    if (procNum != SEMA4_GATEn(base, gateNum))
-    {
-        status = kStatus_Fail;
-    }
-    else
-    {
-        status = kStatus_Success;
-    }
+	/* Check locked or not. */
+	if (procNum != SEMA4_GATEn(base, gateNum)) {
+		status = kStatus_Fail;
+	} else {
+		status = kStatus_Success;
+	}
 
-    return status;
+	return status;
 }
 
 /*!
@@ -168,20 +163,18 @@ status_t SEMA4_TryLock(SEMA4_Type *base, uint8_t gateNum, uint8_t procNum)
  */
 void SEMA4_Lock(SEMA4_Type *base, uint8_t gateNum, uint8_t procNum)
 {
-    assert(gateNum < (uint8_t)FSL_FEATURE_SEMA4_GATE_COUNT);
+	assert(gateNum < (uint8_t)FSL_FEATURE_SEMA4_GATE_COUNT);
 
-    ++procNum;
+	++procNum;
 
-    while (procNum != SEMA4_GATEn(base, gateNum))
-    {
-        /* Wait for unlocked status. */
-        while (0U != SEMA4_GATEn(base, gateNum))
-        {
-        }
+	while (procNum != SEMA4_GATEn(base, gateNum)) {
+		/* Wait for unlocked status. */
+		while (0U != SEMA4_GATEn(base, gateNum)) {
+		}
 
-        /* Lock the gate. */
-        SEMA4_GATEn(base, gateNum) = procNum;
-    }
+		/* Lock the gate. */
+		SEMA4_GATEn(base, gateNum) = procNum;
+	}
 }
 
 /*!
@@ -197,30 +190,27 @@ void SEMA4_Lock(SEMA4_Type *base, uint8_t gateNum, uint8_t procNum)
  */
 status_t SEMA4_ResetGate(SEMA4_Type *base, uint8_t gateNum)
 {
-    status_t status;
+	status_t status;
 
-    /*
-     * Reset all gates if gateNum >= SEMA4_GATE_NUM_RESET_ALL
-     * Reset specific gate if gateNum < FSL_FEATURE_SEMA4_GATE_COUNT
-     */
-    assert(!((gateNum < SEMA4_GATE_NUM_RESET_ALL) && (gateNum >= (uint8_t)FSL_FEATURE_SEMA4_GATE_COUNT)));
+	/*
+	 * Reset all gates if gateNum >= SEMA4_GATE_NUM_RESET_ALL
+	 * Reset specific gate if gateNum < FSL_FEATURE_SEMA4_GATE_COUNT
+	 */
+	assert(!((gateNum < SEMA4_GATE_NUM_RESET_ALL) && (gateNum >= (uint8_t)FSL_FEATURE_SEMA4_GATE_COUNT)));
 
-    /* Check whether some reset is ongoing. */
-    if (0U != (base->RSTGT & SEMA4_RSTGT_RSTNSM_MASK))
-    {
-        status = kStatus_Fail;
-    }
-    else
-    {
-        /* First step. */
-        base->RSTGT = SEMA4_RSTGT_RSTGSM_RSTGMS_RSTGDP(SEMA4_GATE_RESET_PATTERN_1);
-        /* Second step. */
-        base->RSTGT = SEMA4_RSTGT_RSTGSM_RSTGMS_RSTGDP(SEMA4_GATE_RESET_PATTERN_2) | SEMA4_RSTGT_RSTGTN(gateNum);
+	/* Check whether some reset is ongoing. */
+	if (0U != (base->RSTGT & SEMA4_RSTGT_RSTNSM_MASK)) {
+		status = kStatus_Fail;
+	} else {
+		/* First step. */
+		base->RSTGT = SEMA4_RSTGT_RSTGSM_RSTGMS_RSTGDP(SEMA4_GATE_RESET_PATTERN_1);
+		/* Second step. */
+		base->RSTGT = SEMA4_RSTGT_RSTGSM_RSTGMS_RSTGDP(SEMA4_GATE_RESET_PATTERN_2) | SEMA4_RSTGT_RSTGTN(gateNum);
 
-        status = kStatus_Success;
-    }
+		status = kStatus_Success;
+	}
 
-    return status;
+	return status;
 }
 
 /*!
@@ -236,28 +226,25 @@ status_t SEMA4_ResetGate(SEMA4_Type *base, uint8_t gateNum)
  */
 status_t SEMA4_ResetGateNotify(SEMA4_Type *base, uint8_t gateNum)
 {
-    status_t status;
+	status_t status;
 
-    /*
-     * Reset all gates if gateNum >= SEMA4_GATE_NUM_RESET_ALL
-     * Reset specific gate if gateNum < FSL_FEATURE_SEMA4_GATE_COUNT
-     */
-    assert(!((gateNum < (uint8_t)SEMA4_GATE_NUM_RESET_ALL) && (gateNum >= (uint8_t)FSL_FEATURE_SEMA4_GATE_COUNT)));
+	/*
+	 * Reset all gates if gateNum >= SEMA4_GATE_NUM_RESET_ALL
+	 * Reset specific gate if gateNum < FSL_FEATURE_SEMA4_GATE_COUNT
+	 */
+	assert(!((gateNum < (uint8_t)SEMA4_GATE_NUM_RESET_ALL) && (gateNum >= (uint8_t)FSL_FEATURE_SEMA4_GATE_COUNT)));
 
-    /* Check whether some reset is ongoing. */
-    if (0U != (base->RSTNTF & SEMA4_RSTNTF_RSTNSM_MASK))
-    {
-        status = kStatus_Fail;
-    }
-    else
-    {
-        /* First step. */
-        base->RSTNTF = SEMA4_RSTNTF_RSTNSM_RSTNMS_RSTNDP(SEMA4_GATE_IRQ_RESET_PATTERN_1);
-        /* Second step. */
-        base->RSTNTF = SEMA4_RSTNTF_RSTNSM_RSTNMS_RSTNDP(SEMA4_GATE_IRQ_RESET_PATTERN_2) | SEMA4_RSTNTF_RSTNTN(gateNum);
+	/* Check whether some reset is ongoing. */
+	if (0U != (base->RSTNTF & SEMA4_RSTNTF_RSTNSM_MASK)) {
+		status = kStatus_Fail;
+	} else {
+		/* First step. */
+		base->RSTNTF = SEMA4_RSTNTF_RSTNSM_RSTNMS_RSTNDP(SEMA4_GATE_IRQ_RESET_PATTERN_1);
+		/* Second step. */
+		base->RSTNTF = SEMA4_RSTNTF_RSTNSM_RSTNMS_RSTNDP(SEMA4_GATE_IRQ_RESET_PATTERN_2) | SEMA4_RSTNTF_RSTNTN(gateNum);
 
-        status = kStatus_Success;
-    }
+		status = kStatus_Success;
+	}
 
-    return status;
+	return status;
 }

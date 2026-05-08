@@ -9,7 +9,7 @@
  * @file    pin_mux.h
  * @brief   Board pins header file.
  */
- 
+
 /* This is an empty template for board specific configuration.*/
 
 #ifndef _PIN_MUX_H_

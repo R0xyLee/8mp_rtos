@@ -40,66 +40,62 @@ typedef void (*asrc_sdma_callback_t)(ASRC_Type *base, asrc_sdma_handle_t *handle
 /*! @brief ASRC trigger peripheral function pointer */
 typedef void (*asrc_start_peripheral_t)(bool start);
 /*! @brief destination peripheral configuration */
-typedef struct _asrc_p2p_sdma_config
-{
-    uint32_t eventSource;  /*!< peripheral event source */
-    uint8_t watermark;     /*!< peripheral watermark */
-    uint8_t channel;       /*!< peripheral channel number */
-    uint8_t fifoWidth;     /*!< peripheral fifo width */
-    bool enableContinuous; /*!< true is the amount of samples to be transferred is unknown and script will keep on
+typedef struct _asrc_p2p_sdma_config {
+	uint32_t eventSource;  /*!< peripheral event source */
+	uint8_t watermark;     /*!< peripheral watermark */
+	uint8_t channel;       /*!< peripheral channel number */
+	uint8_t fifoWidth;     /*!< peripheral fifo width */
+	bool enableContinuous; /*!< true is the amount of samples to be transferred is unknown and script will keep on
                             transferring as long as both events are detected and script must be stopped by
                             application, false is The amount of samples to be transferred is equal to the count
                             field of mode word */
-    asrc_start_peripheral_t startPeripheral; /*!< trigger peripheral start */
+	asrc_start_peripheral_t startPeripheral; /*!< trigger peripheral start */
 } asrc_p2p_sdma_config_t;
 
 /*! @brief ASRC sdma in handle */
-typedef struct _asrc_sdma_in_handle
-{
-    sdma_handle_t *sdmaHandle;     /*!< DMA handler for ASRC */
-    uint32_t eventSource;          /*!< ASRC event source number */
-    asrc_sdma_callback_t callback; /*!< Callback for users while transfer finish or error occurs */
-    void *userData;                /*!< User callback parameter */
-    sdma_buffer_descriptor_t bdPool[ASRC_XFER_IN_QUEUE_SIZE]; /*!< BD pool for SDMA transfer. */
-    uint8_t asrcInWatermark;                                  /*!< The transfer data count in a DMA request */
-    uint8_t bytesPerSample;                                   /*!< Bytes in a sample */
-    uint32_t *asrcQueue[ASRC_XFER_IN_QUEUE_SIZE];             /*!< Transfer queue storing queued transfer. */
-    size_t sdmaTransferSize[ASRC_XFER_IN_QUEUE_SIZE];         /*!< Data bytes need to transfer */
-    volatile uint8_t queueUser;                               /*!< Index for user to queue transfer. */
-    volatile uint8_t queueDriver;                             /*!< Index for driver to get the transfer data and size */
-    const asrc_p2p_sdma_config_t *peripheralConfig;           /*!< peripheral configuration */
-    uint32_t state;                                           /*!< Internal state for ASRC SDMA transfer */
+typedef struct _asrc_sdma_in_handle {
+	sdma_handle_t *sdmaHandle;     /*!< DMA handler for ASRC */
+	uint32_t eventSource;          /*!< ASRC event source number */
+	asrc_sdma_callback_t callback; /*!< Callback for users while transfer finish or error occurs */
+	void *userData;                /*!< User callback parameter */
+	sdma_buffer_descriptor_t bdPool[ASRC_XFER_IN_QUEUE_SIZE]; /*!< BD pool for SDMA transfer. */
+	uint8_t asrcInWatermark;                                  /*!< The transfer data count in a DMA request */
+	uint8_t bytesPerSample;                                   /*!< Bytes in a sample */
+	uint32_t *asrcQueue[ASRC_XFER_IN_QUEUE_SIZE];             /*!< Transfer queue storing queued transfer. */
+	size_t sdmaTransferSize[ASRC_XFER_IN_QUEUE_SIZE];         /*!< Data bytes need to transfer */
+	volatile uint8_t queueUser;                               /*!< Index for user to queue transfer. */
+	volatile uint8_t queueDriver;                             /*!< Index for driver to get the transfer data and size */
+	const asrc_p2p_sdma_config_t *peripheralConfig;           /*!< peripheral configuration */
+	uint32_t state;                                           /*!< Internal state for ASRC SDMA transfer */
 } asrc_sdma_in_handle_t;
 
 /*! @brief ASRC sdma out handle */
-typedef struct _asrc_sdma_out_handle
-{
-    sdma_handle_t *sdmaHandle;     /*!< DMA handler for ASRC */
-    void *userData;                /*!< User callback parameter */
-    uint32_t state;                /*!< Internal state for ASRC SDMA transfer */
-    uint8_t bytesPerSample;        /*!< Bytes in a sample */
-    uint32_t eventSource;          /*!< ASRC event source number */
-    asrc_sdma_callback_t callback; /*!< Callback for users while transfer finish or error occurs */
-    uint8_t asrcOutWatermark;      /*!< The transfer data count in a DMA request */
-    sdma_buffer_descriptor_t bdPool[ASRC_XFER_OUT_QUEUE_SIZE]; /*!< BD pool for SDMA transfer. */
-    uint32_t *asrcQueue[ASRC_XFER_OUT_QUEUE_SIZE];             /*!< Transfer queue storing queued transfer. */
-    size_t sdmaTransferSize[ASRC_XFER_OUT_QUEUE_SIZE];         /*!< Data bytes need to transfer */
-    volatile uint8_t queueUser;                                /*!< Index for user to queue transfer. */
-    volatile uint8_t queueDriver;                   /*!< Index for driver to get the transfer data and size */
-    const asrc_p2p_sdma_config_t *peripheralConfig; /*!< peripheral configuration */
-    uint32_t nonAlignSize;                          /*!< non align size */
-    void *nonAlignAddr;                             /*!< non align address */
+typedef struct _asrc_sdma_out_handle {
+	sdma_handle_t *sdmaHandle;     /*!< DMA handler for ASRC */
+	void *userData;                /*!< User callback parameter */
+	uint32_t state;                /*!< Internal state for ASRC SDMA transfer */
+	uint8_t bytesPerSample;        /*!< Bytes in a sample */
+	uint32_t eventSource;          /*!< ASRC event source number */
+	asrc_sdma_callback_t callback; /*!< Callback for users while transfer finish or error occurs */
+	uint8_t asrcOutWatermark;      /*!< The transfer data count in a DMA request */
+	sdma_buffer_descriptor_t bdPool[ASRC_XFER_OUT_QUEUE_SIZE]; /*!< BD pool for SDMA transfer. */
+	uint32_t *asrcQueue[ASRC_XFER_OUT_QUEUE_SIZE];             /*!< Transfer queue storing queued transfer. */
+	size_t sdmaTransferSize[ASRC_XFER_OUT_QUEUE_SIZE];         /*!< Data bytes need to transfer */
+	volatile uint8_t queueUser;                                /*!< Index for user to queue transfer. */
+	volatile uint8_t queueDriver;                   /*!< Index for driver to get the transfer data and size */
+	const asrc_p2p_sdma_config_t *peripheralConfig; /*!< peripheral configuration */
+	uint32_t nonAlignSize;                          /*!< non align size */
+	void *nonAlignAddr;                             /*!< non align address */
 
 } asrc_sdma_out_handle_t;
 
 /*! @brief ASRC DMA transfer handle, users should not touch the content of the handle. */
-struct _asrc_sdma_handle
-{
-    asrc_sdma_in_handle_t inDMAHandle;   /*!< input dma handle */
-    asrc_sdma_out_handle_t outDMAHandle; /*!< output dma handle */
+struct _asrc_sdma_handle {
+	asrc_sdma_in_handle_t inDMAHandle;   /*!< input dma handle */
+	asrc_sdma_out_handle_t outDMAHandle; /*!< output dma handle */
 
-    asrc_context_t context; /*!< ASRC context number */
-    uint8_t dataChannels;   /*!< ASRC process data channel number */
+	asrc_context_t context; /*!< ASRC context number */
+	uint8_t dataChannels;   /*!< ASRC process data channel number */
 };
 
 /*******************************************************************************
@@ -130,13 +126,13 @@ extern "C" {
  * @param userData User parameter passed to the callback function.
  */
 void ASRC_TransferInCreateHandleSDMA(ASRC_Type *base,
-                                     asrc_sdma_handle_t *handle,
-                                     asrc_sdma_callback_t callback,
-                                     sdma_handle_t *dmaHandle,
-                                     uint32_t eventSource,
-                                     asrc_context_t context,
-                                     const asrc_p2p_sdma_config_t *periphConfig,
-                                     void *userData);
+        asrc_sdma_handle_t *handle,
+        asrc_sdma_callback_t callback,
+        sdma_handle_t *dmaHandle,
+        uint32_t eventSource,
+        asrc_context_t context,
+        const asrc_p2p_sdma_config_t *periphConfig,
+        void *userData);
 
 /*!
  * @brief Initializes the ASRC output  SDMA handle.
@@ -154,13 +150,13 @@ void ASRC_TransferInCreateHandleSDMA(ASRC_Type *base,
  * @param userData User parameter passed to the callback function.
  */
 void ASRC_TransferOutCreateHandleSDMA(ASRC_Type *base,
-                                      asrc_sdma_handle_t *handle,
-                                      asrc_sdma_callback_t callback,
-                                      sdma_handle_t *dmaHandle,
-                                      uint32_t eventSource,
-                                      asrc_context_t context,
-                                      const asrc_p2p_sdma_config_t *periphConfig,
-                                      void *userData);
+        asrc_sdma_handle_t *handle,
+        asrc_sdma_callback_t callback,
+        sdma_handle_t *dmaHandle,
+        uint32_t eventSource,
+        asrc_context_t context,
+        const asrc_p2p_sdma_config_t *periphConfig,
+        void *userData);
 
 /*!
  * @brief Configures the ASRC context.
@@ -170,8 +166,8 @@ void ASRC_TransferOutCreateHandleSDMA(ASRC_Type *base,
  * @param asrcConfig asrc context configurations.
  */
 status_t ASRC_TransferSetContextConfigSDMA(ASRC_Type *base,
-                                           asrc_sdma_handle_t *handle,
-                                           asrc_context_config_t *asrcConfig);
+        asrc_sdma_handle_t *handle,
+        asrc_context_config_t *asrcConfig);
 /*!
  * @brief Performs a non-blocking ASRC transfer using DMA.
  *

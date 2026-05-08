@@ -47,29 +47,29 @@
  */
 
 q31_t arm_sin_q31(
-  q31_t x)
+        q31_t x)
 {
-  q31_t sinVal;                                  /* Temporary variables for input, output */
-  int32_t index;                                 /* Index variable */
-  q31_t a, b;                                    /* Two nearest output values */
-  q31_t fract;                                   /* Temporary values for fractional values */
+	q31_t sinVal;                                  /* Temporary variables for input, output */
+	int32_t index;                                 /* Index variable */
+	q31_t a, b;                                    /* Two nearest output values */
+	q31_t fract;                                   /* Temporary values for fractional values */
 
-  /* Calculate the nearest index */
-  index = (uint32_t)x >> FAST_MATH_Q31_SHIFT;
+	/* Calculate the nearest index */
+	index = (uint32_t)x >> FAST_MATH_Q31_SHIFT;
 
-  /* Calculation of fractional value */
-  fract = (x - (index << FAST_MATH_Q31_SHIFT)) << 9;
+	/* Calculation of fractional value */
+	fract = (x - (index << FAST_MATH_Q31_SHIFT)) << 9;
 
-  /* Read two nearest values of input value from the sin table */
-  a = sinTable_q31[index];
-  b = sinTable_q31[index+1];
+	/* Read two nearest values of input value from the sin table */
+	a = sinTable_q31[index];
+	b = sinTable_q31[index + 1];
 
-  /* Linear interpolation process */
-  sinVal = (q63_t) (0x80000000 - fract) * a >> 32;
-  sinVal = (q31_t) ((((q63_t) sinVal << 32) + ((q63_t) fract * b)) >> 32);
+	/* Linear interpolation process */
+	sinVal = (q63_t)(0x80000000 - fract) * a >> 32;
+	sinVal = (q31_t)((((q63_t) sinVal << 32) + ((q63_t) fract * b)) >> 32);
 
-  /* Return output value */
-  return (sinVal << 1);
+	/* Return output value */
+	return (sinVal << 1);
 }
 
 /**

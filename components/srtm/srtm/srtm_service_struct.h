@@ -18,15 +18,14 @@
 /**
  * @brief SRTM service struct
  */
-struct _srtm_service
-{
-    srtm_list_t node; /*!< SRTM service list node to link to a list */
-    srtm_dispatcher_t dispatcher;
-    uint8_t category;
+struct _srtm_service {
+	srtm_list_t node; /*!< SRTM service list node to link to a list */
+	srtm_dispatcher_t dispatcher;
+	uint8_t category;
 
-    void (*destroy)(srtm_service_t service);
-    srtm_status_t (*request)(srtm_service_t service, srtm_request_t request);
-    srtm_status_t (*notify)(srtm_service_t service, srtm_notification_t notification);
+	void (*destroy)(srtm_service_t service);
+	srtm_status_t (*request)(srtm_service_t service, srtm_request_t request);
+	srtm_status_t (*notify)(srtm_service_t service, srtm_notification_t notification);
 };
 
 /*******************************************************************************

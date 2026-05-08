@@ -55,98 +55,96 @@
  */
 
 void arm_cmplx_dot_prod_q15(
-  const q15_t * pSrcA,
-  const q15_t * pSrcB,
+        const q15_t *pSrcA,
+        const q15_t *pSrcB,
         uint32_t numSamples,
-        q31_t * realResult,
-        q31_t * imagResult)
+        q31_t *realResult,
+        q31_t *imagResult)
 {
-        uint32_t blkCnt;                               /* Loop counter */
-        q63_t real_sum = 0, imag_sum = 0;              /* Temporary result variables */
-        q15_t a0,b0,c0,d0;
+	uint32_t blkCnt;                               /* Loop counter */
+	q63_t real_sum = 0, imag_sum = 0;              /* Temporary result variables */
+	q15_t a0, b0, c0, d0;
 
 #if defined (ARM_MATH_LOOPUNROLL)
 
-  /* Loop unrolling: Compute 4 outputs at a time */
-  blkCnt = numSamples >> 2U;
+	/* Loop unrolling: Compute 4 outputs at a time */
+	blkCnt = numSamples >> 2U;
 
-  while (blkCnt > 0U)
-  {
-    a0 = *pSrcA++;
-    b0 = *pSrcA++;
-    c0 = *pSrcB++;
-    d0 = *pSrcB++;
+	while (blkCnt > 0U) {
+		a0 = *pSrcA++;
+		b0 = *pSrcA++;
+		c0 = *pSrcB++;
+		d0 = *pSrcB++;
 
-    real_sum += (q31_t)a0 * c0;
-    imag_sum += (q31_t)a0 * d0;
-    real_sum -= (q31_t)b0 * d0;
-    imag_sum += (q31_t)b0 * c0;
+		real_sum += (q31_t)a0 * c0;
+		imag_sum += (q31_t)a0 * d0;
+		real_sum -= (q31_t)b0 * d0;
+		imag_sum += (q31_t)b0 * c0;
 
-    a0 = *pSrcA++;
-    b0 = *pSrcA++;
-    c0 = *pSrcB++;
-    d0 = *pSrcB++;
+		a0 = *pSrcA++;
+		b0 = *pSrcA++;
+		c0 = *pSrcB++;
+		d0 = *pSrcB++;
 
-    real_sum += (q31_t)a0 * c0;
-    imag_sum += (q31_t)a0 * d0;
-    real_sum -= (q31_t)b0 * d0;
-    imag_sum += (q31_t)b0 * c0;
+		real_sum += (q31_t)a0 * c0;
+		imag_sum += (q31_t)a0 * d0;
+		real_sum -= (q31_t)b0 * d0;
+		imag_sum += (q31_t)b0 * c0;
 
-    a0 = *pSrcA++;
-    b0 = *pSrcA++;
-    c0 = *pSrcB++;
-    d0 = *pSrcB++;
+		a0 = *pSrcA++;
+		b0 = *pSrcA++;
+		c0 = *pSrcB++;
+		d0 = *pSrcB++;
 
-    real_sum += (q31_t)a0 * c0;
-    imag_sum += (q31_t)a0 * d0;
-    real_sum -= (q31_t)b0 * d0;
-    imag_sum += (q31_t)b0 * c0;
+		real_sum += (q31_t)a0 * c0;
+		imag_sum += (q31_t)a0 * d0;
+		real_sum -= (q31_t)b0 * d0;
+		imag_sum += (q31_t)b0 * c0;
 
-    a0 = *pSrcA++;
-    b0 = *pSrcA++;
-    c0 = *pSrcB++;
-    d0 = *pSrcB++;
+		a0 = *pSrcA++;
+		b0 = *pSrcA++;
+		c0 = *pSrcB++;
+		d0 = *pSrcB++;
 
-    real_sum += (q31_t)a0 * c0;
-    imag_sum += (q31_t)a0 * d0;
-    real_sum -= (q31_t)b0 * d0;
-    imag_sum += (q31_t)b0 * c0;
+		real_sum += (q31_t)a0 * c0;
+		imag_sum += (q31_t)a0 * d0;
+		real_sum -= (q31_t)b0 * d0;
+		imag_sum += (q31_t)b0 * c0;
 
-    /* Decrement loop counter */
-    blkCnt--;
-  }
+		/* Decrement loop counter */
+		blkCnt--;
+	}
 
-  /* Loop unrolling: Compute remaining outputs */
-  blkCnt = numSamples % 0x4U;
+	/* Loop unrolling: Compute remaining outputs */
+	blkCnt = numSamples % 0x4U;
 
 #else
 
-  /* Initialize blkCnt with number of samples */
-  blkCnt = numSamples;
+	/* Initialize blkCnt with number of samples */
+	blkCnt = numSamples;
 
 #endif /* #if defined (ARM_MATH_LOOPUNROLL) */
 
-  while (blkCnt > 0U)
-  {
-    a0 = *pSrcA++;
-    b0 = *pSrcA++;
-    c0 = *pSrcB++;
-    d0 = *pSrcB++;
+	while (blkCnt > 0U) {
+		a0 = *pSrcA++;
+		b0 = *pSrcA++;
+		c0 = *pSrcB++;
+		d0 = *pSrcB++;
 
-    real_sum += (q31_t)a0 * c0;
-    imag_sum += (q31_t)a0 * d0;
-    real_sum -= (q31_t)b0 * d0;
-    imag_sum += (q31_t)b0 * c0;
+		real_sum += (q31_t)a0 * c0;
+		imag_sum += (q31_t)a0 * d0;
+		real_sum -= (q31_t)b0 * d0;
+		imag_sum += (q31_t)b0 * c0;
 
-    /* Decrement loop counter */
-    blkCnt--;
-  }
+		/* Decrement loop counter */
+		blkCnt--;
+	}
 
-  /* Store real and imaginary result in 8.24 format  */
-  /* Convert real data in 34.30 to 8.24 by 6 right shifts */
-  *realResult = (q31_t) (real_sum >> 6);
-  /* Convert imaginary data in 34.30 to 8.24 by 6 right shifts */
-  *imagResult = (q31_t) (imag_sum >> 6);
+	/* Store real and imaginary result in 8.24 format  */
+	/* Convert real data in 34.30 to 8.24 by 6 right shifts */
+	*realResult = (q31_t)(real_sum >> 6);
+	/* Convert imaginary data in 34.30 to 8.24 by 6 right shifts */
+	*imagResult = (q31_t)(imag_sum >> 6);
 }
 
 /**

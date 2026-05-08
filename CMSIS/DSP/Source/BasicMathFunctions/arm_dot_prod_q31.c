@@ -55,59 +55,57 @@
  */
 
 void arm_dot_prod_q31(
-  const q31_t * pSrcA,
-  const q31_t * pSrcB,
+        const q31_t *pSrcA,
+        const q31_t *pSrcB,
         uint32_t blockSize,
-        q63_t * result)
+        q63_t *result)
 {
-        uint32_t blkCnt;                               /* Loop counter */
-        q63_t sum = 0;                                 /* Temporary return variable */
+	uint32_t blkCnt;                               /* Loop counter */
+	q63_t sum = 0;                                 /* Temporary return variable */
 
 #if defined (ARM_MATH_LOOPUNROLL)
 
-  /* Loop unrolling: Compute 4 outputs at a time */
-  blkCnt = blockSize >> 2U;
+	/* Loop unrolling: Compute 4 outputs at a time */
+	blkCnt = blockSize >> 2U;
 
-  while (blkCnt > 0U)
-  {
-    /* C = A[0]* B[0] + A[1]* B[1] + A[2]* B[2] + .....+ A[blockSize-1]* B[blockSize-1] */
+	while (blkCnt > 0U) {
+		/* C = A[0]* B[0] + A[1]* B[1] + A[2]* B[2] + .....+ A[blockSize-1]* B[blockSize-1] */
 
-    /* Calculate dot product and store result in a temporary buffer. */
-    sum += ((q63_t) *pSrcA++ * *pSrcB++) >> 14U;
+		/* Calculate dot product and store result in a temporary buffer. */
+		sum += ((q63_t) * pSrcA++ * *pSrcB++) >> 14U;
 
-    sum += ((q63_t) *pSrcA++ * *pSrcB++) >> 14U;
+		sum += ((q63_t) * pSrcA++ * *pSrcB++) >> 14U;
 
-    sum += ((q63_t) *pSrcA++ * *pSrcB++) >> 14U;
+		sum += ((q63_t) * pSrcA++ * *pSrcB++) >> 14U;
 
-    sum += ((q63_t) *pSrcA++ * *pSrcB++) >> 14U;
+		sum += ((q63_t) * pSrcA++ * *pSrcB++) >> 14U;
 
-    /* Decrement loop counter */
-    blkCnt--;
-  }
+		/* Decrement loop counter */
+		blkCnt--;
+	}
 
-  /* Loop unrolling: Compute remaining outputs */
-  blkCnt = blockSize % 0x4U;
+	/* Loop unrolling: Compute remaining outputs */
+	blkCnt = blockSize % 0x4U;
 
 #else
 
-  /* Initialize blkCnt with number of samples */
-  blkCnt = blockSize;
+	/* Initialize blkCnt with number of samples */
+	blkCnt = blockSize;
 
 #endif /* #if defined (ARM_MATH_LOOPUNROLL) */
 
-  while (blkCnt > 0U)
-  {
-    /* C = A[0]* B[0] + A[1]* B[1] + A[2]* B[2] + .....+ A[blockSize-1]* B[blockSize-1] */
+	while (blkCnt > 0U) {
+		/* C = A[0]* B[0] + A[1]* B[1] + A[2]* B[2] + .....+ A[blockSize-1]* B[blockSize-1] */
 
-    /* Calculate dot product and store result in a temporary buffer. */
-    sum += ((q63_t) *pSrcA++ * *pSrcB++) >> 14U;
+		/* Calculate dot product and store result in a temporary buffer. */
+		sum += ((q63_t) * pSrcA++ * *pSrcB++) >> 14U;
 
-    /* Decrement loop counter */
-    blkCnt--;
-  }
+		/* Decrement loop counter */
+		blkCnt--;
+	}
 
-  /* Store result in destination buffer in 16.48 format */
-  *result = sum;
+	/* Store result in destination buffer in 16.48 format */
+	*result = sum;
 }
 
 /**

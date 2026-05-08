@@ -29,15 +29,14 @@
 /*@}*/
 
 /*! @brief UART configuration structure */
-typedef struct _uart_rtos_config
-{
-    UART_Type *base;                /*!< UART base address */
-    uint32_t srcclk;                /*!< UART source clock in Hz*/
-    uint32_t baudrate;              /*!< Desired communication speed */
-    uart_parity_mode_t parity;      /*!< Parity setting */
-    uart_stop_bit_count_t stopbits; /*!< Number of stop bits to use */
-    uint8_t *buffer;                /*!< Buffer for background reception */
-    uint32_t buffer_size;           /*!< Size of buffer for background reception */
+typedef struct _uart_rtos_config {
+	UART_Type *base;                /*!< UART base address */
+	uint32_t srcclk;                /*!< UART source clock in Hz*/
+	uint32_t baudrate;              /*!< Desired communication speed */
+	uart_parity_mode_t parity;      /*!< Parity setting */
+	uart_stop_bit_count_t stopbits; /*!< Number of stop bits to use */
+	uint8_t *buffer;                /*!< Buffer for background reception */
+	uint32_t buffer_size;           /*!< Size of buffer for background reception */
 } uart_rtos_config_t;
 
 /*!
@@ -56,21 +55,20 @@ typedef struct _uart_rtos_config
 /*@}*/
 
 /*! @brief UART FreeRTOS transfer structure. */
-typedef struct _uart_rtos_handle
-{
-    UART_Type *base;               /*!< UART base address */
-    uart_transfer_t txTransfer;    /*!< TX transfer structure */
-    uart_transfer_t rxTransfer;    /*!< RX transfer structure */
-    SemaphoreHandle_t rxSemaphore; /*!< RX semaphore for resource sharing */
-    SemaphoreHandle_t txSemaphore; /*!< TX semaphore for resource sharing */
-    EventGroupHandle_t rxEvent;    /*!< RX completion event */
-    EventGroupHandle_t txEvent;    /*!< TX completion event */
-    void *t_state;                 /*!< Transactional state of the underlying driver */
+typedef struct _uart_rtos_handle {
+	UART_Type *base;               /*!< UART base address */
+	uart_transfer_t txTransfer;    /*!< TX transfer structure */
+	uart_transfer_t rxTransfer;    /*!< RX transfer structure */
+	SemaphoreHandle_t rxSemaphore; /*!< RX semaphore for resource sharing */
+	SemaphoreHandle_t txSemaphore; /*!< TX semaphore for resource sharing */
+	EventGroupHandle_t rxEvent;    /*!< RX completion event */
+	EventGroupHandle_t txEvent;    /*!< TX completion event */
+	void *t_state;                 /*!< Transactional state of the underlying driver */
 #if (configSUPPORT_STATIC_ALLOCATION == 1)
-    StaticSemaphore_t txSemaphoreBuffer; /*!< Statically allocated memory for txSemaphore */
-    StaticSemaphore_t rxSemaphoreBuffer; /*!< Statically allocated memory for rxSemaphore */
-    StaticEventGroup_t txEventBuffer;    /*!< Statically allocated memory for txEvent */
-    StaticEventGroup_t rxEventBuffer;    /*!< Statically allocated memory for rxEvent */
+	StaticSemaphore_t txSemaphoreBuffer; /*!< Statically allocated memory for txSemaphore */
+	StaticSemaphore_t rxSemaphoreBuffer; /*!< Statically allocated memory for rxSemaphore */
+	StaticEventGroup_t txEventBuffer;    /*!< Statically allocated memory for txEvent */
+	StaticEventGroup_t rxEventBuffer;    /*!< Statically allocated memory for rxEvent */
 #endif
 } uart_rtos_handle_t;
 /*! \endcond */

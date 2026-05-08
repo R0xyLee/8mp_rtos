@@ -56,26 +56,22 @@
  */
 void add_to_list(struct llist **head, struct llist *node)
 {
-    if (node == LIST_NULL)
-    {
-        return;
-    }
+	if (node == LIST_NULL) {
+		return;
+	}
 
-    if (*head != LIST_NULL)
-    {
-        /* Place the new element at the start of list. */
-        node->next    = *head;
-        node->prev    = LIST_NULL;
-        (*head)->prev = node;
-        *head         = node;
-    }
-    else
-    {
-        /* List is empty - assign new element to list head. */
-        *head         = node;
-        (*head)->next = LIST_NULL;
-        (*head)->prev = LIST_NULL;
-    }
+	if (*head != LIST_NULL) {
+		/* Place the new element at the start of list. */
+		node->next    = *head;
+		node->prev    = LIST_NULL;
+		(*head)->prev = node;
+		*head         = node;
+	} else {
+		/* List is empty - assign new element to list head. */
+		*head         = node;
+		(*head)->next = LIST_NULL;
+		(*head)->prev = LIST_NULL;
+	}
 }
 
 /*!
@@ -89,25 +85,19 @@ void add_to_list(struct llist **head, struct llist *node)
  */
 void remove_from_list(struct llist **head, struct llist *node)
 {
-    if ((*head == LIST_NULL) || (node == LIST_NULL))
-    {
-        return;
-    }
+	if ((*head == LIST_NULL) || (node == LIST_NULL)) {
+		return;
+	}
 
-    if (node == *head)
-    {
-        /* First element has to be removed. */
-        *head = (*head)->next;
-    }
-    else if (node->next == LIST_NULL)
-    {
-        /* Last element has to be removed. */
-        node->prev->next = node->next;
-    }
-    else
-    {
-        /* Intermediate element has to be removed. */
-        node->prev->next = node->next;
-        node->next->prev = node->prev;
-    }
+	if (node == *head) {
+		/* First element has to be removed. */
+		*head = (*head)->next;
+	} else if (node->next == LIST_NULL) {
+		/* Last element has to be removed. */
+		node->prev->next = node->next;
+	} else {
+		/* Intermediate element has to be removed. */
+		node->prev->next = node->next;
+		node->next->prev = node->prev;
+	}
 }

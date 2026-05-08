@@ -55,12 +55,11 @@ static int32_t env_init_counter = 0;
 
 /* Max supported ISR counts */
 #define ISR_COUNT (12U) /* Change for multiple remote cores */
-                        /*!
-                         * Structure to keep track of registered ISR's.
-                         */
-struct isr_info
-{
-    void *data;
+/*!
+ * Structure to keep track of registered ISR's.
+ */
+struct isr_info {
+	void *data;
 };
 static struct isr_info isr_table[ISR_COUNT];
 
@@ -76,21 +75,19 @@ static struct isr_info isr_table[ISR_COUNT];
  */
 int32_t env_init(void)
 {
-    // verify 'env_init_counter'
-    RL_ASSERT(env_init_counter >= 0);
-    if (env_init_counter < 0)
-    {
-        return -1;
-    }
-    env_init_counter++;
-    // multiple call of 'env_init' - return ok
-    if (1 < env_init_counter)
-    {
-        return 0;
-    }
-    // first call
-    (void)memset(isr_table, 0, sizeof(isr_table));
-    return platform_init();
+	// verify 'env_init_counter'
+	RL_ASSERT(env_init_counter >= 0);
+	if (env_init_counter < 0) {
+		return -1;
+	}
+	env_init_counter++;
+	// multiple call of 'env_init' - return ok
+	if (1 < env_init_counter) {
+		return 0;
+	}
+	// first call
+	(void)memset(isr_table, 0, sizeof(isr_table));
+	return platform_init();
 }
 
 /*!
@@ -102,21 +99,19 @@ int32_t env_init(void)
  */
 int32_t env_deinit(void)
 {
-    // verify 'env_init_counter'
-    RL_ASSERT(env_init_counter > 0);
-    if (env_init_counter <= 0)
-    {
-        return -1;
-    }
-    // counter on zero - call platform deinit
-    env_init_counter--;
-    // multiple call of 'env_deinit' - return ok
-    if (0 < env_init_counter)
-    {
-        return 0;
-    }
-    // last call
-    return platform_deinit();
+	// verify 'env_init_counter'
+	RL_ASSERT(env_init_counter > 0);
+	if (env_init_counter <= 0) {
+		return -1;
+	}
+	// counter on zero - call platform deinit
+	env_init_counter--;
+	// multiple call of 'env_deinit' - return ok
+	if (0 < env_init_counter) {
+		return 0;
+	}
+	// last call
+	return platform_deinit();
 }
 
 /*!
@@ -126,7 +121,7 @@ int32_t env_deinit(void)
  */
 void *env_allocate_memory(uint32_t size)
 {
-    return (malloc(size));
+	return (malloc(size));
 }
 
 /*!
@@ -136,10 +131,9 @@ void *env_allocate_memory(uint32_t size)
  */
 void env_free_memory(void *ptr)
 {
-    if (ptr != ((void *)0))
-    {
-        free(ptr);
-    }
+	if (ptr != ((void *)0)) {
+		free(ptr);
+	}
 }
 
 /*!
@@ -152,7 +146,7 @@ void env_free_memory(void *ptr)
  */
 void env_memset(void *ptr, int32_t value, uint32_t size)
 {
-    (void)memset(ptr, value, size);
+	(void)memset(ptr, value, size);
 }
 
 /*!
@@ -165,7 +159,7 @@ void env_memset(void *ptr, int32_t value, uint32_t size)
  */
 void env_memcpy(void *dst, void const *src, uint32_t len)
 {
-    (void)memcpy(dst, src, len);
+	(void)memcpy(dst, src, len);
 }
 
 /*!
@@ -178,7 +172,7 @@ void env_memcpy(void *dst, void const *src, uint32_t len)
 
 int32_t env_strcmp(const char *dst, const char *src)
 {
-    return (strcmp(dst, src));
+	return (strcmp(dst, src));
 }
 
 /*!
@@ -191,7 +185,7 @@ int32_t env_strcmp(const char *dst, const char *src)
  */
 void env_strncpy(char *dest, const char *src, uint32_t len)
 {
-    (void)strncpy(dest, src, len);
+	(void)strncpy(dest, src, len);
 }
 
 /*!
@@ -204,7 +198,7 @@ void env_strncpy(char *dest, const char *src, uint32_t len)
  */
 int32_t env_strncmp(char *dest, const char *src, uint32_t len)
 {
-    return (strncmp(dest, src, len));
+	return (strncmp(dest, src, len));
 }
 
 /*!
@@ -214,7 +208,7 @@ int32_t env_strncmp(char *dest, const char *src, uint32_t len)
  */
 void env_mb(void)
 {
-    MEM_BARRIER();
+	MEM_BARRIER();
 }
 
 /*!
@@ -222,7 +216,7 @@ void env_mb(void)
  */
 void env_rmb(void)
 {
-    MEM_BARRIER();
+	MEM_BARRIER();
 }
 
 /*!
@@ -230,7 +224,7 @@ void env_rmb(void)
  */
 void env_wmb(void)
 {
-    MEM_BARRIER();
+	MEM_BARRIER();
 }
 
 /*!
@@ -240,7 +234,7 @@ void env_wmb(void)
  */
 uint32_t env_map_vatopa(void *address)
 {
-    return platform_vatopa(address);
+	return platform_vatopa(address);
 }
 
 /*!
@@ -250,7 +244,7 @@ uint32_t env_map_vatopa(void *address)
  */
 void *env_map_patova(uint32_t address)
 {
-    return platform_patova(address);
+	return platform_patova(address);
 }
 
 /*!
@@ -261,11 +255,11 @@ void *env_map_patova(uint32_t address)
  */
 int32_t env_create_mutex(void **lock, int32_t count)
 {
-    /* make the mutex pointer point to itself
-     * this marks the mutex handle as initialized.
-     */
-    *lock = lock;
-    return 0;
+	/* make the mutex pointer point to itself
+	 * this marks the mutex handle as initialized.
+	 */
+	*lock = lock;
+	return 0;
 }
 
 /*!
@@ -286,8 +280,8 @@ void env_delete_mutex(void *lock)
  */
 void env_lock_mutex(void *lock)
 {
-    /* No mutex needed for RPMsg-Lite in BM environment,
-     * since the API is not shared with ISR context. */
+	/* No mutex needed for RPMsg-Lite in BM environment,
+	 * since the API is not shared with ISR context. */
 }
 
 /*!
@@ -297,8 +291,8 @@ void env_lock_mutex(void *lock)
  */
 void env_unlock_mutex(void *lock)
 {
-    /* No mutex needed for RPMsg-Lite in BM environment,
-     * since the API is not shared with ISR context. */
+	/* No mutex needed for RPMsg-Lite in BM environment,
+	 * since the API is not shared with ISR context. */
 }
 
 /*!
@@ -308,7 +302,7 @@ void env_unlock_mutex(void *lock)
  */
 void env_sleep_msec(uint32_t num_msec)
 {
-    platform_time_delay(num_msec);
+	platform_time_delay(num_msec);
 }
 
 /*!
@@ -321,11 +315,10 @@ void env_sleep_msec(uint32_t num_msec)
  */
 void env_register_isr(uint32_t vector_id, void *data)
 {
-    RL_ASSERT(vector_id < ISR_COUNT);
-    if (vector_id < ISR_COUNT)
-    {
-        isr_table[vector_id].data = data;
-    }
+	RL_ASSERT(vector_id < ISR_COUNT);
+	if (vector_id < ISR_COUNT) {
+		isr_table[vector_id].data = data;
+	}
 }
 
 /*!
@@ -337,11 +330,10 @@ void env_register_isr(uint32_t vector_id, void *data)
  */
 void env_unregister_isr(uint32_t vector_id)
 {
-    RL_ASSERT(vector_id < ISR_COUNT);
-    if (vector_id < ISR_COUNT)
-    {
-        isr_table[vector_id].data = ((void *)0);
-    }
+	RL_ASSERT(vector_id < ISR_COUNT);
+	if (vector_id < ISR_COUNT) {
+		isr_table[vector_id].data = ((void *)0);
+	}
 }
 
 /*!
@@ -354,7 +346,7 @@ void env_unregister_isr(uint32_t vector_id)
 
 void env_enable_interrupt(uint32_t vector_id)
 {
-    (void)platform_interrupt_enable(vector_id);
+	(void)platform_interrupt_enable(vector_id);
 }
 
 /*!
@@ -367,7 +359,7 @@ void env_enable_interrupt(uint32_t vector_id)
 
 void env_disable_interrupt(uint32_t vector_id)
 {
-    (void)platform_interrupt_disable(vector_id);
+	(void)platform_interrupt_disable(vector_id);
 }
 
 /*!
@@ -383,7 +375,7 @@ void env_disable_interrupt(uint32_t vector_id)
 
 void env_map_memory(uint32_t pa, uint32_t va, uint32_t size, uint32_t flags)
 {
-    platform_map_mem_region(va, pa, size, flags);
+	platform_map_mem_region(va, pa, size, flags);
 }
 
 /*!
@@ -395,8 +387,8 @@ void env_map_memory(uint32_t pa, uint32_t va, uint32_t size, uint32_t flags)
 
 void env_disable_cache(void)
 {
-    platform_cache_all_flush_invalidate();
-    platform_cache_disable();
+	platform_cache_all_flush_invalidate();
+	platform_cache_disable();
 }
 
 /*========================================================= */
@@ -404,11 +396,10 @@ void env_disable_cache(void)
 
 void env_isr(uint32_t vector)
 {
-    struct isr_info *info;
-    RL_ASSERT(vector < ISR_COUNT);
-    if (vector < ISR_COUNT)
-    {
-        info = &isr_table[vector];
-        virtqueue_notification((struct virtqueue *)info->data);
-    }
+	struct isr_info *info;
+	RL_ASSERT(vector < ISR_COUNT);
+	if (vector < ISR_COUNT) {
+		info = &isr_table[vector];
+		virtqueue_notification((struct virtqueue *)info->data);
+	}
 }

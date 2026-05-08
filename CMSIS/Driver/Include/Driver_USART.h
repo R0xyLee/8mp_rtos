@@ -26,7 +26,7 @@
  *  Version 2.3
  *    ARM_USART_STATUS and ARM_USART_MODEM_STATUS made volatile
  *  Version 2.2
- *    Corrected ARM_USART_CPOL_Pos and ARM_USART_CPHA_Pos definitions 
+ *    Corrected ARM_USART_CPOL_Pos and ARM_USART_CPHA_Pos definitions
  *  Version 2.1
  *    Removed optional argument parameter from Signal Event
  *  Version 2.0
@@ -38,7 +38,7 @@
  *      Synchronous
  *      Single-wire
  *      IrDA
- *      Smart Card  
+ *      Smart Card
  *    Changed prefix ARM_DRV -> ARM_DRIVER
  *  Version 1.10
  *    Namespace prefix ARM_ added
@@ -153,35 +153,36 @@ extern "C"
 \brief USART Status
 */
 typedef volatile struct _ARM_USART_STATUS {
-  uint32_t tx_busy          : 1;        ///< Transmitter busy flag
-  uint32_t rx_busy          : 1;        ///< Receiver busy flag
-  uint32_t tx_underflow     : 1;        ///< Transmit data underflow detected (cleared on start of next send operation)
-  uint32_t rx_overflow      : 1;        ///< Receive data overflow detected (cleared on start of next receive operation)
-  uint32_t rx_break         : 1;        ///< Break detected on receive (cleared on start of next receive operation)
-  uint32_t rx_framing_error : 1;        ///< Framing error detected on receive (cleared on start of next receive operation)
-  uint32_t rx_parity_error  : 1;        ///< Parity error detected on receive (cleared on start of next receive operation)
-  uint32_t reserved         : 25;
+	uint32_t tx_busy          : 1;        ///< Transmitter busy flag
+	uint32_t rx_busy          : 1;        ///< Receiver busy flag
+	uint32_t tx_underflow     : 1;        ///< Transmit data underflow detected (cleared on start of next send operation)
+	uint32_t rx_overflow      : 1;        ///< Receive data overflow detected (cleared on start of next receive operation)
+	uint32_t rx_break         : 1;        ///< Break detected on receive (cleared on start of next receive operation)
+uint32_t rx_framing_error :
+	1;        ///< Framing error detected on receive (cleared on start of next receive operation)
+	uint32_t rx_parity_error  : 1;        ///< Parity error detected on receive (cleared on start of next receive operation)
+	uint32_t reserved         : 25;
 } ARM_USART_STATUS;
 
 /**
 \brief USART Modem Control
 */
 typedef enum _ARM_USART_MODEM_CONTROL {
-  ARM_USART_RTS_CLEAR,                  ///< Deactivate RTS
-  ARM_USART_RTS_SET,                    ///< Activate RTS
-  ARM_USART_DTR_CLEAR,                  ///< Deactivate DTR
-  ARM_USART_DTR_SET                     ///< Activate DTR
+	ARM_USART_RTS_CLEAR,                  ///< Deactivate RTS
+	ARM_USART_RTS_SET,                    ///< Activate RTS
+	ARM_USART_DTR_CLEAR,                  ///< Deactivate DTR
+	ARM_USART_DTR_SET                     ///< Activate DTR
 } ARM_USART_MODEM_CONTROL;
 
 /**
 \brief USART Modem Status
 */
 typedef volatile struct _ARM_USART_MODEM_STATUS {
-  uint32_t cts      : 1;                ///< CTS state: 1=Active, 0=Inactive
-  uint32_t dsr      : 1;                ///< DSR state: 1=Active, 0=Inactive
-  uint32_t dcd      : 1;                ///< DCD state: 1=Active, 0=Inactive
-  uint32_t ri       : 1;                ///< RI  state: 1=Active, 0=Inactive
-  uint32_t reserved : 28;
+	uint32_t cts      : 1;                ///< CTS state: 1=Active, 0=Inactive
+	uint32_t dsr      : 1;                ///< DSR state: 1=Active, 0=Inactive
+	uint32_t dcd      : 1;                ///< DCD state: 1=Active, 0=Inactive
+	uint32_t ri       : 1;                ///< RI  state: 1=Active, 0=Inactive
+	uint32_t reserved : 28;
 } ARM_USART_MODEM_STATUS;
 
 
@@ -268,7 +269,7 @@ typedef volatile struct _ARM_USART_MODEM_STATUS {
   \fn          int32_t ARM_USART_SetModemControl (ARM_USART_MODEM_CONTROL control)
   \brief       Set USART Modem Control line state.
   \param[in]   control  \ref ARM_USART_MODEM_CONTROL
-  \return      \ref execution_status 
+  \return      \ref execution_status
 
   \fn          ARM_USART_MODEM_STATUS ARM_USART_GetModemStatus (void)
   \brief       Get USART Modem Status lines state.
@@ -280,35 +281,36 @@ typedef volatile struct _ARM_USART_MODEM_STATUS {
   \return      none
 */
 
-typedef void (*ARM_USART_SignalEvent_t) (uint32_t event);  ///< Pointer to \ref ARM_USART_SignalEvent : Signal USART Event.
+typedef void (*ARM_USART_SignalEvent_t)(uint32_t
+        event);   ///< Pointer to \ref ARM_USART_SignalEvent : Signal USART Event.
 
 
 /**
 \brief USART Device Driver Capabilities.
 */
 typedef struct _ARM_USART_CAPABILITIES {
-  uint32_t asynchronous       : 1;      ///< supports UART (Asynchronous) mode 
-  uint32_t synchronous_master : 1;      ///< supports Synchronous Master mode
-  uint32_t synchronous_slave  : 1;      ///< supports Synchronous Slave mode
-  uint32_t single_wire        : 1;      ///< supports UART Single-wire mode
-  uint32_t irda               : 1;      ///< supports UART IrDA mode
-  uint32_t smart_card         : 1;      ///< supports UART Smart Card mode
-  uint32_t smart_card_clock   : 1;      ///< Smart Card Clock generator available
-  uint32_t flow_control_rts   : 1;      ///< RTS Flow Control available
-  uint32_t flow_control_cts   : 1;      ///< CTS Flow Control available
-  uint32_t event_tx_complete  : 1;      ///< Transmit completed event: \ref ARM_USART_EVENT_TX_COMPLETE
-  uint32_t event_rx_timeout   : 1;      ///< Signal receive character timeout event: \ref ARM_USART_EVENT_RX_TIMEOUT
-  uint32_t rts                : 1;      ///< RTS Line: 0=not available, 1=available
-  uint32_t cts                : 1;      ///< CTS Line: 0=not available, 1=available
-  uint32_t dtr                : 1;      ///< DTR Line: 0=not available, 1=available
-  uint32_t dsr                : 1;      ///< DSR Line: 0=not available, 1=available
-  uint32_t dcd                : 1;      ///< DCD Line: 0=not available, 1=available
-  uint32_t ri                 : 1;      ///< RI Line: 0=not available, 1=available
-  uint32_t event_cts          : 1;      ///< Signal CTS change event: \ref ARM_USART_EVENT_CTS
-  uint32_t event_dsr          : 1;      ///< Signal DSR change event: \ref ARM_USART_EVENT_DSR
-  uint32_t event_dcd          : 1;      ///< Signal DCD change event: \ref ARM_USART_EVENT_DCD
-  uint32_t event_ri           : 1;      ///< Signal RI change event: \ref ARM_USART_EVENT_RI
-  uint32_t reserved           : 11;     ///< Reserved (must be zero)
+	uint32_t asynchronous       : 1;      ///< supports UART (Asynchronous) mode
+	uint32_t synchronous_master : 1;      ///< supports Synchronous Master mode
+	uint32_t synchronous_slave  : 1;      ///< supports Synchronous Slave mode
+	uint32_t single_wire        : 1;      ///< supports UART Single-wire mode
+	uint32_t irda               : 1;      ///< supports UART IrDA mode
+	uint32_t smart_card         : 1;      ///< supports UART Smart Card mode
+	uint32_t smart_card_clock   : 1;      ///< Smart Card Clock generator available
+	uint32_t flow_control_rts   : 1;      ///< RTS Flow Control available
+	uint32_t flow_control_cts   : 1;      ///< CTS Flow Control available
+	uint32_t event_tx_complete  : 1;      ///< Transmit completed event: \ref ARM_USART_EVENT_TX_COMPLETE
+	uint32_t event_rx_timeout   : 1;      ///< Signal receive character timeout event: \ref ARM_USART_EVENT_RX_TIMEOUT
+	uint32_t rts                : 1;      ///< RTS Line: 0=not available, 1=available
+	uint32_t cts                : 1;      ///< CTS Line: 0=not available, 1=available
+	uint32_t dtr                : 1;      ///< DTR Line: 0=not available, 1=available
+	uint32_t dsr                : 1;      ///< DSR Line: 0=not available, 1=available
+	uint32_t dcd                : 1;      ///< DCD Line: 0=not available, 1=available
+	uint32_t ri                 : 1;      ///< RI Line: 0=not available, 1=available
+	uint32_t event_cts          : 1;      ///< Signal CTS change event: \ref ARM_USART_EVENT_CTS
+	uint32_t event_dsr          : 1;      ///< Signal DSR change event: \ref ARM_USART_EVENT_DSR
+	uint32_t event_dcd          : 1;      ///< Signal DCD change event: \ref ARM_USART_EVENT_DCD
+	uint32_t event_ri           : 1;      ///< Signal RI change event: \ref ARM_USART_EVENT_RI
+	uint32_t reserved           : 11;     ///< Reserved (must be zero)
 } ARM_USART_CAPABILITIES;
 
 
@@ -316,22 +318,36 @@ typedef struct _ARM_USART_CAPABILITIES {
 \brief Access structure of the USART Driver.
 */
 typedef struct _ARM_DRIVER_USART {
-  ARM_DRIVER_VERSION     (*GetVersion)      (void);                              ///< Pointer to \ref ARM_USART_GetVersion : Get driver version.
-  ARM_USART_CAPABILITIES (*GetCapabilities) (void);                              ///< Pointer to \ref ARM_USART_GetCapabilities : Get driver capabilities.
-  int32_t                (*Initialize)      (ARM_USART_SignalEvent_t cb_event);  ///< Pointer to \ref ARM_USART_Initialize : Initialize USART Interface.
-  int32_t                (*Uninitialize)    (void);                              ///< Pointer to \ref ARM_USART_Uninitialize : De-initialize USART Interface.
-  int32_t                (*PowerControl)    (ARM_POWER_STATE state);             ///< Pointer to \ref ARM_USART_PowerControl : Control USART Interface Power.
-  int32_t                (*Send)            (const void *data, uint32_t num);    ///< Pointer to \ref ARM_USART_Send : Start sending data to USART transmitter.
-  int32_t                (*Receive)         (      void *data, uint32_t num);    ///< Pointer to \ref ARM_USART_Receive : Start receiving data from USART receiver.
-  int32_t                (*Transfer)        (const void *data_out,
-                                                   void *data_in,
-                                             uint32_t    num);                   ///< Pointer to \ref ARM_USART_Transfer : Start sending/receiving data to/from USART.
-  uint32_t               (*GetTxCount)      (void);                              ///< Pointer to \ref ARM_USART_GetTxCount : Get transmitted data count.
-  uint32_t               (*GetRxCount)      (void);                              ///< Pointer to \ref ARM_USART_GetRxCount : Get received data count.
-  int32_t                (*Control)         (uint32_t control, uint32_t arg);    ///< Pointer to \ref ARM_USART_Control : Control USART Interface.
-  ARM_USART_STATUS       (*GetStatus)       (void);                              ///< Pointer to \ref ARM_USART_GetStatus : Get USART status.
-  int32_t                (*SetModemControl) (ARM_USART_MODEM_CONTROL control);   ///< Pointer to \ref ARM_USART_SetModemControl : Set USART Modem Control line state.
-  ARM_USART_MODEM_STATUS (*GetModemStatus)  (void);                              ///< Pointer to \ref ARM_USART_GetModemStatus : Get USART Modem Status lines state.
+	ARM_DRIVER_VERSION(*GetVersion)(
+	        void);                                         ///< Pointer to \ref ARM_USART_GetVersion : Get driver version.
+	ARM_USART_CAPABILITIES(*GetCapabilities)(
+	        void);                                ///< Pointer to \ref ARM_USART_GetCapabilities : Get driver capabilities.
+	int32_t (*Initialize)(ARM_USART_SignalEvent_t
+	        cb_event);                       ///< Pointer to \ref ARM_USART_Initialize : Initialize USART Interface.
+	int32_t (*Uninitialize)(
+	        void);                                                 ///< Pointer to \ref ARM_USART_Uninitialize : De-initialize USART Interface.
+	int32_t (*PowerControl)(ARM_POWER_STATE
+	        state);                                ///< Pointer to \ref ARM_USART_PowerControl : Control USART Interface Power.
+	int32_t (*Send)(const void *data, uint32_t
+	        num);                               ///< Pointer to \ref ARM_USART_Send : Start sending data to USART transmitter.
+	int32_t (*Receive)(void *data, uint32_t
+	        num);                                  ///< Pointer to \ref ARM_USART_Receive : Start receiving data from USART receiver.
+	int32_t (*Transfer)(const void *data_out,
+	        void *data_in,
+	        uint32_t
+	        num);                   ///< Pointer to \ref ARM_USART_Transfer : Start sending/receiving data to/from USART.
+	uint32_t (*GetTxCount)(
+	        void);                                                  ///< Pointer to \ref ARM_USART_GetTxCount : Get transmitted data count.
+	uint32_t (*GetRxCount)(
+	        void);                                                  ///< Pointer to \ref ARM_USART_GetRxCount : Get received data count.
+	int32_t (*Control)(uint32_t control,
+	        uint32_t arg);                            ///< Pointer to \ref ARM_USART_Control : Control USART Interface.
+	ARM_USART_STATUS(*GetStatus)(
+	        void);                                            ///< Pointer to \ref ARM_USART_GetStatus : Get USART status.
+	int32_t (*SetModemControl)(ARM_USART_MODEM_CONTROL
+	        control);                   ///< Pointer to \ref ARM_USART_SetModemControl : Set USART Modem Control line state.
+	ARM_USART_MODEM_STATUS(*GetModemStatus)(
+	        void);                                 ///< Pointer to \ref ARM_USART_GetModemStatus : Get USART Modem Status lines state.
 } const ARM_DRIVER_USART;
 
 #ifdef  __cplusplus

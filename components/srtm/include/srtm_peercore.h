@@ -22,13 +22,12 @@
 /**
  * @brief SRTM peer core state
  */
-typedef enum _srtm_peercore_state
-{
-    SRTM_PeerCore_State_Inactive = 0x00U, /*!< Peer core is not ready to communicate */
-    SRTM_PeerCore_State_Activating,       /*!< Peer core wakeup in progress */
-    SRTM_PeerCore_State_Activated,        /*!< Peer core is ready to communicate */
-    SRTM_PeerCore_State_Deactivating,     /*!< Peer core is going to suspend */
-    SRTM_PeerCore_State_Deactivated,      /*!< Peer core suspended and not ready to communicate */
+typedef enum _srtm_peercore_state {
+	SRTM_PeerCore_State_Inactive = 0x00U, /*!< Peer core is not ready to communicate */
+	SRTM_PeerCore_State_Activating,       /*!< Peer core wakeup in progress */
+	SRTM_PeerCore_State_Activated,        /*!< Peer core is ready to communicate */
+	SRTM_PeerCore_State_Deactivating,     /*!< Peer core is going to suspend */
+	SRTM_PeerCore_State_Deactivated,      /*!< Peer core suspended and not ready to communicate */
 } srtm_peercore_state_t;
 
 /**

@@ -20,5 +20,5 @@
  */
 void BOARD_InitDebugConsole(void)
 {
-    /* The user initialization should be placed here */
+	/* The user initialization should be placed here */
 }

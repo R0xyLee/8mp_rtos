@@ -118,9 +118,9 @@ void SEMA4_Lock(SEMA4_Type *base, uint8_t gateNum, uint8_t procNum);
  */
 static inline void SEMA4_Unlock(SEMA4_Type *base, uint8_t gateNum)
 {
-    assert(gateNum < (uint8_t)FSL_FEATURE_SEMA4_GATE_COUNT);
+	assert(gateNum < (uint8_t)FSL_FEATURE_SEMA4_GATE_COUNT);
 
-    SEMA4_GATEn(base, gateNum) = 0U;
+	SEMA4_GATEn(base, gateNum) = 0U;
 }
 
 /*!
@@ -136,9 +136,9 @@ static inline void SEMA4_Unlock(SEMA4_Type *base, uint8_t gateNum)
  */
 static inline int32_t SEMA4_GetLockProc(SEMA4_Type *base, uint8_t gateNum)
 {
-    assert(gateNum < (uint8_t)FSL_FEATURE_SEMA4_GATE_COUNT);
+	assert(gateNum < (uint8_t)FSL_FEATURE_SEMA4_GATE_COUNT);
 
-    return (int32_t)(SEMA4_GATEn(base, gateNum)) - 1;
+	return (int32_t)(SEMA4_GATEn(base, gateNum)) - 1;
 }
 
 /*!
@@ -166,7 +166,7 @@ status_t SEMA4_ResetGate(SEMA4_Type *base, uint8_t gateNum);
  */
 static inline status_t SEMA4_ResetAllGates(SEMA4_Type *base)
 {
-    return SEMA4_ResetGate(base, SEMA4_GATE_NUM_RESET_ALL);
+	return SEMA4_ResetGate(base, SEMA4_GATE_NUM_RESET_ALL);
 }
 
 /*!
@@ -182,8 +182,8 @@ static inline status_t SEMA4_ResetAllGates(SEMA4_Type *base)
  */
 static inline void SEMA4_EnableGateNotifyInterrupt(SEMA4_Type *base, uint8_t procNum, uint32_t mask)
 {
-    mask = __REV(__RBIT(mask));
-    base->CPINE[procNum].CPINE |= (uint16_t)mask;
+	mask = __REV(__RBIT(mask));
+	base->CPINE[procNum].CPINE |= (uint16_t)mask;
 }
 
 /*!
@@ -199,8 +199,8 @@ static inline void SEMA4_EnableGateNotifyInterrupt(SEMA4_Type *base, uint8_t pro
  */
 static inline void SEMA4_DisableGateNotifyInterrupt(SEMA4_Type *base, uint8_t procNum, uint32_t mask)
 {
-    mask = __REV(__RBIT(mask));
-    base->CPINE[procNum].CPINE &= (uint16_t)(~mask);
+	mask = __REV(__RBIT(mask));
+	base->CPINE[procNum].CPINE &= (uint16_t)(~mask);
 }
 
 /*!
@@ -218,7 +218,7 @@ static inline void SEMA4_DisableGateNotifyInterrupt(SEMA4_Type *base, uint8_t pr
  */
 static inline uint32_t SEMA4_GetGateNotifyStatus(SEMA4_Type *base, uint8_t procNum)
 {
-    return __REV(__RBIT(base->CPNTF[procNum].CPNTF));
+	return __REV(__RBIT(base->CPNTF[procNum].CPNTF));
 }
 
 /*!
@@ -246,7 +246,7 @@ status_t SEMA4_ResetGateNotify(SEMA4_Type *base, uint8_t gateNum);
  */
 static inline status_t SEMA4_ResetAllGateNotify(SEMA4_Type *base)
 {
-    return SEMA4_ResetGateNotify(base, SEMA4_GATE_NUM_RESET_ALL);
+	return SEMA4_ResetGateNotify(base, SEMA4_GATE_NUM_RESET_ALL);
 }
 
 #if defined(__cplusplus)

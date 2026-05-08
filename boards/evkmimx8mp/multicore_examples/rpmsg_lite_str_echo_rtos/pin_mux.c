@@ -35,7 +35,7 @@ processor_version: 0.8.3
  * END ****************************************************************************************************************/
 void BOARD_InitBootPins(void)
 {
-    BOARD_InitPins();
+	BOARD_InitPins();
 }
 
 /*
@@ -54,15 +54,16 @@ BOARD_InitPins:
  * Description   : Configures pin routing and optionally pin electrical features.
  *
  * END ****************************************************************************************************************/
-void BOARD_InitPins(void) {                                /*!< Function assigned for the core: Cortex-M7F[m7] */
-    IOMUXC_SetPinMux(IOMUXC_UART4_RXD_UART4_RX, 0U);
-    IOMUXC_SetPinConfig(IOMUXC_UART4_RXD_UART4_RX, 
-                        IOMUXC_SW_PAD_CTL_PAD_PUE_MASK |
-                        IOMUXC_SW_PAD_CTL_PAD_PE_MASK);
-    IOMUXC_SetPinMux(IOMUXC_UART4_TXD_UART4_TX, 0U);
-    IOMUXC_SetPinConfig(IOMUXC_UART4_TXD_UART4_TX, 
-                        IOMUXC_SW_PAD_CTL_PAD_PUE_MASK |
-                        IOMUXC_SW_PAD_CTL_PAD_PE_MASK);
+void BOARD_InitPins(void)                                  /*!< Function assigned for the core: Cortex-M7F[m7] */
+{
+	IOMUXC_SetPinMux(IOMUXC_UART4_RXD_UART4_RX, 0U);
+	IOMUXC_SetPinConfig(IOMUXC_UART4_RXD_UART4_RX,
+	        IOMUXC_SW_PAD_CTL_PAD_PUE_MASK |
+	        IOMUXC_SW_PAD_CTL_PAD_PE_MASK);
+	IOMUXC_SetPinMux(IOMUXC_UART4_TXD_UART4_TX, 0U);
+	IOMUXC_SetPinConfig(IOMUXC_UART4_TXD_UART4_TX,
+	        IOMUXC_SW_PAD_CTL_PAD_PUE_MASK |
+	        IOMUXC_SW_PAD_CTL_PAD_PE_MASK);
 }
 
 /***********************************************************************************************************************

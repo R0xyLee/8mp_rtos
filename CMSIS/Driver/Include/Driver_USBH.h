@@ -63,10 +63,10 @@ extern "C"
 \brief USB Host Port State
 */
 typedef volatile struct _ARM_USBH_PORT_STATE {
-  uint32_t connected   : 1;             ///< USB Host Port connected flag
-  uint32_t overcurrent : 1;             ///< USB Host Port overcurrent flag
-  uint32_t speed       : 2;             ///< USB Host Port speed setting (ARM_USB_SPEED_xxx)
-  uint32_t reserved    : 28;
+	uint32_t connected   : 1;             ///< USB Host Port connected flag
+	uint32_t overcurrent : 1;             ///< USB Host Port overcurrent flag
+	uint32_t speed       : 2;             ///< USB Host Port speed setting (ARM_USB_SPEED_xxx)
+	uint32_t reserved    : 28;
 } ARM_USBH_PORT_STATE;
 
 /**
@@ -279,8 +279,10 @@ typedef uint32_t ARM_USBH_PIPE_HANDLE;
   \return      none
 */
 
-typedef void (*ARM_USBH_SignalPortEvent_t) (uint8_t port, uint32_t event);                    ///< Pointer to \ref ARM_USBH_SignalPortEvent : Signal Root HUB Port Event.
-typedef void (*ARM_USBH_SignalPipeEvent_t) (ARM_USBH_PIPE_HANDLE pipe_hndl, uint32_t event);  ///< Pointer to \ref ARM_USBH_SignalPipeEvent : Signal Pipe Event.
+typedef void (*ARM_USBH_SignalPortEvent_t)(uint8_t port,
+        uint32_t event);                     ///< Pointer to \ref ARM_USBH_SignalPortEvent : Signal Root HUB Port Event.
+typedef void (*ARM_USBH_SignalPipeEvent_t)(ARM_USBH_PIPE_HANDLE pipe_hndl,
+        uint32_t event);   ///< Pointer to \ref ARM_USBH_SignalPipeEvent : Signal Pipe Event.
 #define ARM_USBH_SignalEndpointEvent_t ARM_USBH_SignalPipeEvent_t  /* Legacy name */
 
 
@@ -288,12 +290,12 @@ typedef void (*ARM_USBH_SignalPipeEvent_t) (ARM_USBH_PIPE_HANDLE pipe_hndl, uint
 \brief USB Host Driver Capabilities.
 */
 typedef struct _ARM_USBH_CAPABILITIES {
-  uint32_t port_mask          : 15;     ///< Root HUB available Ports Mask
-  uint32_t auto_split         :  1;     ///< Automatic SPLIT packet handling
-  uint32_t event_connect      :  1;     ///< Signal Connect event
-  uint32_t event_disconnect   :  1;     ///< Signal Disconnect event
-  uint32_t event_overcurrent  :  1;     ///< Signal Overcurrent event
-  uint32_t reserved           : 13;     ///< Reserved (must be zero)
+	uint32_t port_mask          : 15;     ///< Root HUB available Ports Mask
+	uint32_t auto_split         :  1;     ///< Automatic SPLIT packet handling
+	uint32_t event_connect      :  1;     ///< Signal Connect event
+	uint32_t event_disconnect   :  1;     ///< Signal Disconnect event
+	uint32_t event_overcurrent  :  1;     ///< Signal Overcurrent event
+	uint32_t reserved           : 13;     ///< Reserved (must be zero)
 } ARM_USBH_CAPABILITIES;
 
 
@@ -301,40 +303,54 @@ typedef struct _ARM_USBH_CAPABILITIES {
 \brief Access structure of USB Host Driver.
 */
 typedef struct _ARM_DRIVER_USBH {
-  ARM_DRIVER_VERSION    (*GetVersion)            (void);                                     ///< Pointer to \ref ARM_USBH_GetVersion : Get driver version.
-  ARM_USBH_CAPABILITIES (*GetCapabilities)       (void);                                     ///< Pointer to \ref ARM_USBH_GetCapabilities : Get driver capabilities.
-  int32_t               (*Initialize)            (ARM_USBH_SignalPortEvent_t cb_port_event,            
-                                                  ARM_USBH_SignalPipeEvent_t cb_pipe_event); ///< Pointer to \ref ARM_USBH_Initialize : Initialize USB Host Interface.
-  int32_t               (*Uninitialize)          (void);                                     ///< Pointer to \ref ARM_USBH_Uninitialize : De-initialize USB Host Interface.
-  int32_t               (*PowerControl)          (ARM_POWER_STATE state);                    ///< Pointer to \ref ARM_USBH_PowerControl : Control USB Host Interface Power.
-  int32_t               (*PortVbusOnOff)         (uint8_t port, bool vbus);                  ///< Pointer to \ref ARM_USBH_PortVbusOnOff : Root HUB Port VBUS on/off.
-  int32_t               (*PortReset)             (uint8_t port);                             ///< Pointer to \ref ARM_USBH_PortReset : Do Root HUB Port Reset.
-  int32_t               (*PortSuspend)           (uint8_t port);                             ///< Pointer to \ref ARM_USBH_PortSuspend : Suspend Root HUB Port (stop generating SOFs).
-  int32_t               (*PortResume)            (uint8_t port);                             ///< Pointer to \ref ARM_USBH_PortResume : Resume Root HUB Port (start generating SOFs).
-  ARM_USBH_PORT_STATE   (*PortGetState)          (uint8_t port);                             ///< Pointer to \ref ARM_USBH_PortGetState : Get current Root HUB Port State.
-  ARM_USBH_PIPE_HANDLE  (*PipeCreate)            (uint8_t dev_addr,
-                                                  uint8_t dev_speed,
-                                                  uint8_t hub_addr,
-                                                  uint8_t hub_port,
-                                                  uint8_t ep_addr,
-                                                  uint8_t ep_type,
-                                                  uint16_t ep_max_packet_size,
-                                                  uint8_t ep_interval);                      ///< Pointer to \ref ARM_USBH_PipeCreate : Create Pipe in System.
-  int32_t               (*PipeModify)            (ARM_USBH_PIPE_HANDLE pipe_hndl,
-                                                  uint8_t dev_addr,
-                                                  uint8_t dev_speed,
-                                                  uint8_t hub_addr,
-                                                  uint8_t hub_port,
-                                                  uint16_t ep_max_packet_size);              ///< Pointer to \ref ARM_USBH_PipeModify : Modify Pipe in System.
-  int32_t               (*PipeDelete)            (ARM_USBH_PIPE_HANDLE pipe_hndl);           ///< Pointer to \ref ARM_USBH_PipeDelete : Delete Pipe from System.
-  int32_t               (*PipeReset)             (ARM_USBH_PIPE_HANDLE pipe_hndl);           ///< Pointer to \ref ARM_USBH_PipeReset : Reset Pipe.
-  int32_t               (*PipeTransfer)          (ARM_USBH_PIPE_HANDLE pipe_hndl, 
-                                                  uint32_t packet,
-                                                  uint8_t *data,
-                                                  uint32_t num);                             ///< Pointer to \ref ARM_USBH_PipeTransfer : Transfer packets through USB Pipe.
-  uint32_t              (*PipeTransferGetResult) (ARM_USBH_PIPE_HANDLE pipe_hndl);           ///< Pointer to \ref ARM_USBH_PipeTransferGetResult : Get result of USB Pipe transfer.
-  int32_t               (*PipeTransferAbort)     (ARM_USBH_PIPE_HANDLE pipe_hndl);           ///< Pointer to \ref ARM_USBH_PipeTransferAbort : Abort current USB Pipe transfer.
-  uint16_t              (*GetFrameNumber)        (void);                                     ///< Pointer to \ref ARM_USBH_GetFrameNumber : Get current USB Frame Number.                    
+	ARM_DRIVER_VERSION(*GetVersion)(
+	        void);                                                     ///< Pointer to \ref ARM_USBH_GetVersion : Get driver version.
+	ARM_USBH_CAPABILITIES(*GetCapabilities)(
+	        void);                                             ///< Pointer to \ref ARM_USBH_GetCapabilities : Get driver capabilities.
+	int32_t (*Initialize)(ARM_USBH_SignalPortEvent_t cb_port_event,
+	        ARM_USBH_SignalPipeEvent_t cb_pipe_event); ///< Pointer to \ref ARM_USBH_Initialize : Initialize USB Host Interface.
+	int32_t (*Uninitialize)(
+	        void);                                                             ///< Pointer to \ref ARM_USBH_Uninitialize : De-initialize USB Host Interface.
+	int32_t (*PowerControl)(ARM_POWER_STATE
+	        state);                                            ///< Pointer to \ref ARM_USBH_PowerControl : Control USB Host Interface Power.
+	int32_t (*PortVbusOnOff)(uint8_t port,
+	        bool vbus);                                         ///< Pointer to \ref ARM_USBH_PortVbusOnOff : Root HUB Port VBUS on/off.
+	int32_t (*PortReset)(uint8_t
+	        port);                                                        ///< Pointer to \ref ARM_USBH_PortReset : Do Root HUB Port Reset.
+	int32_t (*PortSuspend)(uint8_t
+	        port);                                                      ///< Pointer to \ref ARM_USBH_PortSuspend : Suspend Root HUB Port (stop generating SOFs).
+	int32_t (*PortResume)(uint8_t
+	        port);                                                       ///< Pointer to \ref ARM_USBH_PortResume : Resume Root HUB Port (start generating SOFs).
+	ARM_USBH_PORT_STATE(*PortGetState)(uint8_t
+	        port);                                          ///< Pointer to \ref ARM_USBH_PortGetState : Get current Root HUB Port State.
+	ARM_USBH_PIPE_HANDLE(*PipeCreate)(uint8_t dev_addr,
+	        uint8_t dev_speed,
+	        uint8_t hub_addr,
+	        uint8_t hub_port,
+	        uint8_t ep_addr,
+	        uint8_t ep_type,
+	        uint16_t ep_max_packet_size,
+	        uint8_t ep_interval);                      ///< Pointer to \ref ARM_USBH_PipeCreate : Create Pipe in System.
+	int32_t (*PipeModify)(ARM_USBH_PIPE_HANDLE pipe_hndl,
+	        uint8_t dev_addr,
+	        uint8_t dev_speed,
+	        uint8_t hub_addr,
+	        uint8_t hub_port,
+	        uint16_t ep_max_packet_size);              ///< Pointer to \ref ARM_USBH_PipeModify : Modify Pipe in System.
+	int32_t (*PipeDelete)(ARM_USBH_PIPE_HANDLE
+	        pipe_hndl);                                     ///< Pointer to \ref ARM_USBH_PipeDelete : Delete Pipe from System.
+	int32_t (*PipeReset)(ARM_USBH_PIPE_HANDLE
+	        pipe_hndl);                                      ///< Pointer to \ref ARM_USBH_PipeReset : Reset Pipe.
+	int32_t (*PipeTransfer)(ARM_USBH_PIPE_HANDLE pipe_hndl,
+	        uint32_t packet,
+	        uint8_t *data,
+	        uint32_t num);                             ///< Pointer to \ref ARM_USBH_PipeTransfer : Transfer packets through USB Pipe.
+	uint32_t (*PipeTransferGetResult)(ARM_USBH_PIPE_HANDLE
+	        pipe_hndl);                         ///< Pointer to \ref ARM_USBH_PipeTransferGetResult : Get result of USB Pipe transfer.
+	int32_t (*PipeTransferAbort)(ARM_USBH_PIPE_HANDLE
+	        pipe_hndl);                              ///< Pointer to \ref ARM_USBH_PipeTransferAbort : Abort current USB Pipe transfer.
+	uint16_t (*GetFrameNumber)(
+	        void);                                                          ///< Pointer to \ref ARM_USBH_GetFrameNumber : Get current USB Frame Number.
 } const ARM_DRIVER_USBH;
 
 
@@ -384,15 +400,15 @@ typedef struct _ARM_DRIVER_USBH {
   \return      none
 */
 
-typedef void (*ARM_USBH_HCI_Interrupt_t) (void);  ///< Pointer to Interrupt Handler Routine.
+typedef void (*ARM_USBH_HCI_Interrupt_t)(void);   ///< Pointer to Interrupt Handler Routine.
 
 
 /**
 \brief USB Host HCI (OHCI/EHCI) Driver Capabilities.
 */
 typedef struct _ARM_USBH_HCI_CAPABILITIES {
-  uint32_t port_mask : 15;              ///< Root HUB available Ports Mask
-  uint32_t reserved  : 17;              ///< Reserved (must be zero)
+	uint32_t port_mask : 15;              ///< Root HUB available Ports Mask
+	uint32_t reserved  : 17;              ///< Reserved (must be zero)
 } ARM_USBH_HCI_CAPABILITIES;
 
 
@@ -400,12 +416,18 @@ typedef struct _ARM_USBH_HCI_CAPABILITIES {
   \brief Access structure of USB Host HCI (OHCI/EHCI) Driver.
 */
 typedef struct _ARM_DRIVER_USBH_HCI {
-  ARM_DRIVER_VERSION        (*GetVersion)      (void);                                  ///< Pointer to \ref ARM_USBH_HCI_GetVersion : Get USB Host HCI (OHCI/EHCI) driver version.
-  ARM_USBH_HCI_CAPABILITIES (*GetCapabilities) (void);                                  ///< Pointer to \ref ARM_USBH_HCI_GetCapabilities : Get driver capabilities.
-  int32_t                   (*Initialize)      (ARM_USBH_HCI_Interrupt_t cb_interrupt); ///< Pointer to \ref ARM_USBH_HCI_Initialize : Initialize USB Host HCI (OHCI/EHCI) Interface.
-  int32_t                   (*Uninitialize)    (void);                                  ///< Pointer to \ref ARM_USBH_HCI_Uninitialize : De-initialize USB Host HCI (OHCI/EHCI) Interface.
-  int32_t                   (*PowerControl)    (ARM_POWER_STATE state);                 ///< Pointer to \ref ARM_USBH_HCI_PowerControl : Control USB Host HCI (OHCI/EHCI) Interface Power.
-  int32_t                   (*PortVbusOnOff)   (uint8_t port, bool vbus);               ///< Pointer to \ref ARM_USBH_HCI_PortVbusOnOff : USB Host HCI (OHCI/EHCI) Root HUB Port VBUS on/off.
+	ARM_DRIVER_VERSION(*GetVersion)(
+	        void);                                                ///< Pointer to \ref ARM_USBH_HCI_GetVersion : Get USB Host HCI (OHCI/EHCI) driver version.
+	ARM_USBH_HCI_CAPABILITIES(*GetCapabilities)(
+	        void);                                    ///< Pointer to \ref ARM_USBH_HCI_GetCapabilities : Get driver capabilities.
+	int32_t (*Initialize)(ARM_USBH_HCI_Interrupt_t
+	        cb_interrupt);                         ///< Pointer to \ref ARM_USBH_HCI_Initialize : Initialize USB Host HCI (OHCI/EHCI) Interface.
+	int32_t (*Uninitialize)(
+	        void);                                                        ///< Pointer to \ref ARM_USBH_HCI_Uninitialize : De-initialize USB Host HCI (OHCI/EHCI) Interface.
+	int32_t (*PowerControl)(ARM_POWER_STATE
+	        state);                                       ///< Pointer to \ref ARM_USBH_HCI_PowerControl : Control USB Host HCI (OHCI/EHCI) Interface Power.
+	int32_t (*PortVbusOnOff)(uint8_t port,
+	        bool vbus);                                    ///< Pointer to \ref ARM_USBH_HCI_PortVbusOnOff : USB Host HCI (OHCI/EHCI) Root HUB Port VBUS on/off.
 } const ARM_DRIVER_USBH_HCI;
 
 #endif /* __DOXYGEN_MW__ */

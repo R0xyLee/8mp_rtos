@@ -60,20 +60,18 @@ static const clock_ip_name_t s_sema42Clocks[] = RDC_SEMA42_CLOCKS;
 
 uint32_t RDC_SEMA42_GetInstance(RDC_SEMAPHORE_Type *base)
 {
-    uint32_t instance;
+	uint32_t instance;
 
-    /* Find the instance index from base address mappings. */
-    for (instance = 0; instance < ARRAY_SIZE(s_sema42Bases); instance++)
-    {
-        if (s_sema42Bases[instance] == base)
-        {
-            break;
-        }
-    }
+	/* Find the instance index from base address mappings. */
+	for (instance = 0; instance < ARRAY_SIZE(s_sema42Bases); instance++) {
+		if (s_sema42Bases[instance] == base) {
+			break;
+		}
+	}
 
-    assert(instance < ARRAY_SIZE(s_sema42Bases));
+	assert(instance < ARRAY_SIZE(s_sema42Bases));
 
-    return instance;
+	return instance;
 }
 
 /*!
@@ -90,7 +88,7 @@ void RDC_SEMA42_Init(RDC_SEMAPHORE_Type *base)
 {
 #if !(defined(FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL) && FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL)
 #if defined(RDC_SEMA42_CLOCKS)
-    CLOCK_EnableClock(s_sema42Clocks[RDC_SEMA42_GetInstance(base)]);
+	CLOCK_EnableClock(s_sema42Clocks[RDC_SEMA42_GetInstance(base)]);
 #endif
 #endif /* FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL */
 }
@@ -106,7 +104,7 @@ void RDC_SEMA42_Deinit(RDC_SEMAPHORE_Type *base)
 {
 #if !(defined(FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL) && FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL)
 #if defined(RDC_SEMA42_CLOCKS)
-    CLOCK_DisableClock(s_sema42Clocks[RDC_SEMA42_GetInstance(base)]);
+	CLOCK_DisableClock(s_sema42Clocks[RDC_SEMA42_GetInstance(base)]);
 #endif
 #endif /* FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL */
 }
@@ -127,25 +125,24 @@ void RDC_SEMA42_Deinit(RDC_SEMAPHORE_Type *base)
  */
 status_t RDC_SEMA42_TryLock(RDC_SEMAPHORE_Type *base, uint8_t gateNum, uint8_t masterIndex, uint8_t domainId)
 {
-    assert(gateNum < RDC_SEMA42_GATE_COUNT);
+	assert(gateNum < RDC_SEMA42_GATE_COUNT);
 
-    status_t status = kStatus_Success;
-    uint8_t regGate;
+	status_t status = kStatus_Success;
+	uint8_t regGate;
 
-    ++masterIndex;
+	++masterIndex;
 
-    regGate = (uint8_t)(RDC_SEMAPHORE_GATE_LDOM(domainId) | RDC_SEMAPHORE_GATE_GTFSM(masterIndex));
+	regGate = (uint8_t)(RDC_SEMAPHORE_GATE_LDOM(domainId) | RDC_SEMAPHORE_GATE_GTFSM(masterIndex));
 
-    /* Try to lock. */
-    RDC_SEMA42_GATEn(base, gateNum) = masterIndex;
+	/* Try to lock. */
+	RDC_SEMA42_GATEn(base, gateNum) = masterIndex;
 
-    /* Check locked or not. */
-    if (regGate != RDC_SEMA42_GATEn(base, gateNum))
-    {
-        status = kStatus_Fail;
-    }
+	/* Check locked or not. */
+	if (regGate != RDC_SEMA42_GATEn(base, gateNum)) {
+		status = kStatus_Fail;
+	}
 
-    return status;
+	return status;
 }
 
 /*!
@@ -162,24 +159,22 @@ status_t RDC_SEMA42_TryLock(RDC_SEMAPHORE_Type *base, uint8_t gateNum, uint8_t m
  */
 void RDC_SEMA42_Lock(RDC_SEMAPHORE_Type *base, uint8_t gateNum, uint8_t masterIndex, uint8_t domainId)
 {
-    assert(gateNum < RDC_SEMA42_GATE_COUNT);
+	assert(gateNum < RDC_SEMA42_GATE_COUNT);
 
-    uint8_t regGate;
+	uint8_t regGate;
 
-    ++masterIndex;
+	++masterIndex;
 
-    regGate = (uint8_t)(RDC_SEMAPHORE_GATE_LDOM(domainId) | RDC_SEMAPHORE_GATE_GTFSM(masterIndex));
+	regGate = (uint8_t)(RDC_SEMAPHORE_GATE_LDOM(domainId) | RDC_SEMAPHORE_GATE_GTFSM(masterIndex));
 
-    while (regGate != RDC_SEMA42_GATEn(base, gateNum))
-    {
-        /* Wait for unlocked status. */
-        while (0U != (RDC_SEMA42_GATEn(base, gateNum) & RDC_SEMAPHORE_GATE_GTFSM_MASK))
-        {
-        }
+	while (regGate != RDC_SEMA42_GATEn(base, gateNum)) {
+		/* Wait for unlocked status. */
+		while (0U != (RDC_SEMA42_GATEn(base, gateNum) & RDC_SEMAPHORE_GATE_GTFSM_MASK)) {
+		}
 
-        /* Lock the gate. */
-        RDC_SEMA42_GATEn(base, gateNum) = masterIndex;
-    }
+		/* Lock the gate. */
+		RDC_SEMA42_GATEn(base, gateNum) = masterIndex;
+	}
 }
 
 /*!
@@ -193,22 +188,19 @@ void RDC_SEMA42_Lock(RDC_SEMAPHORE_Type *base, uint8_t gateNum, uint8_t masterIn
  */
 int32_t RDC_SEMA42_GetLockDomainID(RDC_SEMAPHORE_Type *base, uint8_t gateNum)
 {
-    assert(gateNum < RDC_SEMA42_GATE_COUNT);
+	assert(gateNum < RDC_SEMA42_GATE_COUNT);
 
-    int32_t ret;
-    uint8_t regGate = RDC_SEMA42_GATEn(base, gateNum);
+	int32_t ret;
+	uint8_t regGate = RDC_SEMA42_GATEn(base, gateNum);
 
-    /* Current gate is not locked. */
-    if (0U == (regGate & RDC_SEMAPHORE_GATE_GTFSM_MASK))
-    {
-        ret = -1;
-    }
-    else
-    {
-        ret = (int32_t)((uint8_t)((regGate & RDC_SEMAPHORE_GATE_LDOM_MASK) >> RDC_SEMAPHORE_GATE_LDOM_SHIFT));
-    }
+	/* Current gate is not locked. */
+	if (0U == (regGate & RDC_SEMAPHORE_GATE_GTFSM_MASK)) {
+		ret = -1;
+	} else {
+		ret = (int32_t)((uint8_t)((regGate & RDC_SEMAPHORE_GATE_LDOM_MASK) >> RDC_SEMAPHORE_GATE_LDOM_SHIFT));
+	}
 
-    return ret;
+	return ret;
 }
 
 /*!
@@ -224,28 +216,25 @@ int32_t RDC_SEMA42_GetLockDomainID(RDC_SEMAPHORE_Type *base, uint8_t gateNum)
  */
 status_t RDC_SEMA42_ResetGate(RDC_SEMAPHORE_Type *base, uint8_t gateNum)
 {
-    status_t status;
+	status_t status;
 
-    /*
-     * Reset all gates if gateNum >= RDC_SEMA42_GATE_NUM_RESET_ALL
-     * Reset specific gate if gateNum < RDC_SEMA42_GATE_COUNT
-     */
+	/*
+	 * Reset all gates if gateNum >= RDC_SEMA42_GATE_NUM_RESET_ALL
+	 * Reset specific gate if gateNum < RDC_SEMA42_GATE_COUNT
+	 */
 
-    /* Check whether some reset is ongoing. */
-    if (0U != (base->RSTGT_R & RDC_SEMAPHORE_RSTGT_R_RSTGSM_MASK))
-    {
-        status = kStatus_Fail;
-    }
-    else
-    {
-        /* First step. */
-        base->RSTGT_W = RDC_SEMAPHORE_RSTGT_W_RSTGDP(RDC_SEMA42_GATE_RESET_PATTERN_1);
-        /* Second step. */
-        base->RSTGT_W =
-            RDC_SEMAPHORE_RSTGT_W_RSTGDP(RDC_SEMA42_GATE_RESET_PATTERN_2) | RDC_SEMAPHORE_RSTGT_W_RSTGTN(gateNum);
+	/* Check whether some reset is ongoing. */
+	if (0U != (base->RSTGT_R & RDC_SEMAPHORE_RSTGT_R_RSTGSM_MASK)) {
+		status = kStatus_Fail;
+	} else {
+		/* First step. */
+		base->RSTGT_W = RDC_SEMAPHORE_RSTGT_W_RSTGDP(RDC_SEMA42_GATE_RESET_PATTERN_1);
+		/* Second step. */
+		base->RSTGT_W =
+		        RDC_SEMAPHORE_RSTGT_W_RSTGDP(RDC_SEMA42_GATE_RESET_PATTERN_2) | RDC_SEMAPHORE_RSTGT_W_RSTGTN(gateNum);
 
-        status = kStatus_Success;
-    }
+		status = kStatus_Success;
+	}
 
-    return status;
+	return status;
 }

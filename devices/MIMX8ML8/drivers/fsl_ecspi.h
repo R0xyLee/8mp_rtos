@@ -36,162 +36,145 @@
 #endif
 
 /*! @brief Return status for the ECSPI driver. */
-enum
-{
-    kStatus_ECSPI_Busy             = MAKE_STATUS(kStatusGroup_ECSPI, 0), /*!< ECSPI bus is busy */
-    kStatus_ECSPI_Idle             = MAKE_STATUS(kStatusGroup_ECSPI, 1), /*!< ECSPI is idle */
-    kStatus_ECSPI_Error            = MAKE_STATUS(kStatusGroup_ECSPI, 2), /*!< ECSPI error */
-    kStatus_ECSPI_HardwareOverFlow = MAKE_STATUS(kStatusGroup_ECSPI, 3), /*!< ECSPI hardware overflow */
-    kStatus_ECSPI_Timeout          = MAKE_STATUS(kStatusGroup_ECSPI, 4), /*!< ECSPI timeout polling status flags. */
+enum {
+	kStatus_ECSPI_Busy             = MAKE_STATUS(kStatusGroup_ECSPI, 0), /*!< ECSPI bus is busy */
+	kStatus_ECSPI_Idle             = MAKE_STATUS(kStatusGroup_ECSPI, 1), /*!< ECSPI is idle */
+	kStatus_ECSPI_Error            = MAKE_STATUS(kStatusGroup_ECSPI, 2), /*!< ECSPI error */
+	kStatus_ECSPI_HardwareOverFlow = MAKE_STATUS(kStatusGroup_ECSPI, 3), /*!< ECSPI hardware overflow */
+	kStatus_ECSPI_Timeout          = MAKE_STATUS(kStatusGroup_ECSPI, 4), /*!< ECSPI timeout polling status flags. */
 };
 
 /*! @brief ECSPI clock polarity configuration. */
-typedef enum _ecspi_clock_polarity
-{
-    kECSPI_PolarityActiveHigh = 0x0U, /*!< Active-high ECSPI polarity high (idles low). */
-    kECSPI_PolarityActiveLow,         /*!< Active-low ECSPI polarity low (idles high). */
+typedef enum _ecspi_clock_polarity {
+	kECSPI_PolarityActiveHigh = 0x0U, /*!< Active-high ECSPI polarity high (idles low). */
+	kECSPI_PolarityActiveLow,         /*!< Active-low ECSPI polarity low (idles high). */
 } ecspi_clock_polarity_t;
 
 /*! @brief ECSPI clock phase configuration. */
-typedef enum _ecspi_clock_phase
-{
-    kECSPI_ClockPhaseFirstEdge =
-        0x0U,                    /*!< First edge on SPSCK occurs at the middle of the first cycle of a data transfer. */
-    kECSPI_ClockPhaseSecondEdge, /*!< First edge on SPSCK occurs at the start of the first cycle of a data transfer. */
+typedef enum _ecspi_clock_phase {
+	kECSPI_ClockPhaseFirstEdge =
+	        0x0U,                    /*!< First edge on SPSCK occurs at the middle of the first cycle of a data transfer. */
+	kECSPI_ClockPhaseSecondEdge, /*!< First edge on SPSCK occurs at the start of the first cycle of a data transfer. */
 } ecspi_clock_phase_t;
 
 /*! @brief ECSPI interrupt sources. */
-enum
-{
-    kECSPI_TxfifoEmptyInterruptEnable      = ECSPI_INTREG_TEEN_MASK,  /*!< Transmit FIFO buffer empty interrupt */
-    kECSPI_TxFifoDataRequstInterruptEnable = ECSPI_INTREG_TDREN_MASK, /*!< Transmit FIFO data requst interrupt */
-    kECSPI_TxFifoFullInterruptEnable       = ECSPI_INTREG_TFEN_MASK,  /*!< Transmit FIFO full interrupt */
-    kECSPI_RxFifoReadyInterruptEnable      = ECSPI_INTREG_RREN_MASK,  /*!< Receiver FIFO ready interrupt */
-    kECSPI_RxFifoDataRequstInterruptEnable = ECSPI_INTREG_RDREN_MASK, /*!< Receiver FIFO data requst interrupt */
-    kECSPI_RxFifoFullInterruptEnable       = ECSPI_INTREG_RFEN_MASK,  /*!< Receiver FIFO full interrupt */
-    kECSPI_RxFifoOverFlowInterruptEnable   = ECSPI_INTREG_ROEN_MASK,  /*!< Receiver FIFO buffer overflow interrupt */
-    kECSPI_TransferCompleteInterruptEnable = ECSPI_INTREG_TCEN_MASK,  /*!< Transfer complete interrupt */
-    kECSPI_AllInterruptEnable = (ECSPI_INTREG_TEEN_MASK | ECSPI_INTREG_TDREN_MASK | ECSPI_INTREG_TFEN_MASK |
-                                 ECSPI_INTREG_RREN_MASK | ECSPI_INTREG_RDREN_MASK | ECSPI_INTREG_RFEN_MASK |
-                                 ECSPI_INTREG_ROEN_MASK | ECSPI_INTREG_TCEN_MASK), /*!< All interrupt */
+enum {
+	kECSPI_TxfifoEmptyInterruptEnable      = ECSPI_INTREG_TEEN_MASK,  /*!< Transmit FIFO buffer empty interrupt */
+	kECSPI_TxFifoDataRequstInterruptEnable = ECSPI_INTREG_TDREN_MASK, /*!< Transmit FIFO data requst interrupt */
+	kECSPI_TxFifoFullInterruptEnable       = ECSPI_INTREG_TFEN_MASK,  /*!< Transmit FIFO full interrupt */
+	kECSPI_RxFifoReadyInterruptEnable      = ECSPI_INTREG_RREN_MASK,  /*!< Receiver FIFO ready interrupt */
+	kECSPI_RxFifoDataRequstInterruptEnable = ECSPI_INTREG_RDREN_MASK, /*!< Receiver FIFO data requst interrupt */
+	kECSPI_RxFifoFullInterruptEnable       = ECSPI_INTREG_RFEN_MASK,  /*!< Receiver FIFO full interrupt */
+	kECSPI_RxFifoOverFlowInterruptEnable   = ECSPI_INTREG_ROEN_MASK,  /*!< Receiver FIFO buffer overflow interrupt */
+	kECSPI_TransferCompleteInterruptEnable = ECSPI_INTREG_TCEN_MASK,  /*!< Transfer complete interrupt */
+	kECSPI_AllInterruptEnable = (ECSPI_INTREG_TEEN_MASK | ECSPI_INTREG_TDREN_MASK | ECSPI_INTREG_TFEN_MASK |
+	                ECSPI_INTREG_RREN_MASK | ECSPI_INTREG_RDREN_MASK | ECSPI_INTREG_RFEN_MASK |
+	                ECSPI_INTREG_ROEN_MASK | ECSPI_INTREG_TCEN_MASK), /*!< All interrupt */
 };
 
 /*! @brief ECSPI status flags. */
-enum
-{
-    kECSPI_TxfifoEmptyFlag      = ECSPI_STATREG_TE_MASK,  /*!< Transmit FIFO buffer empty flag */
-    kECSPI_TxFifoDataRequstFlag = ECSPI_STATREG_TDR_MASK, /*!< Transmit FIFO data requst flag */
-    kECSPI_TxFifoFullFlag       = ECSPI_STATREG_TF_MASK,  /*!< Transmit FIFO full flag */
-    kECSPI_RxFifoReadyFlag      = ECSPI_STATREG_RR_MASK,  /*!< Receiver FIFO ready flag */
-    kECSPI_RxFifoDataRequstFlag = ECSPI_STATREG_RDR_MASK, /*!< Receiver FIFO data requst flag */
-    kECSPI_RxFifoFullFlag       = ECSPI_STATREG_RF_MASK,  /*!< Receiver FIFO full flag */
-    kECSPI_RxFifoOverFlowFlag   = ECSPI_STATREG_RO_MASK,  /*!< Receiver FIFO buffer overflow flag */
-    kECSPI_TransferCompleteFlag = ECSPI_STATREG_TC_MASK,  /*!< Transfer complete flag */
+enum {
+	kECSPI_TxfifoEmptyFlag      = ECSPI_STATREG_TE_MASK,  /*!< Transmit FIFO buffer empty flag */
+	kECSPI_TxFifoDataRequstFlag = ECSPI_STATREG_TDR_MASK, /*!< Transmit FIFO data requst flag */
+	kECSPI_TxFifoFullFlag       = ECSPI_STATREG_TF_MASK,  /*!< Transmit FIFO full flag */
+	kECSPI_RxFifoReadyFlag      = ECSPI_STATREG_RR_MASK,  /*!< Receiver FIFO ready flag */
+	kECSPI_RxFifoDataRequstFlag = ECSPI_STATREG_RDR_MASK, /*!< Receiver FIFO data requst flag */
+	kECSPI_RxFifoFullFlag       = ECSPI_STATREG_RF_MASK,  /*!< Receiver FIFO full flag */
+	kECSPI_RxFifoOverFlowFlag   = ECSPI_STATREG_RO_MASK,  /*!< Receiver FIFO buffer overflow flag */
+	kECSPI_TransferCompleteFlag = ECSPI_STATREG_TC_MASK,  /*!< Transfer complete flag */
 };
 /*! @brief ECSPI DMA enable.*/
-enum
-{
-    kECSPI_TxDmaEnable  = ECSPI_DMAREG_TEDEN_MASK,                            /*!< Tx DMA request source */
-    kECSPI_RxDmaEnable  = ECSPI_DMAREG_RXDEN_MASK,                            /*!< Rx DMA request source */
-    kECSPI_DmaAllEnable = (ECSPI_DMAREG_TEDEN_MASK | ECSPI_DMAREG_RXDEN_MASK) /*!< All DMA request source*/
+enum {
+	kECSPI_TxDmaEnable  = ECSPI_DMAREG_TEDEN_MASK,                            /*!< Tx DMA request source */
+	kECSPI_RxDmaEnable  = ECSPI_DMAREG_RXDEN_MASK,                            /*!< Rx DMA request source */
+	kECSPI_DmaAllEnable = (ECSPI_DMAREG_TEDEN_MASK | ECSPI_DMAREG_RXDEN_MASK) /*!< All DMA request source*/
 };
 
 /*! @brief ECSPI SPI_RDY signal configuration. */
-typedef enum _ecspi_data_ready
-{
-    kECSPI_DataReadyIgnore = 0x0U, /*!< SPI_RDY signal is ignored */
-    kECSPI_DataReadyFallingEdge,   /*!< SPI_RDY signal will be triggerd by the falling edge */
-    kECSPI_DataReadyLowLevel,      /*!< SPI_RDY signal will be triggerd by a low level */
+typedef enum _ecspi_data_ready {
+	kECSPI_DataReadyIgnore = 0x0U, /*!< SPI_RDY signal is ignored */
+	kECSPI_DataReadyFallingEdge,   /*!< SPI_RDY signal will be triggerd by the falling edge */
+	kECSPI_DataReadyLowLevel,      /*!< SPI_RDY signal will be triggerd by a low level */
 } ecspi_Data_ready_t;
 
 /*! @brief ECSPI channel select source. */
-typedef enum _ecspi_channel_source
-{
-    kECSPI_Channel0 = 0x0U, /*!< Channel 0 is selectd */
-    kECSPI_Channel1,        /*!< Channel 1 is selectd */
-    kECSPI_Channel2,        /*!< Channel 2 is selectd */
-    kECSPI_Channel3,        /*!< Channel 3 is selectd */
+typedef enum _ecspi_channel_source {
+	kECSPI_Channel0 = 0x0U, /*!< Channel 0 is selectd */
+	kECSPI_Channel1,        /*!< Channel 1 is selectd */
+	kECSPI_Channel2,        /*!< Channel 2 is selectd */
+	kECSPI_Channel3,        /*!< Channel 3 is selectd */
 } ecspi_channel_source_t;
 
 /*! @brief ECSPI master or slave mode configuration. */
-typedef enum _ecspi_master_slave_mode
-{
-    kECSPI_Slave = 0U, /*!< ECSPI peripheral operates in slave mode.*/
-    kECSPI_Master,     /*!< ECSPI peripheral operates in master mode.*/
+typedef enum _ecspi_master_slave_mode {
+	kECSPI_Slave = 0U, /*!< ECSPI peripheral operates in slave mode.*/
+	kECSPI_Master,     /*!< ECSPI peripheral operates in master mode.*/
 } ecspi_master_slave_mode_t;
 
 /*! @brief ECSPI data line inactive state configuration. */
-typedef enum _ecspi_data_line_inactive_state_t
-{
-    kECSPI_DataLineInactiveStateHigh = 0x0U, /*!< The data line inactive state stays high. */
-    kECSPI_DataLineInactiveStateLow,         /*!< The data line inactive state stays low. */
+typedef enum _ecspi_data_line_inactive_state_t {
+	kECSPI_DataLineInactiveStateHigh = 0x0U, /*!< The data line inactive state stays high. */
+	kECSPI_DataLineInactiveStateLow,         /*!< The data line inactive state stays low. */
 } ecspi_data_line_inactive_state_t;
 
 /*! @brief ECSPI clock inactive state configuration. */
-typedef enum _ecspi_clock_inactive_state_t
-{
-    kECSPI_ClockInactiveStateLow = 0x0U, /*!< The SCLK inactive state stays low. */
-    kECSPI_ClockInactiveStateHigh,       /*!< The SCLK inactive state stays high. */
+typedef enum _ecspi_clock_inactive_state_t {
+	kECSPI_ClockInactiveStateLow = 0x0U, /*!< The SCLK inactive state stays low. */
+	kECSPI_ClockInactiveStateHigh,       /*!< The SCLK inactive state stays high. */
 } ecspi_clock_inactive_state_t;
 
 /*! @brief ECSPI active state configuration.*/
-typedef enum _ecspi_chip_select_active_state_t
-{
-    kECSPI_ChipSelectActiveStateLow = 0x0U, /*!< The SS signal line active stays low. */
-    kECSPI_ChipSelectActiveStateHigh,       /*!< The SS signal line active stays high. */
+typedef enum _ecspi_chip_select_active_state_t {
+	kECSPI_ChipSelectActiveStateLow = 0x0U, /*!< The SS signal line active stays low. */
+	kECSPI_ChipSelectActiveStateHigh,       /*!< The SS signal line active stays high. */
 } ecspi_chip_select_active_state_t;
 
 /*! @brief ECSPI sample period clock configuration.*/
-typedef enum _ecspi_sample_period_clock_source
-{
-    kECSPI_spiClock = 0x0U, /*!< The sample period clock source is SCLK. */
-    kECSPI_lowFreqClock,    /*!< The sample seriod clock source is low_frequency reference clock(32.768 kHz). */
+typedef enum _ecspi_sample_period_clock_source {
+	kECSPI_spiClock = 0x0U, /*!< The sample period clock source is SCLK. */
+	kECSPI_lowFreqClock,    /*!< The sample seriod clock source is low_frequency reference clock(32.768 kHz). */
 } ecspi_sample_period_clock_source_t;
 
 /*! @brief ECSPI user channel configure structure.*/
-typedef struct _ecspi_channel_config
-{
-    ecspi_master_slave_mode_t channelMode;                  /*!< Channel mode */
-    ecspi_clock_inactive_state_t clockInactiveState;        /*!< Clock line (SCLK) inactive state */
-    ecspi_data_line_inactive_state_t dataLineInactiveState; /*!< Data line (MOSI&MISO) inactive state */
-    ecspi_chip_select_active_state_t chipSlectActiveState;  /*!< Chip select(SS) line active state */
-    ecspi_clock_polarity_t polarity;                        /*!< Clock polarity */
-    ecspi_clock_phase_t phase;                              /*!< Clock phase */
+typedef struct _ecspi_channel_config {
+	ecspi_master_slave_mode_t channelMode;                  /*!< Channel mode */
+	ecspi_clock_inactive_state_t clockInactiveState;        /*!< Clock line (SCLK) inactive state */
+	ecspi_data_line_inactive_state_t dataLineInactiveState; /*!< Data line (MOSI&MISO) inactive state */
+	ecspi_chip_select_active_state_t chipSlectActiveState;  /*!< Chip select(SS) line active state */
+	ecspi_clock_polarity_t polarity;                        /*!< Clock polarity */
+	ecspi_clock_phase_t phase;                              /*!< Clock phase */
 } ecspi_channel_config_t;
 
 /*! @brief ECSPI master configure structure.*/
-typedef struct _ecspi_master_config
-{
-    ecspi_channel_source_t channel;                       /*!< Channel number */
-    ecspi_channel_config_t channelConfig;                 /*!< Channel configuration */
-    ecspi_sample_period_clock_source_t samplePeriodClock; /*!< Sample period clock source */
+typedef struct _ecspi_master_config {
+	ecspi_channel_source_t channel;                       /*!< Channel number */
+	ecspi_channel_config_t channelConfig;                 /*!< Channel configuration */
+	ecspi_sample_period_clock_source_t samplePeriodClock; /*!< Sample period clock source */
 
-    uint8_t burstLength;     /*!< Burst length */
-    uint8_t chipSelectDelay; /*!< SS delay time */
-    uint16_t samplePeriod;   /*!< Sample period */
-    uint8_t txFifoThreshold; /*!< TX Threshold */
-    uint8_t rxFifoThreshold; /*!< RX Threshold */
-    uint32_t baudRate_Bps;   /*!< ECSPI baud rate for master mode */
-    bool enableLoopback;     /*!< Enable the ECSPI loopback test. */
+	uint8_t burstLength;     /*!< Burst length */
+	uint8_t chipSelectDelay; /*!< SS delay time */
+	uint16_t samplePeriod;   /*!< Sample period */
+	uint8_t txFifoThreshold; /*!< TX Threshold */
+	uint8_t rxFifoThreshold; /*!< RX Threshold */
+	uint32_t baudRate_Bps;   /*!< ECSPI baud rate for master mode */
+	bool enableLoopback;     /*!< Enable the ECSPI loopback test. */
 } ecspi_master_config_t;
 
 /*! @brief ECSPI slave configure structure.*/
-typedef struct _ecspi_slave_config
-{
-    ecspi_channel_source_t channel;       /*Channel number */
-    uint8_t burstLength;                  /*!< Burst length */
-    uint8_t txFifoThreshold;              /*!< TX Threshold */
-    uint8_t rxFifoThreshold;              /*!< RX Threshold */
-    ecspi_channel_config_t channelConfig; /*!< Channel configuration */
+typedef struct _ecspi_slave_config {
+	ecspi_channel_source_t channel;       /*Channel number */
+	uint8_t burstLength;                  /*!< Burst length */
+	uint8_t txFifoThreshold;              /*!< TX Threshold */
+	uint8_t rxFifoThreshold;              /*!< RX Threshold */
+	ecspi_channel_config_t channelConfig; /*!< Channel configuration */
 } ecspi_slave_config_t;
 
 /*! @brief ECSPI transfer structure */
-typedef struct _ecspi_transfer
-{
-    uint32_t *txData;               /*!< Send buffer */
-    uint32_t *rxData;               /*!< Receive buffer */
-    size_t dataSize;                /*!< Transfer bytes */
-    ecspi_channel_source_t channel; /*!< ECSPI channel select */
+typedef struct _ecspi_transfer {
+	uint32_t *txData;               /*!< Send buffer */
+	uint32_t *rxData;               /*!< Receive buffer */
+	size_t dataSize;                /*!< Transfer bytes */
+	ecspi_channel_source_t channel; /*!< ECSPI channel select */
 } ecspi_transfer_t;
 
 typedef struct _ecspi_master_handle ecspi_master_handle_t;
@@ -200,25 +183,24 @@ typedef ecspi_master_handle_t ecspi_slave_handle_t;
 
 /*! @brief ECSPI master callback for finished transmit */
 typedef void (*ecspi_master_callback_t)(ECSPI_Type *base,
-                                        ecspi_master_handle_t *handle,
-                                        status_t status,
-                                        void *userData);
+        ecspi_master_handle_t *handle,
+        status_t status,
+        void *userData);
 
 /*! @brief ECSPI slave callback for finished transmit */
 typedef void (*ecspi_slave_callback_t)(ECSPI_Type *base, ecspi_slave_handle_t *handle, status_t status, void *userData);
 
 /*! @brief ECSPI master handle structure */
-struct _ecspi_master_handle
-{
-    ecspi_channel_source_t channel;   /*!< Channel number */
-    uint32_t *volatile txData;        /*!< Transfer buffer */
-    uint32_t *volatile rxData;        /*!< Receive buffer */
-    volatile size_t txRemainingBytes; /*!< Send data remaining in bytes */
-    volatile size_t rxRemainingBytes; /*!< Receive data remaining in bytes */
-    volatile uint32_t state;          /*!< ECSPI internal state */
-    size_t transferSize;              /*!< Bytes to be transferred */
-    ecspi_master_callback_t callback; /*!< ECSPI callback */
-    void *userData;                   /*!< Callback parameter */
+struct _ecspi_master_handle {
+	ecspi_channel_source_t channel;   /*!< Channel number */
+	uint32_t *volatile txData;        /*!< Transfer buffer */
+	uint32_t *volatile rxData;        /*!< Receive buffer */
+	volatile size_t txRemainingBytes; /*!< Send data remaining in bytes */
+	volatile size_t rxRemainingBytes; /*!< Receive data remaining in bytes */
+	volatile uint32_t state;          /*!< ECSPI internal state */
+	size_t transferSize;              /*!< Bytes to be transferred */
+	ecspi_master_callback_t callback; /*!< ECSPI callback */
+	void *userData;                   /*!< Callback parameter */
 };
 
 #if defined(__cplusplus)
@@ -330,14 +312,11 @@ void ECSPI_Deinit(ECSPI_Type *base);
  */
 static inline void ECSPI_Enable(ECSPI_Type *base, bool enable)
 {
-    if (enable)
-    {
-        base->CONREG |= ECSPI_CONREG_EN_MASK;
-    }
-    else
-    {
-        base->CONREG &= ~ECSPI_CONREG_EN_MASK;
-    }
+	if (enable) {
+		base->CONREG |= ECSPI_CONREG_EN_MASK;
+	} else {
+		base->CONREG &= ~ECSPI_CONREG_EN_MASK;
+	}
 }
 /*! @} */
 
@@ -354,7 +333,7 @@ static inline void ECSPI_Enable(ECSPI_Type *base, bool enable)
  */
 static inline uint32_t ECSPI_GetStatusFlags(ECSPI_Type *base)
 {
-    return (base->STATREG);
+	return (base->STATREG);
 }
 
 /*!
@@ -365,7 +344,7 @@ static inline uint32_t ECSPI_GetStatusFlags(ECSPI_Type *base)
  */
 static inline void ECSPI_ClearStatusFlags(ECSPI_Type *base, uint32_t mask)
 {
-    base->STATREG |= mask;
+	base->STATREG |= mask;
 }
 /*! @} */
 
@@ -391,7 +370,7 @@ static inline void ECSPI_ClearStatusFlags(ECSPI_Type *base, uint32_t mask)
  */
 static inline void ECSPI_EnableInterrupts(ECSPI_Type *base, uint32_t mask)
 {
-    base->INTREG |= mask;
+	base->INTREG |= mask;
 }
 
 /*!
@@ -411,7 +390,7 @@ static inline void ECSPI_EnableInterrupts(ECSPI_Type *base, uint32_t mask)
  */
 static inline void ECSPI_DisableInterrupts(ECSPI_Type *base, uint32_t mask)
 {
-    base->INTREG &= ~(mask);
+	base->INTREG &= ~(mask);
 }
 /*! @} */
 
@@ -427,10 +406,10 @@ static inline void ECSPI_DisableInterrupts(ECSPI_Type *base, uint32_t mask)
  */
 static inline void ECSPI_SoftwareReset(ECSPI_Type *base)
 {
-    /* Disables the block and resets the internal logic with the exception of the ECSPI control register */
-    base->CONREG &= ~ECSPI_CONREG_EN_MASK;
-    /* Software reset can not reset the control register, so clear the control register manually */
-    base->CONREG = 0x0U;
+	/* Disables the block and resets the internal logic with the exception of the ECSPI control register */
+	base->CONREG &= ~ECSPI_CONREG_EN_MASK;
+	/* Software reset can not reset the control register, so clear the control register manually */
+	base->CONREG = 0x0U;
 }
 /*! @} */
 
@@ -448,9 +427,9 @@ static inline void ECSPI_SoftwareReset(ECSPI_Type *base)
  */
 static inline bool ECSPI_IsMaster(ECSPI_Type *base, ecspi_channel_source_t channel)
 {
-    return (bool)(((base->CONREG & ECSPI_CONREG_CHANNEL_MODE_MASK) >>
-                   (ECSPI_CONREG_CHANNEL_MODE_SHIFT + (uint32_t)channel)) &
-                  0x1U);
+	return (bool)(((base->CONREG & ECSPI_CONREG_CHANNEL_MODE_MASK) >>
+	                        (ECSPI_CONREG_CHANNEL_MODE_SHIFT + (uint32_t)channel)) &
+	                0x1U);
 }
 /*! @} */
 
@@ -471,14 +450,11 @@ static inline bool ECSPI_IsMaster(ECSPI_Type *base, ecspi_channel_source_t chann
  */
 static inline void ECSPI_EnableDMA(ECSPI_Type *base, uint32_t mask, bool enable)
 {
-    if (enable)
-    {
-        base->DMAREG |= mask;
-    }
-    else
-    {
-        base->DMAREG &= ~mask;
-    }
+	if (enable) {
+		base->DMAREG |= mask;
+	} else {
+		base->DMAREG &= ~mask;
+	}
 }
 /*! @} */
 
@@ -495,7 +471,7 @@ static inline void ECSPI_EnableDMA(ECSPI_Type *base, uint32_t mask, bool enable)
  */
 static inline uint8_t ECSPI_GetTxFifoCount(ECSPI_Type *base)
 {
-    return (uint8_t)((base->TESTREG & ECSPI_TESTREG_TXCNT_MASK) >> ECSPI_TESTREG_TXCNT_SHIFT);
+	return (uint8_t)((base->TESTREG & ECSPI_TESTREG_TXCNT_MASK) >> ECSPI_TESTREG_TXCNT_SHIFT);
 }
 
 /*!
@@ -506,7 +482,7 @@ static inline uint8_t ECSPI_GetTxFifoCount(ECSPI_Type *base)
  */
 static inline uint8_t ECSPI_GetRxFifoCount(ECSPI_Type *base)
 {
-    return (uint8_t)((base->TESTREG & ECSPI_TESTREG_RXCNT_MASK) >> ECSPI_TESTREG_RXCNT_SHIFT);
+	return (uint8_t)((base->TESTREG & ECSPI_TESTREG_RXCNT_MASK) >> ECSPI_TESTREG_RXCNT_SHIFT);
 }
 /*! @} */
 
@@ -523,10 +499,10 @@ static inline uint8_t ECSPI_GetRxFifoCount(ECSPI_Type *base)
  */
 static inline void ECSPI_SetChannelSelect(ECSPI_Type *base, ecspi_channel_source_t channel)
 {
-    /* Clear Channel select bits in CONREG register */
-    uint32_t temp = base->CONREG & (~(ECSPI_CONREG_CHANNEL_SELECT_MASK));
-    /* Set channel select bits */
-    base->CONREG = (temp | ECSPI_CONREG_CHANNEL_SELECT(channel));
+	/* Clear Channel select bits in CONREG register */
+	uint32_t temp = base->CONREG & (~(ECSPI_CONREG_CHANNEL_SELECT_MASK));
+	/* Set channel select bits */
+	base->CONREG = (temp | ECSPI_CONREG_CHANNEL_SELECT(channel));
 }
 /*!
  * @brief Set channel select configuration for transfer.
@@ -572,7 +548,7 @@ status_t ECSPI_WriteBlocking(ECSPI_Type *base, uint32_t *buffer, size_t size);
  */
 static inline void ECSPI_WriteData(ECSPI_Type *base, uint32_t data)
 {
-    base->TXDATA = data;
+	base->TXDATA = data;
 }
 
 /*!
@@ -583,7 +559,7 @@ static inline void ECSPI_WriteData(ECSPI_Type *base, uint32_t data)
  */
 static inline uint32_t ECSPI_ReadData(ECSPI_Type *base)
 {
-    return (uint32_t)(base->RXDATA);
+	return (uint32_t)(base->RXDATA);
 }
 /*! @} */
 
@@ -604,9 +580,9 @@ static inline uint32_t ECSPI_ReadData(ECSPI_Type *base)
  * @param userData User data.
  */
 void ECSPI_MasterTransferCreateHandle(ECSPI_Type *base,
-                                      ecspi_master_handle_t *handle,
-                                      ecspi_master_callback_t callback,
-                                      void *userData);
+        ecspi_master_handle_t *handle,
+        ecspi_master_callback_t callback,
+        void *userData);
 
 /*!
  * @brief Transfers a block of data using a polling method.
@@ -673,9 +649,9 @@ void ECSPI_MasterTransferHandleIRQ(ECSPI_Type *base, ecspi_master_handle_t *hand
  * @param userData User data.
  */
 void ECSPI_SlaveTransferCreateHandle(ECSPI_Type *base,
-                                     ecspi_slave_handle_t *handle,
-                                     ecspi_slave_callback_t callback,
-                                     void *userData);
+        ecspi_slave_handle_t *handle,
+        ecspi_slave_callback_t callback,
+        void *userData);
 
 /*!
  * @brief Performs a non-blocking ECSPI slave interrupt transfer.
@@ -690,10 +666,10 @@ void ECSPI_SlaveTransferCreateHandle(ECSPI_Type *base,
  * @retval kStatus_ECSPI_Busy ECSPI is not idle, is running another transfer.
  */
 static inline status_t ECSPI_SlaveTransferNonBlocking(ECSPI_Type *base,
-                                                      ecspi_slave_handle_t *handle,
-                                                      ecspi_transfer_t *xfer)
+        ecspi_slave_handle_t *handle,
+        ecspi_transfer_t *xfer)
 {
-    return ECSPI_MasterTransferNonBlocking(base, handle, xfer);
+	return ECSPI_MasterTransferNonBlocking(base, handle, xfer);
 }
 
 /*!
@@ -707,7 +683,7 @@ static inline status_t ECSPI_SlaveTransferNonBlocking(ECSPI_Type *base,
  */
 static inline status_t ECSPI_SlaveTransferGetCount(ECSPI_Type *base, ecspi_slave_handle_t *handle, size_t *count)
 {
-    return ECSPI_MasterTransferGetCount(base, handle, count);
+	return ECSPI_MasterTransferGetCount(base, handle, count);
 }
 
 /*!
@@ -718,7 +694,7 @@ static inline status_t ECSPI_SlaveTransferGetCount(ECSPI_Type *base, ecspi_slave
  */
 static inline void ECSPI_SlaveTransferAbort(ECSPI_Type *base, ecspi_slave_handle_t *handle)
 {
-    ECSPI_MasterTransferAbort(base, handle);
+	ECSPI_MasterTransferAbort(base, handle);
 }
 
 /*!

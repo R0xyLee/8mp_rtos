@@ -46,8 +46,8 @@ extern "C"
 
 /****** CAN Bitrate selection codes *****/
 typedef enum _ARM_CAN_BITRATE_SELECT {
-  ARM_CAN_BITRATE_NOMINAL,              ///< Select nominal (flexible data-rate arbitration) bitrate
-  ARM_CAN_BITRATE_FD_DATA               ///< Select flexible data-rate data bitrate
+	ARM_CAN_BITRATE_NOMINAL,              ///< Select nominal (flexible data-rate arbitration) bitrate
+	ARM_CAN_BITRATE_FD_DATA               ///< Select flexible data-rate data bitrate
 } ARM_CAN_BITRATE_SELECT;
 
 /****** CAN Bit Propagation Segment codes (PROP_SEG) *****/
@@ -72,47 +72,47 @@ typedef enum _ARM_CAN_BITRATE_SELECT {
 
 /****** CAN Mode codes *****/
 typedef enum _ARM_CAN_MODE {
-  ARM_CAN_MODE_INITIALIZATION,          ///< Initialization mode
-  ARM_CAN_MODE_NORMAL,                  ///< Normal operation mode
-  ARM_CAN_MODE_RESTRICTED,              ///< Restricted operation mode
-  ARM_CAN_MODE_MONITOR,                 ///< Bus monitoring mode
-  ARM_CAN_MODE_LOOPBACK_INTERNAL,       ///< Loopback internal mode
-  ARM_CAN_MODE_LOOPBACK_EXTERNAL        ///< Loopback external mode
+	ARM_CAN_MODE_INITIALIZATION,          ///< Initialization mode
+	ARM_CAN_MODE_NORMAL,                  ///< Normal operation mode
+	ARM_CAN_MODE_RESTRICTED,              ///< Restricted operation mode
+	ARM_CAN_MODE_MONITOR,                 ///< Bus monitoring mode
+	ARM_CAN_MODE_LOOPBACK_INTERNAL,       ///< Loopback internal mode
+	ARM_CAN_MODE_LOOPBACK_EXTERNAL        ///< Loopback external mode
 } ARM_CAN_MODE;
 
 /****** CAN Filter Operation codes *****/
 typedef enum _ARM_CAN_FILTER_OPERATION {
-  ARM_CAN_FILTER_ID_EXACT_ADD,          ///< Add    exact id filter
-  ARM_CAN_FILTER_ID_EXACT_REMOVE,       ///< Remove exact id filter
-  ARM_CAN_FILTER_ID_RANGE_ADD,          ///< Add    range id filter
-  ARM_CAN_FILTER_ID_RANGE_REMOVE,       ///< Remove range id filter
-  ARM_CAN_FILTER_ID_MASKABLE_ADD,       ///< Add    maskable id filter
-  ARM_CAN_FILTER_ID_MASKABLE_REMOVE     ///< Remove maskable id filter
+	ARM_CAN_FILTER_ID_EXACT_ADD,          ///< Add    exact id filter
+	ARM_CAN_FILTER_ID_EXACT_REMOVE,       ///< Remove exact id filter
+	ARM_CAN_FILTER_ID_RANGE_ADD,          ///< Add    range id filter
+	ARM_CAN_FILTER_ID_RANGE_REMOVE,       ///< Remove range id filter
+	ARM_CAN_FILTER_ID_MASKABLE_ADD,       ///< Add    maskable id filter
+	ARM_CAN_FILTER_ID_MASKABLE_REMOVE     ///< Remove maskable id filter
 } ARM_CAN_FILTER_OPERATION;
 
 /****** CAN Object Configuration codes *****/
 typedef enum _ARM_CAN_OBJ_CONFIG {
-  ARM_CAN_OBJ_INACTIVE,                 ///< CAN object inactive
-  ARM_CAN_OBJ_TX,                       ///< CAN transmit object
-  ARM_CAN_OBJ_RX,                       ///< CAN receive object
-  ARM_CAN_OBJ_RX_RTR_TX_DATA,           ///< CAN object that on RTR reception automatically transmits Data Frame
-  ARM_CAN_OBJ_TX_RTR_RX_DATA            ///< CAN object that transmits RTR and automatically receives Data Frame
+	ARM_CAN_OBJ_INACTIVE,                 ///< CAN object inactive
+	ARM_CAN_OBJ_TX,                       ///< CAN transmit object
+	ARM_CAN_OBJ_RX,                       ///< CAN receive object
+	ARM_CAN_OBJ_RX_RTR_TX_DATA,           ///< CAN object that on RTR reception automatically transmits Data Frame
+	ARM_CAN_OBJ_TX_RTR_RX_DATA            ///< CAN object that transmits RTR and automatically receives Data Frame
 } ARM_CAN_OBJ_CONFIG;
 
 /**
 \brief CAN Object Capabilities
 */
 typedef struct _ARM_CAN_OBJ_CAPABILITIES {
-  uint32_t tx               : 1;        ///< Object supports transmission
-  uint32_t rx               : 1;        ///< Object supports reception
-  uint32_t rx_rtr_tx_data   : 1;        ///< Object supports RTR reception and automatic Data Frame transmission
-  uint32_t tx_rtr_rx_data   : 1;        ///< Object supports RTR transmission and automatic Data Frame reception
-  uint32_t multiple_filters : 1;        ///< Object allows assignment of multiple filters to it
-  uint32_t exact_filtering  : 1;        ///< Object supports exact identifier filtering
-  uint32_t range_filtering  : 1;        ///< Object supports range identifier filtering
-  uint32_t mask_filtering   : 1;        ///< Object supports mask identifier filtering
-  uint32_t message_depth    : 8;        ///< Number of messages buffers (FIFO) for that object
-  uint32_t reserved         : 16;       ///< Reserved (must be zero)
+	uint32_t tx               : 1;        ///< Object supports transmission
+	uint32_t rx               : 1;        ///< Object supports reception
+	uint32_t rx_rtr_tx_data   : 1;        ///< Object supports RTR reception and automatic Data Frame transmission
+	uint32_t tx_rtr_rx_data   : 1;        ///< Object supports RTR transmission and automatic Data Frame reception
+	uint32_t multiple_filters : 1;        ///< Object allows assignment of multiple filters to it
+	uint32_t exact_filtering  : 1;        ///< Object supports exact identifier filtering
+	uint32_t range_filtering  : 1;        ///< Object supports range identifier filtering
+	uint32_t mask_filtering   : 1;        ///< Object supports mask identifier filtering
+	uint32_t message_depth    : 8;        ///< Number of messages buffers (FIFO) for that object
+	uint32_t reserved         : 16;       ///< Reserved (must be zero)
 } ARM_CAN_OBJ_CAPABILITIES;
 
 /****** CAN Control Function Operation codes *****/
@@ -135,13 +135,13 @@ typedef struct _ARM_CAN_OBJ_CAPABILITIES {
 \brief CAN Message Information
 */
 typedef struct _ARM_CAN_MSG_INFO {
-  uint32_t id;                          ///< CAN identifier with frame format specifier (bit 31)
-  uint32_t rtr              : 1;        ///< Remote transmission request frame
-  uint32_t edl              : 1;        ///< Flexible data-rate format extended data length
-  uint32_t brs              : 1;        ///< Flexible data-rate format with bitrate switch 
-  uint32_t esi              : 1;        ///< Flexible data-rate format error state indicator
-  uint32_t dlc              : 4;        ///< Data length code
-  uint32_t reserved         : 24;
+	uint32_t id;                          ///< CAN identifier with frame format specifier (bit 31)
+	uint32_t rtr              : 1;        ///< Remote transmission request frame
+	uint32_t edl              : 1;        ///< Flexible data-rate format extended data length
+	uint32_t brs              : 1;        ///< Flexible data-rate format with bitrate switch
+	uint32_t esi              : 1;        ///< Flexible data-rate format error state indicator
+	uint32_t dlc              : 4;        ///< Data length code
+	uint32_t reserved         : 24;
 } ARM_CAN_MSG_INFO;
 
 /****** CAN specific error code *****/
@@ -169,11 +169,11 @@ typedef struct _ARM_CAN_MSG_INFO {
 \brief CAN Status
 */
 typedef volatile struct _ARM_CAN_STATUS {
-  uint32_t unit_state       : 4;        ///< Unit bus state
-  uint32_t last_error_code  : 4;        ///< Last error code
-  uint32_t tx_error_count   : 8;        ///< Transmitter error count
-  uint32_t rx_error_count   : 8;        ///< Receiver error count
-  uint32_t reserved         : 8;
+	uint32_t unit_state       : 4;        ///< Unit bus state
+	uint32_t last_error_code  : 4;        ///< Last error code
+	uint32_t tx_error_count   : 8;        ///< Transmitter error count
+	uint32_t rx_error_count   : 8;        ///< Receiver error count
+	uint32_t reserved         : 8;
 } ARM_CAN_STATUS;
 
 
@@ -321,22 +321,26 @@ typedef volatile struct _ARM_CAN_STATUS {
   \return      none
 */
 
-typedef void (*ARM_CAN_SignalUnitEvent_t)   (uint32_t event);                   ///< Pointer to \ref ARM_CAN_SignalUnitEvent   : Signal CAN Unit Event.
-typedef void (*ARM_CAN_SignalObjectEvent_t) (uint32_t obj_idx, uint32_t event); ///< Pointer to \ref ARM_CAN_SignalObjectEvent : Signal CAN Object Event.
+typedef void (*ARM_CAN_SignalUnitEvent_t)(uint32_t
+        event);                      ///< Pointer to \ref ARM_CAN_SignalUnitEvent   : Signal CAN Unit Event.
+typedef void (*ARM_CAN_SignalObjectEvent_t)(uint32_t obj_idx,
+        uint32_t event);  ///< Pointer to \ref ARM_CAN_SignalObjectEvent : Signal CAN Object Event.
 
 
 /**
 \brief CAN Device Driver Capabilities.
 */
 typedef struct _ARM_CAN_CAPABILITIES {
-  uint32_t num_objects            : 8;  ///< Number of \ref can_objects available
-  uint32_t reentrant_operation    : 1;  ///< Support for reentrant calls to \ref ARM_CAN_MessageSend, \ref ARM_CAN_MessageRead, \ref ARM_CAN_ObjectConfigure and abort message sending used by \ref ARM_CAN_Control
-  uint32_t fd_mode                : 1;  ///< Support for CAN with flexible data-rate mode (CAN_FD) (set by \ref ARM_CAN_Control)
-  uint32_t restricted_mode        : 1;  ///< Support for restricted operation mode (set by \ref ARM_CAN_SetMode)
-  uint32_t monitor_mode           : 1;  ///< Support for bus monitoring mode (set by \ref ARM_CAN_SetMode)
-  uint32_t internal_loopback      : 1;  ///< Support for internal loopback mode (set by \ref ARM_CAN_SetMode)
-  uint32_t external_loopback      : 1;  ///< Support for external loopback mode (set by \ref ARM_CAN_SetMode)
-  uint32_t reserved               : 18; ///< Reserved (must be zero)
+	uint32_t num_objects            : 8;  ///< Number of \ref can_objects available
+uint32_t reentrant_operation    :
+	1;  ///< Support for reentrant calls to \ref ARM_CAN_MessageSend, \ref ARM_CAN_MessageRead, \ref ARM_CAN_ObjectConfigure and abort message sending used by \ref ARM_CAN_Control
+uint32_t fd_mode                :
+	1;  ///< Support for CAN with flexible data-rate mode (CAN_FD) (set by \ref ARM_CAN_Control)
+	uint32_t restricted_mode        : 1;  ///< Support for restricted operation mode (set by \ref ARM_CAN_SetMode)
+	uint32_t monitor_mode           : 1;  ///< Support for bus monitoring mode (set by \ref ARM_CAN_SetMode)
+	uint32_t internal_loopback      : 1;  ///< Support for internal loopback mode (set by \ref ARM_CAN_SetMode)
+	uint32_t external_loopback      : 1;  ///< Support for external loopback mode (set by \ref ARM_CAN_SetMode)
+	uint32_t reserved               : 18; ///< Reserved (must be zero)
 } ARM_CAN_CAPABILITIES;
 
 
@@ -344,35 +348,45 @@ typedef struct _ARM_CAN_CAPABILITIES {
 \brief Access structure of the CAN Driver.
 */
 typedef struct _ARM_DRIVER_CAN {
-  ARM_DRIVER_VERSION       (*GetVersion)            (void);                             ///< Pointer to \ref ARM_CAN_GetVersion            : Get driver version.
-  ARM_CAN_CAPABILITIES     (*GetCapabilities)       (void);                             ///< Pointer to \ref ARM_CAN_GetCapabilities       : Get driver capabilities.
-  int32_t                  (*Initialize)            (ARM_CAN_SignalUnitEvent_t   cb_unit_event,                     
-                                                     ARM_CAN_SignalObjectEvent_t cb_object_event); ///< Pointer to \ref ARM_CAN_Initialize : Initialize CAN interface.
-  int32_t                  (*Uninitialize)          (void);                             ///< Pointer to \ref ARM_CAN_Uninitialize          : De-initialize CAN interface.
-  int32_t                  (*PowerControl)          (ARM_POWER_STATE          state);   ///< Pointer to \ref ARM_CAN_PowerControl          : Control CAN interface power.
-  uint32_t                 (*GetClock)              (void);                             ///< Pointer to \ref ARM_CAN_GetClock              : Retrieve CAN base clock frequency.
-  int32_t                  (*SetBitrate)            (ARM_CAN_BITRATE_SELECT   select,
-                                                     uint32_t                 bitrate,
-                                                     uint32_t                 bit_segments);       ///< Pointer to \ref ARM_CAN_SetBitrate : Set bitrate for CAN interface.
-  int32_t                  (*SetMode)               (ARM_CAN_MODE             mode);    ///< Pointer to \ref ARM_CAN_SetMode               : Set operating mode for CAN interface.
-  ARM_CAN_OBJ_CAPABILITIES (*ObjectGetCapabilities) (uint32_t                 obj_idx); ///< Pointer to \ref ARM_CAN_ObjectGetCapabilities : Retrieve capabilities of an object.
-  int32_t                  (*ObjectSetFilter)       (uint32_t                 obj_idx,
-                                                     ARM_CAN_FILTER_OPERATION operation,
-                                                     uint32_t                 id,
-                                                     uint32_t                 arg);     ///< Pointer to \ref ARM_CAN_ObjectSetFilter       : Add or remove filter for message reception.
-  int32_t                  (*ObjectConfigure)       (uint32_t                 obj_idx,
-                                                     ARM_CAN_OBJ_CONFIG       obj_cfg); ///< Pointer to \ref ARM_CAN_ObjectConfigure       : Configure object.
-  int32_t                  (*MessageSend)           (uint32_t                 obj_idx,
-                                                     ARM_CAN_MSG_INFO        *msg_info,
-                                                     const uint8_t           *data,
-                                                     uint8_t                  size);    ///< Pointer to \ref ARM_CAN_MessageSend           : Send message on CAN bus.
-  int32_t                  (*MessageRead)           (uint32_t                 obj_idx,
-                                                     ARM_CAN_MSG_INFO        *msg_info,
-                                                     uint8_t                 *data,
-                                                     uint8_t                  size);    ///< Pointer to \ref ARM_CAN_MessageRead           : Read message received on CAN bus.
-  int32_t                  (*Control)               (uint32_t                 control,
-                                                     uint32_t                 arg);     ///< Pointer to \ref ARM_CAN_Control               : Control CAN interface.
-  ARM_CAN_STATUS           (*GetStatus)             (void);                             ///< Pointer to \ref ARM_CAN_GetStatus             : Get CAN status.
+	ARM_DRIVER_VERSION(*GetVersion)(
+	        void);                                                ///< Pointer to \ref ARM_CAN_GetVersion            : Get driver version.
+	ARM_CAN_CAPABILITIES(*GetCapabilities)(
+	        void);                                         ///< Pointer to \ref ARM_CAN_GetCapabilities       : Get driver capabilities.
+	int32_t (*Initialize)(ARM_CAN_SignalUnitEvent_t   cb_unit_event,
+	        ARM_CAN_SignalObjectEvent_t cb_object_event); ///< Pointer to \ref ARM_CAN_Initialize : Initialize CAN interface.
+	int32_t (*Uninitialize)(
+	        void);                                                        ///< Pointer to \ref ARM_CAN_Uninitialize          : De-initialize CAN interface.
+	int32_t (*PowerControl)(ARM_POWER_STATE
+	        state);                              ///< Pointer to \ref ARM_CAN_PowerControl          : Control CAN interface power.
+	uint32_t (*GetClock)(
+	        void);                                                           ///< Pointer to \ref ARM_CAN_GetClock              : Retrieve CAN base clock frequency.
+	int32_t (*SetBitrate)(ARM_CAN_BITRATE_SELECT   select,
+	        uint32_t                 bitrate,
+	        uint32_t                 bit_segments);       ///< Pointer to \ref ARM_CAN_SetBitrate : Set bitrate for CAN interface.
+	int32_t (*SetMode)(ARM_CAN_MODE
+	        mode);                                    ///< Pointer to \ref ARM_CAN_SetMode               : Set operating mode for CAN interface.
+	ARM_CAN_OBJ_CAPABILITIES(*ObjectGetCapabilities)(uint32_t
+	        obj_idx);   ///< Pointer to \ref ARM_CAN_ObjectGetCapabilities : Retrieve capabilities of an object.
+	int32_t (*ObjectSetFilter)(uint32_t                 obj_idx,
+	        ARM_CAN_FILTER_OPERATION operation,
+	        uint32_t                 id,
+	        uint32_t
+	        arg);     ///< Pointer to \ref ARM_CAN_ObjectSetFilter       : Add or remove filter for message reception.
+	int32_t (*ObjectConfigure)(uint32_t                 obj_idx,
+	        ARM_CAN_OBJ_CONFIG       obj_cfg); ///< Pointer to \ref ARM_CAN_ObjectConfigure       : Configure object.
+	int32_t (*MessageSend)(uint32_t                 obj_idx,
+	        ARM_CAN_MSG_INFO        *msg_info,
+	        const uint8_t           *data,
+	        uint8_t                  size);    ///< Pointer to \ref ARM_CAN_MessageSend           : Send message on CAN bus.
+	int32_t (*MessageRead)(uint32_t                 obj_idx,
+	        ARM_CAN_MSG_INFO        *msg_info,
+	        uint8_t                 *data,
+	        uint8_t
+	        size);    ///< Pointer to \ref ARM_CAN_MessageRead           : Read message received on CAN bus.
+	int32_t (*Control)(uint32_t                 control,
+	        uint32_t                 arg);     ///< Pointer to \ref ARM_CAN_Control               : Control CAN interface.
+	ARM_CAN_STATUS(*GetStatus)(
+	        void);                                                     ///< Pointer to \ref ARM_CAN_GetStatus             : Get CAN status.
 } const ARM_DRIVER_CAN;
 
 #ifdef  __cplusplus

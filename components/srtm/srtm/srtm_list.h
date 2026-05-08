@@ -27,10 +27,9 @@
 /**
  * @brief SRTM list fields
  */
-typedef struct _srtm_list
-{
-    struct _srtm_list *prev; /*!< previous list node */
-    struct _srtm_list *next; /*!< next list node */
+typedef struct _srtm_list {
+	struct _srtm_list *prev; /*!< previous list node */
+	struct _srtm_list *next; /*!< next list node */
 } srtm_list_t;
 
 /*******************************************************************************
@@ -47,10 +46,10 @@ extern "C" {
  */
 static inline void SRTM_List_Init(srtm_list_t *list)
 {
-    assert(list);
+	assert(list);
 
-    list->prev = list;
-    list->next = list;
+	list->prev = list;
+	list->next = list;
 }
 
 /*!
@@ -61,9 +60,9 @@ static inline void SRTM_List_Init(srtm_list_t *list)
  */
 static inline bool SRTM_List_IsEmpty(srtm_list_t *list)
 {
-    assert(list);
+	assert(list);
 
-    return list->next == list;
+	return list->next == list;
 }
 
 /*!
@@ -74,13 +73,13 @@ static inline bool SRTM_List_IsEmpty(srtm_list_t *list)
  */
 static inline void SRTM_List_AddHead(srtm_list_t *list, srtm_list_t *node)
 {
-    assert(list);
-    assert(node);
+	assert(list);
+	assert(node);
 
-    node->next       = list->next;
-    node->prev       = list;
-    list->next->prev = node;
-    list->next       = node;
+	node->next       = list->next;
+	node->prev       = list;
+	list->next->prev = node;
+	list->next       = node;
 }
 
 /*!
@@ -91,13 +90,13 @@ static inline void SRTM_List_AddHead(srtm_list_t *list, srtm_list_t *node)
  */
 static inline void SRTM_List_AddTail(srtm_list_t *list, srtm_list_t *node)
 {
-    assert(list);
-    assert(node);
+	assert(list);
+	assert(node);
 
-    node->prev       = list->prev;
-    node->next       = list;
-    list->prev->next = node;
-    list->prev       = node;
+	node->prev       = list->prev;
+	node->next       = list;
+	list->prev->next = node;
+	list->prev       = node;
 }
 
 /*!
@@ -108,7 +107,7 @@ static inline void SRTM_List_AddTail(srtm_list_t *list, srtm_list_t *node)
  */
 static inline void SRTM_List_InsertBefore(srtm_list_t *anchor, srtm_list_t *node)
 {
-    SRTM_List_AddTail(anchor, node);
+	SRTM_List_AddTail(anchor, node);
 }
 
 /*!
@@ -119,7 +118,7 @@ static inline void SRTM_List_InsertBefore(srtm_list_t *anchor, srtm_list_t *node
  */
 static inline void SRTM_List_InsertAfter(srtm_list_t *anchor, srtm_list_t *node)
 {
-    SRTM_List_AddHead(anchor, node);
+	SRTM_List_AddHead(anchor, node);
 }
 
 /*!
@@ -129,12 +128,12 @@ static inline void SRTM_List_InsertAfter(srtm_list_t *anchor, srtm_list_t *node)
  */
 static inline void SRTM_List_Remove(srtm_list_t *node)
 {
-    assert(node);
+	assert(node);
 
-    node->prev->next = node->next;
-    node->next->prev = node->prev;
-    /* clear node */
-    SRTM_List_Init(node);
+	node->prev->next = node->next;
+	node->next->prev = node->prev;
+	/* clear node */
+	SRTM_List_Init(node);
 }
 
 #ifdef __cplusplus

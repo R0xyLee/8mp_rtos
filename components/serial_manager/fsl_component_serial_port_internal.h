@@ -41,11 +41,11 @@ serial_manager_status_t Serial_UartRead(serial_handle_t serialHandle, uint8_t *b
 #if (defined(SERIAL_MANAGER_NON_BLOCKING_MODE) && (SERIAL_MANAGER_NON_BLOCKING_MODE > 0U))
 serial_manager_status_t Serial_UartCancelWrite(serial_handle_t serialHandle);
 serial_manager_status_t Serial_UartInstallTxCallback(serial_handle_t serialHandle,
-                                                     serial_manager_callback_t callback,
-                                                     void *callbackParam);
+        serial_manager_callback_t callback,
+        void *callbackParam);
 serial_manager_status_t Serial_UartInstallRxCallback(serial_handle_t serialHandle,
-                                                     serial_manager_callback_t callback,
-                                                     void *callbackParam);
+        serial_manager_callback_t callback,
+        void *callbackParam);
 void Serial_UartIsrFunction(serial_handle_t serialHandle);
 #endif
 serial_manager_status_t Serial_UartEnterLowpower(serial_handle_t serialHandle);
@@ -64,11 +64,11 @@ serial_manager_status_t Serial_RpmsgRead(serial_handle_t serialHandle, uint8_t *
 #if (defined(SERIAL_MANAGER_NON_BLOCKING_MODE) && (SERIAL_MANAGER_NON_BLOCKING_MODE > 0U))
 serial_manager_status_t Serial_RpmsgCancelWrite(serial_handle_t serialHandle);
 serial_manager_status_t Serial_RpmsgInstallTxCallback(serial_handle_t serialHandle,
-                                                      serial_manager_callback_t callback,
-                                                      void *callbackParam);
+        serial_manager_callback_t callback,
+        void *callbackParam);
 serial_manager_status_t Serial_RpmsgInstallRxCallback(serial_handle_t serialHandle,
-                                                      serial_manager_callback_t callback,
-                                                      void *callbackParam);
+        serial_manager_callback_t callback,
+        void *callbackParam);
 #endif
 serial_manager_status_t Serial_RpmsgEnterLowpower(serial_handle_t serialHandle);
 serial_manager_status_t Serial_RpmsgExitLowpower(serial_handle_t serialHandle);
@@ -81,11 +81,11 @@ serial_manager_status_t Serial_UsbCdcWrite(serial_handle_t serialHandle, uint8_t
 serial_manager_status_t Serial_UsbCdcRead(serial_handle_t serialHandle, uint8_t *buffer, uint32_t length);
 serial_manager_status_t Serial_UsbCdcCancelWrite(serial_handle_t serialHandle);
 serial_manager_status_t Serial_UsbCdcInstallTxCallback(serial_handle_t serialHandle,
-                                                       serial_manager_callback_t callback,
-                                                       void *callbackParam);
+        serial_manager_callback_t callback,
+        void *callbackParam);
 serial_manager_status_t Serial_UsbCdcInstallRxCallback(serial_handle_t serialHandle,
-                                                       serial_manager_callback_t callback,
-                                                       void *callbackParam);
+        serial_manager_callback_t callback,
+        void *callbackParam);
 void Serial_UsbCdcIsrFunction(serial_handle_t serialHandle);
 #endif
 
@@ -99,11 +99,11 @@ serial_manager_status_t Serial_SwoRead(serial_handle_t serialHandle, uint8_t *bu
 #if (defined(SERIAL_MANAGER_NON_BLOCKING_MODE) && (SERIAL_MANAGER_NON_BLOCKING_MODE > 0U))
 serial_manager_status_t Serial_SwoCancelWrite(serial_handle_t serialHandle);
 serial_manager_status_t Serial_SwoInstallTxCallback(serial_handle_t serialHandle,
-                                                    serial_manager_callback_t callback,
-                                                    void *callbackParam);
+        serial_manager_callback_t callback,
+        void *callbackParam);
 serial_manager_status_t Serial_SwoInstallRxCallback(serial_handle_t serialHandle,
-                                                    serial_manager_callback_t callback,
-                                                    void *callbackParam);
+        serial_manager_callback_t callback,
+        void *callbackParam);
 void Serial_SwoIsrFunction(serial_handle_t serialHandle);
 #endif
 #endif
@@ -115,11 +115,11 @@ serial_manager_status_t Serial_PortVirtualWrite(serial_handle_t serialHandle, ui
 serial_manager_status_t Serial_PortVirtualRead(serial_handle_t serialHandle, uint8_t *buffer, uint32_t length);
 serial_manager_status_t Serial_PortVirtualCancelWrite(serial_handle_t serialHandle);
 serial_manager_status_t Serial_PortVirtualInstallTxCallback(serial_handle_t serialHandle,
-                                                            serial_manager_callback_t callback,
-                                                            void *callbackParam);
+        serial_manager_callback_t callback,
+        void *callbackParam);
 serial_manager_status_t Serial_PortVirtualInstallRxCallback(serial_handle_t serialHandle,
-                                                            serial_manager_callback_t callback,
-                                                            void *callbackParam);
+        serial_manager_callback_t callback,
+        void *callbackParam);
 void Serial_PortVirtualIsrFunction(serial_handle_t serialHandle);
 #endif
 

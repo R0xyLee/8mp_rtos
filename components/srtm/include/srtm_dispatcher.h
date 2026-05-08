@@ -117,9 +117,9 @@ srtm_status_t SRTM_Dispatcher_UnregisterService(srtm_dispatcher_t disp, srtm_ser
  * @return SRTM_Status_Success on success and others on failure.
  */
 srtm_status_t SRTM_Dispatcher_Request(srtm_dispatcher_t disp,
-                                      srtm_request_t req,
-                                      srtm_response_t *pResp,
-                                      uint32_t timeout);
+        srtm_request_t req,
+        srtm_response_t *pResp,
+        uint32_t timeout);
 
 /*!
  * @brief Deliver request to peer core and return immediately.
@@ -137,9 +137,9 @@ srtm_status_t SRTM_Dispatcher_Request(srtm_dispatcher_t disp,
  * @return SRTM_Status_Success on success and others on failure.
  */
 srtm_status_t SRTM_Dispatcher_DeliverRequest(srtm_dispatcher_t disp,
-                                             srtm_request_t req,
-                                             srtm_dispatcher_resp_cb_t callback,
-                                             void *param);
+        srtm_request_t req,
+        srtm_dispatcher_resp_cb_t callback,
+        void *param);
 
 /*!
  * @brief Deliver response to peer core and return immediately.

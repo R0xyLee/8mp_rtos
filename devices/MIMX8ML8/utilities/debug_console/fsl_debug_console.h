@@ -158,15 +158,15 @@ status_t DbgConsole_ExitLowpower(void);
  * SDK_DEBUGCONSOLE_UART is not defined.
  */
 static inline status_t DbgConsole_Init(uint8_t instance,
-                                       uint32_t baudRate,
-                                       serial_port_type_t device,
-                                       uint32_t clkSrcFreq)
+        uint32_t baudRate,
+        serial_port_type_t device,
+        uint32_t clkSrcFreq)
 {
-    (void)instance;
-    (void)baudRate;
-    (void)device;
-    (void)clkSrcFreq;
-    return (status_t)kStatus_Fail;
+	(void)instance;
+	(void)baudRate;
+	(void)device;
+	(void)clkSrcFreq;
+	return (status_t)kStatus_Fail;
 }
 /*!
  * Use an error to replace the DbgConsole_Deinit when SDK_DEBUGCONSOLE is not DEBUGCONSOLE_REDIRECT_TO_SDK and
@@ -174,7 +174,7 @@ static inline status_t DbgConsole_Init(uint8_t instance,
  */
 static inline status_t DbgConsole_Deinit(void)
 {
-    return (status_t)kStatus_Fail;
+	return (status_t)kStatus_Fail;
 }
 
 /*!
@@ -183,7 +183,7 @@ static inline status_t DbgConsole_Deinit(void)
  */
 static inline status_t DbgConsole_EnterLowpower(void)
 {
-    return (status_t)kStatus_Fail;
+	return (status_t)kStatus_Fail;
 }
 
 /*!
@@ -192,7 +192,7 @@ static inline status_t DbgConsole_EnterLowpower(void)
  */
 static inline status_t DbgConsole_ExitLowpower(void)
 {
-    return (status_t)kStatus_Fail;
+	return (status_t)kStatus_Fail;
 }
 
 #endif /* ((SDK_DEBUGCONSOLE == DEBUGCONSOLE_REDIRECT_TO_SDK) || defined(SDK_DEBUGCONSOLE_UART)) */

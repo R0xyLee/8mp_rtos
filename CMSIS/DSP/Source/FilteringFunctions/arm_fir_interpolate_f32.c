@@ -130,778 +130,754 @@
  */
 #if defined(ARM_MATH_NEON)
 void arm_fir_interpolate_f32(
-  const arm_fir_interpolate_instance_f32 * S,
-  const float32_t * pSrc,
-  float32_t * pDst,
-  uint32_t blockSize)
+        const arm_fir_interpolate_instance_f32 *S,
+        const float32_t *pSrc,
+        float32_t *pDst,
+        uint32_t blockSize)
 {
-  float32_t *pState = S->pState;                 /* State pointer */
-  const float32_t *pCoeffs = S->pCoeffs;         /* Coefficient pointer */
-  float32_t *pStateCurnt;                        /* Points to the current sample of the state */
-  float32_t *ptr1;                               /* Temporary pointers for state buffer */
-  const float32_t *ptr2;                         /* Temporary pointers for coefficient buffer */
-  float32_t sum0;                                /* Accumulators */
-  float32_t x0, c0;                              /* Temporary variables to hold state and coefficient values */
-  uint32_t i, blkCnt, j;                         /* Loop counters */
-  uint16_t phaseLen = S->phaseLength, tapCnt;    /* Length of each polyphase filter component */
-  float32_t acc0, acc1, acc2, acc3;
-  float32_t x1, x2, x3;
-  uint32_t blkCntN4;
-  float32_t c1, c2, c3;
-
-  float32x4_t sum0v;
-  float32x4_t accV,accV0,accV1;
-  float32x4_t x0v,x1v,x2v,xa,xb;
-  uint32x4_t x0v_u,x1v_u,x2v_u,xa_u,xb_u;
-  float32x2_t tempV;
-
-  /* S->pState buffer contains previous frame (phaseLen - 1) samples */
-  /* pStateCurnt points to the location where the new input data should be written */
-  pStateCurnt = S->pState + (phaseLen - 1U);
-
-  /* Initialise  blkCnt */
-  blkCnt = blockSize >> 3;
-  blkCntN4 = blockSize & 7;
-
-  /* Loop unrolling */
-  while (blkCnt > 0U)
-  {
-    /* Copy new input samples into the state buffer */
-    sum0v = vld1q_f32(pSrc);
-    vst1q_f32(pStateCurnt,sum0v);
-    pSrc += 4;
-    pStateCurnt += 4;
-
-    sum0v = vld1q_f32(pSrc);
-    vst1q_f32(pStateCurnt,sum0v);
-    pSrc += 4;
-    pStateCurnt += 4;
-
-    /* Address modifier index of coefficient buffer */
-    j = 1U;
-
-    /* Loop over the Interpolation factor. */
-    i = (S->L);
-
-    while (i > 0U)
-    {
-      /* Set accumulator to zero */
-      accV0 = vdupq_n_f32(0.0);
-      accV1 = vdupq_n_f32(0.0);
-
-      /* Initialize state pointer */
-      ptr1 = pState;
-
-      /* Initialize coefficient pointer */
-      ptr2 = pCoeffs + (S->L - j);
-
-      /* Loop over the polyPhase length. Unroll by a factor of 4.
-       ** Repeat until we've computed numTaps-(4*S->L) coefficients. */
-      tapCnt = phaseLen >> 2U;
-     
-      x0v = vld1q_f32(ptr1);
-      x1v = vld1q_f32(ptr1 + 4);
-	
-      while (tapCnt > 0U)
-      {
-        /* Read the input samples */
-        x2v = vld1q_f32(ptr1 + 8);
-
-        /* Read the coefficients */
-        c0 = *(ptr2);
-
-        /* Perform the multiply-accumulate */
-        accV0 = vmlaq_n_f32(accV0,x0v,c0);
-        accV1 = vmlaq_n_f32(accV1,x1v,c0);
-       
-        /* Read the coefficients, inputs and perform multiply-accumulate */
-        c1 = *(ptr2 + S->L);
-	
-        xa = vextq_f32(x0v,x1v,1);
-        xb = vextq_f32(x1v,x2v,1);
-
-        accV0 = vmlaq_n_f32(accV0,xa,c1);
-        accV1 = vmlaq_n_f32(accV1,xb,c1);
-
-        /* Read the coefficients, inputs and perform multiply-accumulate */
-        c2 = *(ptr2 + S->L * 2);
-	
-        xa = vextq_f32(x0v,x1v,2);
-        xb = vextq_f32(x1v,x2v,2);
-        
-	accV0 = vmlaq_n_f32(accV0,xa,c2);
-        accV1 = vmlaq_n_f32(accV1,xb,c2);
-
-        /* Read the coefficients, inputs and perform multiply-accumulate */
-        c3 = *(ptr2 + S->L * 3);
-
-        xa = vextq_f32(x0v,x1v,3);
-        xb = vextq_f32(x1v,x2v,3);
-        
-	accV0 = vmlaq_n_f32(accV0,xa,c3);
-        accV1 = vmlaq_n_f32(accV1,xb,c3);
-
-        /* Upsampling is done by stuffing L-1 zeros between each sample.
-         * So instead of multiplying zeros with coefficients,
-         * Increment the coefficient pointer by interpolation factor times. */
-        ptr2 += 4 * S->L;
-        ptr1 += 4;
-        x0v = x1v;
-        x1v = x2v;
-
-        /* Decrement the loop counter */
-        tapCnt--;
-      }
-
-      /* If the polyPhase length is not a multiple of 4, compute the remaining filter taps */
-      tapCnt = phaseLen % 0x4U;
-
-      x2v = vld1q_f32(ptr1 + 8);
-
-      switch (tapCnt)
-      {
-        case 3:
-             c0 = *(ptr2);
-             accV0 = vmlaq_n_f32(accV0,x0v,c0);
-             accV1 = vmlaq_n_f32(accV1,x1v,c0);
-             ptr2 += S->L;
-
-             c0 = *(ptr2);
-
-             xa = vextq_f32(x0v,x1v,1);
-             xb = vextq_f32(x1v,x2v,1);
-
-             accV0 = vmlaq_n_f32(accV0,xa,c0);
-             accV1 = vmlaq_n_f32(accV1,xb,c0);
-             ptr2 += S->L;
-
-             c0 = *(ptr2);
-
-             xa = vextq_f32(x0v,x1v,2);
-             xb = vextq_f32(x1v,x2v,2);
-             
-	     accV0 = vmlaq_n_f32(accV0,xa,c0);
-             accV1 = vmlaq_n_f32(accV1,xb,c0);
-             ptr2 += S->L;
-
-        break;
-
-        case 2:
-             c0 = *(ptr2);
-             accV0 = vmlaq_n_f32(accV0,x0v,c0);
-             accV1 = vmlaq_n_f32(accV1,x1v,c0);
-             ptr2 += S->L;
-
-             c0 = *(ptr2);
-
-             xa = vextq_f32(x0v,x1v,1);
-             xb = vextq_f32(x1v,x2v,1);
-             
-	     accV0 = vmlaq_n_f32(accV0,xa,c0);
-             accV1 = vmlaq_n_f32(accV1,xb,c0);
-             ptr2 += S->L;
-
-        break;
+	float32_t *pState = S->pState;                 /* State pointer */
+	const float32_t *pCoeffs = S->pCoeffs;         /* Coefficient pointer */
+	float32_t *pStateCurnt;                        /* Points to the current sample of the state */
+	float32_t *ptr1;                               /* Temporary pointers for state buffer */
+	const float32_t *ptr2;                         /* Temporary pointers for coefficient buffer */
+	float32_t sum0;                                /* Accumulators */
+	float32_t x0, c0;                              /* Temporary variables to hold state and coefficient values */
+	uint32_t i, blkCnt, j;                         /* Loop counters */
+	uint16_t phaseLen = S->phaseLength, tapCnt;    /* Length of each polyphase filter component */
+	float32_t acc0, acc1, acc2, acc3;
+	float32_t x1, x2, x3;
+	uint32_t blkCntN4;
+	float32_t c1, c2, c3;
+
+	float32x4_t sum0v;
+	float32x4_t accV, accV0, accV1;
+	float32x4_t x0v, x1v, x2v, xa, xb;
+	uint32x4_t x0v_u, x1v_u, x2v_u, xa_u, xb_u;
+	float32x2_t tempV;
+
+	/* S->pState buffer contains previous frame (phaseLen - 1) samples */
+	/* pStateCurnt points to the location where the new input data should be written */
+	pStateCurnt = S->pState + (phaseLen - 1U);
+
+	/* Initialise  blkCnt */
+	blkCnt = blockSize >> 3;
+	blkCntN4 = blockSize & 7;
+
+	/* Loop unrolling */
+	while (blkCnt > 0U) {
+		/* Copy new input samples into the state buffer */
+		sum0v = vld1q_f32(pSrc);
+		vst1q_f32(pStateCurnt, sum0v);
+		pSrc += 4;
+		pStateCurnt += 4;
+
+		sum0v = vld1q_f32(pSrc);
+		vst1q_f32(pStateCurnt, sum0v);
+		pSrc += 4;
+		pStateCurnt += 4;
+
+		/* Address modifier index of coefficient buffer */
+		j = 1U;
+
+		/* Loop over the Interpolation factor. */
+		i = (S->L);
+
+		while (i > 0U) {
+			/* Set accumulator to zero */
+			accV0 = vdupq_n_f32(0.0);
+			accV1 = vdupq_n_f32(0.0);
+
+			/* Initialize state pointer */
+			ptr1 = pState;
+
+			/* Initialize coefficient pointer */
+			ptr2 = pCoeffs + (S->L - j);
+
+			/* Loop over the polyPhase length. Unroll by a factor of 4.
+			 ** Repeat until we've computed numTaps-(4*S->L) coefficients. */
+			tapCnt = phaseLen >> 2U;
+
+			x0v = vld1q_f32(ptr1);
+			x1v = vld1q_f32(ptr1 + 4);
 
-        case 1:
-             c0 = *(ptr2);
-             accV0 = vmlaq_n_f32(accV0,x0v,c0);
-             accV1 = vmlaq_n_f32(accV1,x1v,c0);
-             ptr2 += S->L;
+			while (tapCnt > 0U) {
+				/* Read the input samples */
+				x2v = vld1q_f32(ptr1 + 8);
 
-        break;
+				/* Read the coefficients */
+				c0 = *(ptr2);
 
-        default:
-        break;
-        
-      }
+				/* Perform the multiply-accumulate */
+				accV0 = vmlaq_n_f32(accV0, x0v, c0);
+				accV1 = vmlaq_n_f32(accV1, x1v, c0);
 
-      /* The result is in the accumulator, store in the destination buffer. */
-      *pDst = accV0[0];
-      *(pDst + S->L) = accV0[1];
-      *(pDst + 2 * S->L) = accV0[2];
-      *(pDst + 3 * S->L) = accV0[3];
+				/* Read the coefficients, inputs and perform multiply-accumulate */
+				c1 = *(ptr2 + S->L);
 
-      *(pDst + 4 * S->L) = accV1[0];
-      *(pDst + 5 * S->L) = accV1[1];
-      *(pDst + 6 * S->L) = accV1[2];
-      *(pDst + 7 * S->L) = accV1[3];
+				xa = vextq_f32(x0v, x1v, 1);
+				xb = vextq_f32(x1v, x2v, 1);
 
-      pDst++;
+				accV0 = vmlaq_n_f32(accV0, xa, c1);
+				accV1 = vmlaq_n_f32(accV1, xb, c1);
 
-      /* Increment the address modifier index of coefficient buffer */
-      j++;
+				/* Read the coefficients, inputs and perform multiply-accumulate */
+				c2 = *(ptr2 + S->L * 2);
 
-      /* Decrement the loop counter */
-      i--;
-    }
+				xa = vextq_f32(x0v, x1v, 2);
+				xb = vextq_f32(x1v, x2v, 2);
 
-    /* Advance the state pointer by 1
-     * to process the next group of interpolation factor number samples */
-    pState = pState + 8;
+				accV0 = vmlaq_n_f32(accV0, xa, c2);
+				accV1 = vmlaq_n_f32(accV1, xb, c2);
 
-    pDst += S->L * 7;
+				/* Read the coefficients, inputs and perform multiply-accumulate */
+				c3 = *(ptr2 + S->L * 3);
 
-    /* Decrement the loop counter */
-    blkCnt--;
-  }
+				xa = vextq_f32(x0v, x1v, 3);
+				xb = vextq_f32(x1v, x2v, 3);
 
-  /* If the blockSize is not a multiple of 4, compute any remaining output samples here.
-   ** No loop unrolling is used. */
+				accV0 = vmlaq_n_f32(accV0, xa, c3);
+				accV1 = vmlaq_n_f32(accV1, xb, c3);
 
-  while (blkCntN4 > 0U)
-  {
-    /* Copy new input sample into the state buffer */
-    *pStateCurnt++ = *pSrc++;
+				/* Upsampling is done by stuffing L-1 zeros between each sample.
+				 * So instead of multiplying zeros with coefficients,
+				 * Increment the coefficient pointer by interpolation factor times. */
+				ptr2 += 4 * S->L;
+				ptr1 += 4;
+				x0v = x1v;
+				x1v = x2v;
 
-    /* Address modifier index of coefficient buffer */
-    j = 1U;
+				/* Decrement the loop counter */
+				tapCnt--;
+			}
 
-    /* Loop over the Interpolation factor. */
-    i = S->L;
+			/* If the polyPhase length is not a multiple of 4, compute the remaining filter taps */
+			tapCnt = phaseLen % 0x4U;
 
-    while (i > 0U)
-    {
-      /* Set accumulator to zero */
-      sum0v = vdupq_n_f32(0.0);
+			x2v = vld1q_f32(ptr1 + 8);
 
-      /* Initialize state pointer */
-      ptr1 = pState;
+			switch (tapCnt) {
+			case 3:
+				c0 = *(ptr2);
+				accV0 = vmlaq_n_f32(accV0, x0v, c0);
+				accV1 = vmlaq_n_f32(accV1, x1v, c0);
+				ptr2 += S->L;
 
-      /* Initialize coefficient pointer */
-      ptr2 = pCoeffs + (S->L - j);
+				c0 = *(ptr2);
 
-      /* Loop over the polyPhase length. Unroll by a factor of 4.
-       ** Repeat until we've computed numTaps-(4*S->L) coefficients. */
-      tapCnt = phaseLen >> 2U;
+				xa = vextq_f32(x0v, x1v, 1);
+				xb = vextq_f32(x1v, x2v, 1);
 
-      while (tapCnt > 0U)
-      {
-        /* Read the coefficient */
-        x1v[0] = *(ptr2);
+				accV0 = vmlaq_n_f32(accV0, xa, c0);
+				accV1 = vmlaq_n_f32(accV1, xb, c0);
+				ptr2 += S->L;
 
-        /* Upsampling is done by stuffing L-1 zeros between each sample.
-         * So instead of multiplying zeros with coefficients,
-         * Increment the coefficient pointer by interpolation factor times. */
-        ptr2 += S->L;
+				c0 = *(ptr2);
 
-        /* Read the input sample */
-        x0v = vld1q_f32(ptr1);
-        ptr1 += 4;
+				xa = vextq_f32(x0v, x1v, 2);
+				xb = vextq_f32(x1v, x2v, 2);
 
-        /* Read the coefficient */
-        x1v[1] = *(ptr2);
+				accV0 = vmlaq_n_f32(accV0, xa, c0);
+				accV1 = vmlaq_n_f32(accV1, xb, c0);
+				ptr2 += S->L;
 
-        /* Increment the coefficient pointer by interpolation factor times. */
-        ptr2 += S->L;
+				break;
 
-        /* Read the coefficient */
-        x1v[2] = *(ptr2);
+			case 2:
+				c0 = *(ptr2);
+				accV0 = vmlaq_n_f32(accV0, x0v, c0);
+				accV1 = vmlaq_n_f32(accV1, x1v, c0);
+				ptr2 += S->L;
 
-        /* Increment the coefficient pointer by interpolation factor times. */
-        ptr2 += S->L;
+				c0 = *(ptr2);
 
-        /* Read the coefficient */
-        x1v[3] = *(ptr2);
+				xa = vextq_f32(x0v, x1v, 1);
+				xb = vextq_f32(x1v, x2v, 1);
 
-        /* Increment the coefficient pointer by interpolation factor times. */
-        ptr2 += S->L;
+				accV0 = vmlaq_n_f32(accV0, xa, c0);
+				accV1 = vmlaq_n_f32(accV1, xb, c0);
+				ptr2 += S->L;
 
-        sum0v = vmlaq_f32(sum0v,x0v,x1v);
-       
-        /* Decrement the loop counter */
-        tapCnt--;
-      }
+				break;
 
-      tempV = vpadd_f32(vget_low_f32(sum0v),vget_high_f32(sum0v));
-      sum0 = tempV[0] + tempV[1];
+			case 1:
+				c0 = *(ptr2);
+				accV0 = vmlaq_n_f32(accV0, x0v, c0);
+				accV1 = vmlaq_n_f32(accV1, x1v, c0);
+				ptr2 += S->L;
 
-      /* If the polyPhase length is not a multiple of 4, compute the remaining filter taps */
-      tapCnt = phaseLen % 0x4U;
+				break;
 
-      while (tapCnt > 0U)
-      {
-        /* Perform the multiply-accumulate */
-        sum0 += *(ptr1++) * (*ptr2);
+			default:
+				break;
 
-        /* Increment the coefficient pointer by interpolation factor times. */
-        ptr2 += S->L;
+			}
 
-        /* Decrement the loop counter */
-        tapCnt--;
-      }
+			/* The result is in the accumulator, store in the destination buffer. */
+			*pDst = accV0[0];
+			*(pDst + S->L) = accV0[1];
+			*(pDst + 2 * S->L) = accV0[2];
+			*(pDst + 3 * S->L) = accV0[3];
 
-      /* The result is in the accumulator, store in the destination buffer. */
-      *pDst++ = sum0;
+			*(pDst + 4 * S->L) = accV1[0];
+			*(pDst + 5 * S->L) = accV1[1];
+			*(pDst + 6 * S->L) = accV1[2];
+			*(pDst + 7 * S->L) = accV1[3];
 
-      /* Increment the address modifier index of coefficient buffer */
-      j++;
+			pDst++;
 
-      /* Decrement the loop counter */
-      i--;
-    }
+			/* Increment the address modifier index of coefficient buffer */
+			j++;
 
-    /* Advance the state pointer by 1
-     * to process the next group of interpolation factor number samples */
-    pState = pState + 1;
+			/* Decrement the loop counter */
+			i--;
+		}
 
-    /* Decrement the loop counter */
-    blkCntN4--;
-  }
+		/* Advance the state pointer by 1
+		 * to process the next group of interpolation factor number samples */
+		pState = pState + 8;
 
-  /* Processing is complete.
-   ** Now copy the last phaseLen - 1 samples to the satrt of the state buffer.
-   ** This prepares the state buffer for the next function call. */
+		pDst += S->L * 7;
 
-  /* Points to the start of the state buffer */
-  pStateCurnt = S->pState;
+		/* Decrement the loop counter */
+		blkCnt--;
+	}
 
-  tapCnt = (phaseLen - 1U) >> 2U;
+	/* If the blockSize is not a multiple of 4, compute any remaining output samples here.
+	 ** No loop unrolling is used. */
 
-  /* Copy data */
-  while (tapCnt > 0U)
-  {
-    sum0v = vld1q_f32(pState);
-    vst1q_f32(pStateCurnt,sum0v);
-    pState += 4;
-    pStateCurnt += 4;
+	while (blkCntN4 > 0U) {
+		/* Copy new input sample into the state buffer */
+		*pStateCurnt++ = *pSrc++;
 
-    /* Decrement the loop counter */
-    tapCnt--;
-  }
+		/* Address modifier index of coefficient buffer */
+		j = 1U;
 
-  tapCnt = (phaseLen - 1U) % 0x04U;
+		/* Loop over the Interpolation factor. */
+		i = S->L;
 
-  /* copy data */
-  while (tapCnt > 0U)
-  {
-    *pStateCurnt++ = *pState++;
+		while (i > 0U) {
+			/* Set accumulator to zero */
+			sum0v = vdupq_n_f32(0.0);
 
-    /* Decrement the loop counter */
-    tapCnt--;
-  }
+			/* Initialize state pointer */
+			ptr1 = pState;
+
+			/* Initialize coefficient pointer */
+			ptr2 = pCoeffs + (S->L - j);
+
+			/* Loop over the polyPhase length. Unroll by a factor of 4.
+			 ** Repeat until we've computed numTaps-(4*S->L) coefficients. */
+			tapCnt = phaseLen >> 2U;
+
+			while (tapCnt > 0U) {
+				/* Read the coefficient */
+				x1v[0] = *(ptr2);
+
+				/* Upsampling is done by stuffing L-1 zeros between each sample.
+				 * So instead of multiplying zeros with coefficients,
+				 * Increment the coefficient pointer by interpolation factor times. */
+				ptr2 += S->L;
+
+				/* Read the input sample */
+				x0v = vld1q_f32(ptr1);
+				ptr1 += 4;
+
+				/* Read the coefficient */
+				x1v[1] = *(ptr2);
+
+				/* Increment the coefficient pointer by interpolation factor times. */
+				ptr2 += S->L;
+
+				/* Read the coefficient */
+				x1v[2] = *(ptr2);
+
+				/* Increment the coefficient pointer by interpolation factor times. */
+				ptr2 += S->L;
+
+				/* Read the coefficient */
+				x1v[3] = *(ptr2);
+
+				/* Increment the coefficient pointer by interpolation factor times. */
+				ptr2 += S->L;
+
+				sum0v = vmlaq_f32(sum0v, x0v, x1v);
+
+				/* Decrement the loop counter */
+				tapCnt--;
+			}
+
+			tempV = vpadd_f32(vget_low_f32(sum0v), vget_high_f32(sum0v));
+			sum0 = tempV[0] + tempV[1];
+
+			/* If the polyPhase length is not a multiple of 4, compute the remaining filter taps */
+			tapCnt = phaseLen % 0x4U;
+
+			while (tapCnt > 0U) {
+				/* Perform the multiply-accumulate */
+				sum0 += *(ptr1++) * (*ptr2);
+
+				/* Increment the coefficient pointer by interpolation factor times. */
+				ptr2 += S->L;
+
+				/* Decrement the loop counter */
+				tapCnt--;
+			}
+
+			/* The result is in the accumulator, store in the destination buffer. */
+			*pDst++ = sum0;
+
+			/* Increment the address modifier index of coefficient buffer */
+			j++;
+
+			/* Decrement the loop counter */
+			i--;
+		}
+
+		/* Advance the state pointer by 1
+		 * to process the next group of interpolation factor number samples */
+		pState = pState + 1;
+
+		/* Decrement the loop counter */
+		blkCntN4--;
+	}
+
+	/* Processing is complete.
+	 ** Now copy the last phaseLen - 1 samples to the satrt of the state buffer.
+	 ** This prepares the state buffer for the next function call. */
+
+	/* Points to the start of the state buffer */
+	pStateCurnt = S->pState;
+
+	tapCnt = (phaseLen - 1U) >> 2U;
+
+	/* Copy data */
+	while (tapCnt > 0U) {
+		sum0v = vld1q_f32(pState);
+		vst1q_f32(pStateCurnt, sum0v);
+		pState += 4;
+		pStateCurnt += 4;
+
+		/* Decrement the loop counter */
+		tapCnt--;
+	}
+
+	tapCnt = (phaseLen - 1U) % 0x04U;
+
+	/* copy data */
+	while (tapCnt > 0U) {
+		*pStateCurnt++ = *pState++;
+
+		/* Decrement the loop counter */
+		tapCnt--;
+	}
 
 }
 #else
 
 void arm_fir_interpolate_f32(
-  const arm_fir_interpolate_instance_f32 * S,
-  const float32_t * pSrc,
-        float32_t * pDst,
+        const arm_fir_interpolate_instance_f32 *S,
+        const float32_t *pSrc,
+        float32_t *pDst,
         uint32_t blockSize)
 {
 #if (1)
-//#if !defined(ARM_MATH_CM0_FAMILY)
+	//#if !defined(ARM_MATH_CM0_FAMILY)
 
-        float32_t *pState = S->pState;                 /* State pointer */
-  const float32_t *pCoeffs = S->pCoeffs;               /* Coefficient pointer */
-        float32_t *pStateCur;                          /* Points to the current sample of the state */
-        float32_t *ptr1;                               /* Temporary pointer for state buffer */
-  const float32_t *ptr2;                               /* Temporary pointer for coefficient buffer */
-        float32_t sum0;                                /* Accumulators */
-        uint32_t i, blkCnt, tapCnt;                    /* Loop counters */
-        uint32_t phaseLen = S->phaseLength;            /* Length of each polyphase filter component */
-        uint32_t j;
+	float32_t *pState = S->pState;                 /* State pointer */
+	const float32_t *pCoeffs = S->pCoeffs;               /* Coefficient pointer */
+	float32_t *pStateCur;                          /* Points to the current sample of the state */
+	float32_t *ptr1;                               /* Temporary pointer for state buffer */
+	const float32_t *ptr2;                               /* Temporary pointer for coefficient buffer */
+	float32_t sum0;                                /* Accumulators */
+	uint32_t i, blkCnt, tapCnt;                    /* Loop counters */
+	uint32_t phaseLen = S->phaseLength;            /* Length of each polyphase filter component */
+	uint32_t j;
 
 #if defined (ARM_MATH_LOOPUNROLL)
-        float32_t acc0, acc1, acc2, acc3;
-        float32_t x0, x1, x2, x3;
-        float32_t c0, c1, c2, c3;
+	float32_t acc0, acc1, acc2, acc3;
+	float32_t x0, x1, x2, x3;
+	float32_t c0, c1, c2, c3;
 #endif
 
-  /* S->pState buffer contains previous frame (phaseLen - 1) samples */
-  /* pStateCur points to the location where the new input data should be written */
-  pStateCur = S->pState + (phaseLen - 1U);
+	/* S->pState buffer contains previous frame (phaseLen - 1) samples */
+	/* pStateCur points to the location where the new input data should be written */
+	pStateCur = S->pState + (phaseLen - 1U);
 
 #if defined (ARM_MATH_LOOPUNROLL)
 
-  /* Loop unrolling: Compute 4 outputs at a time */
-  blkCnt = blockSize >> 2U;
+	/* Loop unrolling: Compute 4 outputs at a time */
+	blkCnt = blockSize >> 2U;
 
-  while (blkCnt > 0U)
-  {
-    /* Copy new input sample into the state buffer */
-    *pStateCur++ = *pSrc++;
-    *pStateCur++ = *pSrc++;
-    *pStateCur++ = *pSrc++;
-    *pStateCur++ = *pSrc++;
+	while (blkCnt > 0U) {
+		/* Copy new input sample into the state buffer */
+		*pStateCur++ = *pSrc++;
+		*pStateCur++ = *pSrc++;
+		*pStateCur++ = *pSrc++;
+		*pStateCur++ = *pSrc++;
 
-    /* Address modifier index of coefficient buffer */
-    j = 1U;
+		/* Address modifier index of coefficient buffer */
+		j = 1U;
 
-    /* Loop over the Interpolation factor. */
-    i = (S->L);
+		/* Loop over the Interpolation factor. */
+		i = (S->L);
 
-    while (i > 0U)
-    {
-      /* Set accumulator to zero */
-      acc0 = 0.0f;
-      acc1 = 0.0f;
-      acc2 = 0.0f;
-      acc3 = 0.0f;
+		while (i > 0U) {
+			/* Set accumulator to zero */
+			acc0 = 0.0f;
+			acc1 = 0.0f;
+			acc2 = 0.0f;
+			acc3 = 0.0f;
 
-      /* Initialize state pointer */
-      ptr1 = pState;
+			/* Initialize state pointer */
+			ptr1 = pState;
 
-      /* Initialize coefficient pointer */
-      ptr2 = pCoeffs + (S->L - j);
+			/* Initialize coefficient pointer */
+			ptr2 = pCoeffs + (S->L - j);
 
-      /* Loop over the polyPhase length. Unroll by a factor of 4.
-         Repeat until we've computed numTaps-(4*S->L) coefficients. */
-      tapCnt = phaseLen >> 2U;
+			/* Loop over the polyPhase length. Unroll by a factor of 4.
+			   Repeat until we've computed numTaps-(4*S->L) coefficients. */
+			tapCnt = phaseLen >> 2U;
 
-      x0 = *(ptr1++);
-      x1 = *(ptr1++);
-      x2 = *(ptr1++);
+			x0 = *(ptr1++);
+			x1 = *(ptr1++);
+			x2 = *(ptr1++);
 
-      while (tapCnt > 0U)
-      {
-        /* Read the input sample */
-        x3 = *(ptr1++);
+			while (tapCnt > 0U) {
+				/* Read the input sample */
+				x3 = *(ptr1++);
 
-        /* Read the coefficient */
-        c0 = *(ptr2);
+				/* Read the coefficient */
+				c0 = *(ptr2);
 
-        /* Perform the multiply-accumulate */
-        acc0 += x0 * c0;
-        acc1 += x1 * c0;
-        acc2 += x2 * c0;
-        acc3 += x3 * c0;
+				/* Perform the multiply-accumulate */
+				acc0 += x0 * c0;
+				acc1 += x1 * c0;
+				acc2 += x2 * c0;
+				acc3 += x3 * c0;
 
-        /* Read the coefficient */
-        c1 = *(ptr2 + S->L);
+				/* Read the coefficient */
+				c1 = *(ptr2 + S->L);
 
-        /* Read the input sample */
-        x0 = *(ptr1++);
+				/* Read the input sample */
+				x0 = *(ptr1++);
 
-        /* Perform the multiply-accumulate */
-        acc0 += x1 * c1;
-        acc1 += x2 * c1;
-        acc2 += x3 * c1;
-        acc3 += x0 * c1;
+				/* Perform the multiply-accumulate */
+				acc0 += x1 * c1;
+				acc1 += x2 * c1;
+				acc2 += x3 * c1;
+				acc3 += x0 * c1;
 
-        /* Read the coefficient */
-        c2 = *(ptr2 + S->L * 2);
+				/* Read the coefficient */
+				c2 = *(ptr2 + S->L * 2);
 
-        /* Read the input sample */
-        x1 = *(ptr1++);
+				/* Read the input sample */
+				x1 = *(ptr1++);
 
-        /* Perform the multiply-accumulate */
-        acc0 += x2 * c2;
-        acc1 += x3 * c2;
-        acc2 += x0 * c2;
-        acc3 += x1 * c2;
+				/* Perform the multiply-accumulate */
+				acc0 += x2 * c2;
+				acc1 += x3 * c2;
+				acc2 += x0 * c2;
+				acc3 += x1 * c2;
 
-        /* Read the coefficient */
-        c3 = *(ptr2 + S->L * 3);
+				/* Read the coefficient */
+				c3 = *(ptr2 + S->L * 3);
 
-        /* Read the input sample */
-        x2 = *(ptr1++);
+				/* Read the input sample */
+				x2 = *(ptr1++);
 
-        /* Perform the multiply-accumulate */
-        acc0 += x3 * c3;
-        acc1 += x0 * c3;
-        acc2 += x1 * c3;
-        acc3 += x2 * c3;
+				/* Perform the multiply-accumulate */
+				acc0 += x3 * c3;
+				acc1 += x0 * c3;
+				acc2 += x1 * c3;
+				acc3 += x2 * c3;
 
 
-        /* Upsampling is done by stuffing L-1 zeros between each sample.
-         * So instead of multiplying zeros with coefficients,
-         * Increment the coefficient pointer by interpolation factor times. */
-        ptr2 += 4 * S->L;
+				/* Upsampling is done by stuffing L-1 zeros between each sample.
+				 * So instead of multiplying zeros with coefficients,
+				 * Increment the coefficient pointer by interpolation factor times. */
+				ptr2 += 4 * S->L;
 
-        /* Decrement loop counter */
-        tapCnt--;
-      }
+				/* Decrement loop counter */
+				tapCnt--;
+			}
 
-      /* If the polyPhase length is not a multiple of 4, compute the remaining filter taps */
-      tapCnt = phaseLen % 0x4U;
+			/* If the polyPhase length is not a multiple of 4, compute the remaining filter taps */
+			tapCnt = phaseLen % 0x4U;
 
-      while (tapCnt > 0U)
-      {
-        /* Read the input sample */
-        x3 = *(ptr1++);
+			while (tapCnt > 0U) {
+				/* Read the input sample */
+				x3 = *(ptr1++);
 
-        /* Read the coefficient */
-        c0 = *(ptr2);
+				/* Read the coefficient */
+				c0 = *(ptr2);
 
-        /* Perform the multiply-accumulate */
-        acc0 += x0 * c0;
-        acc1 += x1 * c0;
-        acc2 += x2 * c0;
-        acc3 += x3 * c0;
+				/* Perform the multiply-accumulate */
+				acc0 += x0 * c0;
+				acc1 += x1 * c0;
+				acc2 += x2 * c0;
+				acc3 += x3 * c0;
 
-        /* Increment the coefficient pointer by interpolation factor times. */
-        ptr2 += S->L;
+				/* Increment the coefficient pointer by interpolation factor times. */
+				ptr2 += S->L;
 
-        /* update states for next sample processing */
-        x0 = x1;
-        x1 = x2;
-        x2 = x3;
+				/* update states for next sample processing */
+				x0 = x1;
+				x1 = x2;
+				x2 = x3;
 
-        /* Decrement loop counter */
-        tapCnt--;
-      }
+				/* Decrement loop counter */
+				tapCnt--;
+			}
 
-      /* The result is in the accumulator, store in the destination buffer. */
-      *(pDst           ) = acc0;
-      *(pDst +     S->L) = acc1;
-      *(pDst + 2 * S->L) = acc2;
-      *(pDst + 3 * S->L) = acc3;
+			/* The result is in the accumulator, store in the destination buffer. */
+			*(pDst) = acc0;
+			*(pDst +     S->L) = acc1;
+			*(pDst + 2 * S->L) = acc2;
+			*(pDst + 3 * S->L) = acc3;
 
-      pDst++;
+			pDst++;
 
-      /* Increment the address modifier index of coefficient buffer */
-      j++;
+			/* Increment the address modifier index of coefficient buffer */
+			j++;
 
-      /* Decrement loop counter */
-      i--;
-    }
+			/* Decrement loop counter */
+			i--;
+		}
 
-    /* Advance the state pointer by 1
-     * to process the next group of interpolation factor number samples */
-    pState = pState + 4;
+		/* Advance the state pointer by 1
+		 * to process the next group of interpolation factor number samples */
+		pState = pState + 4;
 
-    pDst += S->L * 3;
+		pDst += S->L * 3;
 
-    /* Decrement loop counter */
-    blkCnt--;
-  }
+		/* Decrement loop counter */
+		blkCnt--;
+	}
 
-  /* Loop unrolling: Compute remaining outputs */
-  blkCnt = blockSize % 0x4U;
+	/* Loop unrolling: Compute remaining outputs */
+	blkCnt = blockSize % 0x4U;
 
 #else
 
-  /* Initialize blkCnt with number of samples */
-  blkCnt = blockSize;
+	/* Initialize blkCnt with number of samples */
+	blkCnt = blockSize;
 
 #endif /* #if defined (ARM_MATH_LOOPUNROLL) */
 
-  while (blkCnt > 0U)
-  {
-    /* Copy new input sample into the state buffer */
-    *pStateCur++ = *pSrc++;
+	while (blkCnt > 0U) {
+		/* Copy new input sample into the state buffer */
+		*pStateCur++ = *pSrc++;
 
-    /* Address modifier index of coefficient buffer */
-    j = 1U;
+		/* Address modifier index of coefficient buffer */
+		j = 1U;
 
-    /* Loop over the Interpolation factor. */
-    i = S->L;
+		/* Loop over the Interpolation factor. */
+		i = S->L;
 
-    while (i > 0U)
-    {
-      /* Set accumulator to zero */
-      sum0 = 0.0f;
+		while (i > 0U) {
+			/* Set accumulator to zero */
+			sum0 = 0.0f;
 
-      /* Initialize state pointer */
-      ptr1 = pState;
+			/* Initialize state pointer */
+			ptr1 = pState;
 
-      /* Initialize coefficient pointer */
-      ptr2 = pCoeffs + (S->L - j);
+			/* Initialize coefficient pointer */
+			ptr2 = pCoeffs + (S->L - j);
 
-      /* Loop over the polyPhase length.
-         Repeat until we've computed numTaps-(4*S->L) coefficients. */
+			/* Loop over the polyPhase length.
+			   Repeat until we've computed numTaps-(4*S->L) coefficients. */
 
 #if defined (ARM_MATH_LOOPUNROLL)
 
-     /* Loop unrolling: Compute 4 outputs at a time */
-      tapCnt = phaseLen >> 2U;
+			/* Loop unrolling: Compute 4 outputs at a time */
+			tapCnt = phaseLen >> 2U;
 
-      while (tapCnt > 0U)
-      {
-        /* Perform the multiply-accumulate */
-        sum0 += *ptr1++ * *ptr2;
+			while (tapCnt > 0U) {
+				/* Perform the multiply-accumulate */
+				sum0 += *ptr1++ * *ptr2;
 
-        /* Upsampling is done by stuffing L-1 zeros between each sample.
-         * So instead of multiplying zeros with coefficients,
-         * Increment the coefficient pointer by interpolation factor times. */
-        ptr2 += S->L;
+				/* Upsampling is done by stuffing L-1 zeros between each sample.
+				 * So instead of multiplying zeros with coefficients,
+				 * Increment the coefficient pointer by interpolation factor times. */
+				ptr2 += S->L;
 
-        sum0 += *ptr1++ * *ptr2;
-        ptr2 += S->L;
+				sum0 += *ptr1++ * *ptr2;
+				ptr2 += S->L;
 
-        sum0 += *ptr1++ * *ptr2;
-        ptr2 += S->L;
+				sum0 += *ptr1++ * *ptr2;
+				ptr2 += S->L;
 
-        sum0 += *ptr1++ * *ptr2;
-        ptr2 += S->L;
+				sum0 += *ptr1++ * *ptr2;
+				ptr2 += S->L;
 
-        /* Decrement loop counter */
-        tapCnt--;
-      }
+				/* Decrement loop counter */
+				tapCnt--;
+			}
 
-      /* Loop unrolling: Compute remaining outputs */
-      tapCnt = phaseLen % 0x4U;
+			/* Loop unrolling: Compute remaining outputs */
+			tapCnt = phaseLen % 0x4U;
 
 #else
 
-      /* Initialize tapCnt with number of samples */
-      tapCnt = phaseLen;
+			/* Initialize tapCnt with number of samples */
+			tapCnt = phaseLen;
 
 #endif /* #if defined (ARM_MATH_LOOPUNROLL) */
 
-      while (tapCnt > 0U)
-      {
-        /* Perform the multiply-accumulate */
-        sum0 += *ptr1++ * *ptr2;
+			while (tapCnt > 0U) {
+				/* Perform the multiply-accumulate */
+				sum0 += *ptr1++ * *ptr2;
 
-        /* Upsampling is done by stuffing L-1 zeros between each sample.
-         * So instead of multiplying zeros with coefficients,
-         * Increment the coefficient pointer by interpolation factor times. */
-        ptr2 += S->L;
+				/* Upsampling is done by stuffing L-1 zeros between each sample.
+				 * So instead of multiplying zeros with coefficients,
+				 * Increment the coefficient pointer by interpolation factor times. */
+				ptr2 += S->L;
 
-        /* Decrement loop counter */
-        tapCnt--;
-      }
+				/* Decrement loop counter */
+				tapCnt--;
+			}
 
-      /* The result is in the accumulator, store in the destination buffer. */
-      *pDst++ = sum0;
+			/* The result is in the accumulator, store in the destination buffer. */
+			*pDst++ = sum0;
 
-      /* Increment the address modifier index of coefficient buffer */
-      j++;
+			/* Increment the address modifier index of coefficient buffer */
+			j++;
 
-      /* Decrement the loop counter */
-      i--;
-    }
+			/* Decrement the loop counter */
+			i--;
+		}
 
-    /* Advance the state pointer by 1
-     * to process the next group of interpolation factor number samples */
-    pState = pState + 1;
+		/* Advance the state pointer by 1
+		 * to process the next group of interpolation factor number samples */
+		pState = pState + 1;
 
-    /* Decrement the loop counter */
-    blkCnt--;
-  }
+		/* Decrement the loop counter */
+		blkCnt--;
+	}
 
-  /* Processing is complete.
-     Now copy the last phaseLen - 1 samples to the satrt of the state buffer.
-     This prepares the state buffer for the next function call. */
+	/* Processing is complete.
+	   Now copy the last phaseLen - 1 samples to the satrt of the state buffer.
+	   This prepares the state buffer for the next function call. */
 
-  /* Points to the start of the state buffer */
-  pStateCur = S->pState;
+	/* Points to the start of the state buffer */
+	pStateCur = S->pState;
 
 #if defined (ARM_MATH_LOOPUNROLL)
 
-  /* Loop unrolling: Compute 4 outputs at a time */
-  tapCnt = (phaseLen - 1U) >> 2U;
+	/* Loop unrolling: Compute 4 outputs at a time */
+	tapCnt = (phaseLen - 1U) >> 2U;
 
-  /* copy data */
-  while (tapCnt > 0U)
-  {
-    *pStateCur++ = *pState++;
-    *pStateCur++ = *pState++;
-    *pStateCur++ = *pState++;
-    *pStateCur++ = *pState++;
+	/* copy data */
+	while (tapCnt > 0U) {
+		*pStateCur++ = *pState++;
+		*pStateCur++ = *pState++;
+		*pStateCur++ = *pState++;
+		*pStateCur++ = *pState++;
 
-    /* Decrement loop counter */
-    tapCnt--;
-  }
+		/* Decrement loop counter */
+		tapCnt--;
+	}
 
-  /* Loop unrolling: Compute remaining outputs */
-  tapCnt = (phaseLen - 1U) % 0x04U;
+	/* Loop unrolling: Compute remaining outputs */
+	tapCnt = (phaseLen - 1U) % 0x04U;
 
 #else
 
-    /* Initialize tapCnt with number of samples */
-    tapCnt = (phaseLen - 1U);
+	/* Initialize tapCnt with number of samples */
+	tapCnt = (phaseLen - 1U);
 
 #endif /* #if defined (ARM_MATH_LOOPUNROLL) */
 
-  /* Copy data */
-  while (tapCnt > 0U)
-  {
-    *pStateCur++ = *pState++;
+	/* Copy data */
+	while (tapCnt > 0U) {
+		*pStateCur++ = *pState++;
 
-    /* Decrement loop counter */
-    tapCnt--;
-  }
+		/* Decrement loop counter */
+		tapCnt--;
+	}
 
 #else
-/* alternate version for CM0_FAMILY */
+	/* alternate version for CM0_FAMILY */
 
-        float32_t *pState = S->pState;                 /* State pointer */
-  const float32_t *pCoeffs = S->pCoeffs;               /* Coefficient pointer */
-        float32_t *pStateCur;                        /* Points to the current sample of the state */
-        float32_t *ptr1;                               /* Temporary pointer for state buffer */
-  const float32_t *ptr2;                               /* Temporary pointer for coefficient buffer */
-        float32_t sum0;                                /* Accumulators */
-        uint32_t i, blkCnt, tapCnt;                    /* Loop counters */
-        uint32_t phaseLen = S->phaseLength;            /* Length of each polyphase filter component */
+	float32_t *pState = S->pState;                 /* State pointer */
+	const float32_t *pCoeffs = S->pCoeffs;               /* Coefficient pointer */
+	float32_t *pStateCur;                        /* Points to the current sample of the state */
+	float32_t *ptr1;                               /* Temporary pointer for state buffer */
+	const float32_t *ptr2;                               /* Temporary pointer for coefficient buffer */
+	float32_t sum0;                                /* Accumulators */
+	uint32_t i, blkCnt, tapCnt;                    /* Loop counters */
+	uint32_t phaseLen = S->phaseLength;            /* Length of each polyphase filter component */
 
-  /* S->pState buffer contains previous frame (phaseLen - 1) samples */
-  /* pStateCur points to the location where the new input data should be written */
-  pStateCur = S->pState + (phaseLen - 1U);
+	/* S->pState buffer contains previous frame (phaseLen - 1) samples */
+	/* pStateCur points to the location where the new input data should be written */
+	pStateCur = S->pState + (phaseLen - 1U);
 
-  /* Total number of intput samples */
-  blkCnt = blockSize;
+	/* Total number of intput samples */
+	blkCnt = blockSize;
 
-  /* Loop over the blockSize. */
-  while (blkCnt > 0U)
-  {
-    /* Copy new input sample into the state buffer */
-    *pStateCur++ = *pSrc++;
+	/* Loop over the blockSize. */
+	while (blkCnt > 0U) {
+		/* Copy new input sample into the state buffer */
+		*pStateCur++ = *pSrc++;
 
-    /* Loop over the Interpolation factor. */
-    i = S->L;
+		/* Loop over the Interpolation factor. */
+		i = S->L;
 
-    while (i > 0U)
-    {
-      /* Set accumulator to zero */
-      sum0 = 0.0f;
+		while (i > 0U) {
+			/* Set accumulator to zero */
+			sum0 = 0.0f;
 
-      /* Initialize state pointer */
-      ptr1 = pState;
+			/* Initialize state pointer */
+			ptr1 = pState;
 
-      /* Initialize coefficient pointer */
-      ptr2 = pCoeffs + (i - 1U);
+			/* Initialize coefficient pointer */
+			ptr2 = pCoeffs + (i - 1U);
 
-      /* Loop over the polyPhase length */
-      tapCnt = phaseLen;
+			/* Loop over the polyPhase length */
+			tapCnt = phaseLen;
 
-      while (tapCnt > 0U)
-      {
-        /* Perform the multiply-accumulate */
-        sum0 += *ptr1++ * *ptr2;
+			while (tapCnt > 0U) {
+				/* Perform the multiply-accumulate */
+				sum0 += *ptr1++ * *ptr2;
 
-        /* Increment the coefficient pointer by interpolation factor times. */
-        ptr2 += S->L;
+				/* Increment the coefficient pointer by interpolation factor times. */
+				ptr2 += S->L;
 
-        /* Decrement the loop counter */
-        tapCnt--;
-      }
+				/* Decrement the loop counter */
+				tapCnt--;
+			}
 
-      /* The result is in the accumulator, store in the destination buffer. */
-      *pDst++ = sum0;
+			/* The result is in the accumulator, store in the destination buffer. */
+			*pDst++ = sum0;
 
-      /* Decrement loop counter */
-      i--;
-    }
+			/* Decrement loop counter */
+			i--;
+		}
 
-    /* Advance the state pointer by 1
-     * to process the next group of interpolation factor number samples */
-    pState = pState + 1;
+		/* Advance the state pointer by 1
+		 * to process the next group of interpolation factor number samples */
+		pState = pState + 1;
 
-    /* Decrement loop counter */
-    blkCnt--;
-  }
+		/* Decrement loop counter */
+		blkCnt--;
+	}
 
-  /* Processing is complete.
-   ** Now copy the last phaseLen - 1 samples to the start of the state buffer.
-   ** This prepares the state buffer for the next function call. */
+	/* Processing is complete.
+	 ** Now copy the last phaseLen - 1 samples to the start of the state buffer.
+	 ** This prepares the state buffer for the next function call. */
 
-  /* Points to the start of the state buffer */
-  pStateCur = S->pState;
+	/* Points to the start of the state buffer */
+	pStateCur = S->pState;
 
-  tapCnt = phaseLen - 1U;
+	tapCnt = phaseLen - 1U;
 
-  /* Copy data */
-  while (tapCnt > 0U)
-  {
-    *pStateCur++ = *pState++;
+	/* Copy data */
+	while (tapCnt > 0U) {
+		*pStateCur++ = *pState++;
 
-    /* Decrement loop counter */
-    tapCnt--;
-  }
+		/* Decrement loop counter */
+		tapCnt--;
+	}
 
 #endif /* #if !defined(ARM_MATH_CM0_FAMILY) */
 

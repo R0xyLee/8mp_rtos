@@ -19,20 +19,19 @@
 /**
  * @brief SRTM peer core struct
  */
-struct _srtm_peercore
-{
-    uint32_t id;          /*!< SRTM peer core ID */
-    srtm_list_t node;     /*!< SRTM peer core list node to link to a list */
-    srtm_list_t channels; /*!< SRTM channel list to maintain channels added to the peer core */
-    srtm_list_t pendingQ; /*!< Pending messages queue */
+struct _srtm_peercore {
+	uint32_t id;          /*!< SRTM peer core ID */
+	srtm_list_t node;     /*!< SRTM peer core list node to link to a list */
+	srtm_list_t channels; /*!< SRTM channel list to maintain channels added to the peer core */
+	srtm_list_t pendingQ; /*!< Pending messages queue */
 
-    srtm_dispatcher_t dispatcher;
-    srtm_mutex_t mutex;
+	srtm_dispatcher_t dispatcher;
+	srtm_mutex_t mutex;
 
-    bool started;
-    srtm_peercore_state_t state;
-    srtm_peercore_wakeup_cb_t wakeupFunc;
-    void *wakeupParam;
+	bool started;
+	srtm_peercore_state_t state;
+	srtm_peercore_wakeup_cb_t wakeupFunc;
+	void *wakeupParam;
 };
 
 /*******************************************************************************

@@ -32,23 +32,22 @@ typedef struct _pdm_sdma_handle pdm_sdma_handle_t;
 typedef void (*pdm_sdma_callback_t)(PDM_Type *base, pdm_sdma_handle_t *handle, status_t status, void *userData);
 
 /*! @brief PDM DMA transfer handle, users should not touch the content of the handle.*/
-struct _pdm_sdma_handle
-{
-    sdma_handle_t *dmaHandle;     /*!< DMA handler for PDM send */
-    uint8_t nbytes;               /*!< eDMA minor byte transfer count initially configured. */
-    uint8_t fifoWidth;            /*!< fifo width */
-    uint8_t endChannel;           /*!< The last enabled channel */
-    uint8_t channelNums;          /*!< total channel numbers */
-    uint8_t count;                /*!< The transfer data count in a DMA request */
-    uint32_t state;               /*!< Internal state for PDM eDMA transfer */
-    uint32_t eventSource;         /*!< PDM event source number */
-    pdm_sdma_callback_t callback; /*!< Callback for users while transfer finish or error occurs */
-    void *userData;               /*!< User callback parameter */
-    sdma_buffer_descriptor_t bdPool[PDM_XFER_QUEUE_SIZE]; /*!< BD pool for SDMA transfer. */
-    pdm_transfer_t pdmQueue[PDM_XFER_QUEUE_SIZE];         /*!< Transfer queue storing queued transfer. */
-    size_t transferSize[PDM_XFER_QUEUE_SIZE];             /*!< Data bytes need to transfer */
-    volatile uint8_t queueUser;                           /*!< Index for user to queue transfer. */
-    volatile uint8_t queueDriver;                         /*!< Index for driver to get the transfer data and size */
+struct _pdm_sdma_handle {
+	sdma_handle_t *dmaHandle;     /*!< DMA handler for PDM send */
+	uint8_t nbytes;               /*!< eDMA minor byte transfer count initially configured. */
+	uint8_t fifoWidth;            /*!< fifo width */
+	uint8_t endChannel;           /*!< The last enabled channel */
+	uint8_t channelNums;          /*!< total channel numbers */
+	uint8_t count;                /*!< The transfer data count in a DMA request */
+	uint32_t state;               /*!< Internal state for PDM eDMA transfer */
+	uint32_t eventSource;         /*!< PDM event source number */
+	pdm_sdma_callback_t callback; /*!< Callback for users while transfer finish or error occurs */
+	void *userData;               /*!< User callback parameter */
+	sdma_buffer_descriptor_t bdPool[PDM_XFER_QUEUE_SIZE]; /*!< BD pool for SDMA transfer. */
+	pdm_transfer_t pdmQueue[PDM_XFER_QUEUE_SIZE];         /*!< Transfer queue storing queued transfer. */
+	size_t transferSize[PDM_XFER_QUEUE_SIZE];             /*!< Data bytes need to transfer */
+	volatile uint8_t queueUser;                           /*!< Index for user to queue transfer. */
+	volatile uint8_t queueDriver;                         /*!< Index for driver to get the transfer data and size */
 };
 
 /*******************************************************************************
@@ -77,11 +76,11 @@ extern "C" {
  * @param eventSource PDM event source number.
  */
 void PDM_TransferCreateHandleSDMA(PDM_Type *base,
-                                  pdm_sdma_handle_t *handle,
-                                  pdm_sdma_callback_t callback,
-                                  void *userData,
-                                  sdma_handle_t *dmaHandle,
-                                  uint32_t eventSource);
+        pdm_sdma_handle_t *handle,
+        pdm_sdma_callback_t callback,
+        void *userData,
+        sdma_handle_t *dmaHandle,
+        uint32_t eventSource);
 
 /*!
  * @brief Performs a non-blocking PDM receive using eDMA.
@@ -115,9 +114,9 @@ void PDM_TransferAbortReceiveSDMA(PDM_Type *base, pdm_sdma_handle_t *handle);
  * @param config channel configurations.
  */
 void PDM_SetChannelConfigSDMA(PDM_Type *base,
-                              pdm_sdma_handle_t *handle,
-                              uint32_t channel,
-                              const pdm_channel_config_t *config);
+        pdm_sdma_handle_t *handle,
+        uint32_t channel,
+        const pdm_channel_config_t *config);
 
 /*! @} */
 

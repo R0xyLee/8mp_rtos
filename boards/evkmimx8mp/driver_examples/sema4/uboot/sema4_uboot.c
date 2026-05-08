@@ -45,12 +45,11 @@
 
 void SEMA4_IRQHandler(void)
 {
-    /* If gate notification IRQ received, then lock the gate. */
-    if (((1U << APP_SEMA4_GATE) & SEMA4_GetGateNotifyStatus(APP_SEMA4, APP_PROC_NUM)))
-    {
-        SEMA4_TryLock(APP_SEMA4, APP_SEMA4_GATE, APP_PROC_NUM);
-    }
-    __DSB();
+	/* If gate notification IRQ received, then lock the gate. */
+	if (((1U << APP_SEMA4_GATE) & SEMA4_GetGateNotifyStatus(APP_SEMA4, APP_PROC_NUM))) {
+		SEMA4_TryLock(APP_SEMA4, APP_SEMA4_GATE, APP_PROC_NUM);
+	}
+	__DSB();
 }
 
 /*!
@@ -58,64 +57,61 @@ void SEMA4_IRQHandler(void)
  */
 int main(void)
 {
-    /* M7 has its local cache and enabled by default,
-     * need to set smart subsystems (0x28000000 ~ 0x3FFFFFFF)
-     * non-cacheable before accessing this address region */
-    BOARD_InitMemory();
+	/* M7 has its local cache and enabled by default,
+	 * need to set smart subsystems (0x28000000 ~ 0x3FFFFFFF)
+	 * non-cacheable before accessing this address region */
+	BOARD_InitMemory();
 
-    /* Board specific RDC settings */
-    BOARD_RdcInit();
+	/* Board specific RDC settings */
+	BOARD_RdcInit();
 
-    BOARD_InitPins();
-    BOARD_BootClockRUN();
-    BOARD_InitDebugConsole();
+	BOARD_InitPins();
+	BOARD_BootClockRUN();
+	BOARD_InitDebugConsole();
 
-    PRINTF("SEMA4 uboot example start\r\n");
+	PRINTF("SEMA4 uboot example start\r\n");
 
-    SEMA4_Init(APP_SEMA4);
+	SEMA4_Init(APP_SEMA4);
 
-    SEMA4_EnableGateNotifyInterrupt(APP_SEMA4, APP_PROC_NUM, (1 << APP_SEMA4_GATE));
+	SEMA4_EnableGateNotifyInterrupt(APP_SEMA4, APP_PROC_NUM, (1 << APP_SEMA4_GATE));
 
-    SOC_EnableSEMA4Intterrupt();
+	SOC_EnableSEMA4Intterrupt();
 
-    /* Step 1: The other core lock the sema4 gate. */
-    PRINTF("Lock sema4 gate in uboot using:\r\n");
-    PRINTF(" > mw.b 0x%08x %d 1 \r\n", APP_SEMA4_GATE_ADDR, APP_OTHER_PROC_NUM + 1);
+	/* Step 1: The other core lock the sema4 gate. */
+	PRINTF("Lock sema4 gate in uboot using:\r\n");
+	PRINTF(" > mw.b 0x%08x %d 1 \r\n", APP_SEMA4_GATE_ADDR, APP_OTHER_PROC_NUM + 1);
 
-    /* Wait SEMA4 gate is locked by the other core. */
-    while (SEMA4_GetLockProc(APP_SEMA4, APP_SEMA4_GATE) != APP_OTHER_PROC_NUM)
-    {
-    }
+	/* Wait SEMA4 gate is locked by the other core. */
+	while (SEMA4_GetLockProc(APP_SEMA4, APP_SEMA4_GATE) != APP_OTHER_PROC_NUM) {
+	}
 
-    /* Step 2: Current core try to lock the sema4 gate and lock failed. */
-    APP_ASSERT(kStatus_Fail == SEMA4_TryLock(APP_SEMA4, APP_SEMA4_GATE, APP_PROC_NUM));
+	/* Step 2: Current core try to lock the sema4 gate and lock failed. */
+	APP_ASSERT(kStatus_Fail == SEMA4_TryLock(APP_SEMA4, APP_SEMA4_GATE, APP_PROC_NUM));
 
-    /* Step 3: The other core unlock the sema4 gate. */
-    PRINTF("Unlock sema4 gate in uboot using:\r\n");
-    PRINTF(" > mw.b 0x%08x 0 1 \r\n", APP_SEMA4_GATE_ADDR);
+	/* Step 3: The other core unlock the sema4 gate. */
+	PRINTF("Unlock sema4 gate in uboot using:\r\n");
+	PRINTF(" > mw.b 0x%08x 0 1 \r\n", APP_SEMA4_GATE_ADDR);
 
-    /* Wait SEMA4 gate is locked by the other core. */
-    while (SEMA4_GetLockProc(APP_SEMA4, APP_SEMA4_GATE) == APP_OTHER_PROC_NUM)
-    {
-    }
+	/* Wait SEMA4 gate is locked by the other core. */
+	while (SEMA4_GetLockProc(APP_SEMA4, APP_SEMA4_GATE) == APP_OTHER_PROC_NUM) {
+	}
 
-    /*
-     * When the other core unlocked the gate, current core receives the notification
-     * interrupt and lock the gate in ISR.
-     */
-    APP_ASSERT(SEMA4_GetLockProc(APP_SEMA4, APP_SEMA4_GATE) == APP_PROC_NUM);
+	/*
+	 * When the other core unlocked the gate, current core receives the notification
+	 * interrupt and lock the gate in ISR.
+	 */
+	APP_ASSERT(SEMA4_GetLockProc(APP_SEMA4, APP_SEMA4_GATE) == APP_PROC_NUM);
 
-    SEMA4_Unlock(APP_SEMA4, APP_SEMA4_GATE);
+	SEMA4_Unlock(APP_SEMA4, APP_SEMA4_GATE);
 
-    SOC_DisableSEMA4Intterrupt();
+	SOC_DisableSEMA4Intterrupt();
 
-    SEMA4_DisableGateNotifyInterrupt(APP_SEMA4, APP_PROC_NUM, (1 << APP_SEMA4_GATE));
+	SEMA4_DisableGateNotifyInterrupt(APP_SEMA4, APP_PROC_NUM, (1 << APP_SEMA4_GATE));
 
-    SEMA4_Deinit(APP_SEMA4);
+	SEMA4_Deinit(APP_SEMA4);
 
-    PRINTF("SEMA4 uboot example success\r\n");
+	PRINTF("SEMA4 uboot example success\r\n");
 
-    while (1)
-    {
-    }
+	while (1) {
+	}
 }

@@ -96,62 +96,57 @@
 typedef void *hal_uart_handle_t;
 
 /*! @brief UART status */
-typedef enum _hal_uart_status
-{
-    kStatus_HAL_UartSuccess = kStatus_Success,                       /*!< Successfully */
-    kStatus_HAL_UartTxBusy  = MAKE_STATUS(kStatusGroup_HAL_UART, 1), /*!< TX busy */
-    kStatus_HAL_UartRxBusy  = MAKE_STATUS(kStatusGroup_HAL_UART, 2), /*!< RX busy */
-    kStatus_HAL_UartTxIdle  = MAKE_STATUS(kStatusGroup_HAL_UART, 3), /*!< HAL UART transmitter is idle. */
-    kStatus_HAL_UartRxIdle  = MAKE_STATUS(kStatusGroup_HAL_UART, 4), /*!< HAL UART receiver is idle */
-    kStatus_HAL_UartBaudrateNotSupport =
-        MAKE_STATUS(kStatusGroup_HAL_UART, 5), /*!< Baudrate is not support in current clock source */
-    kStatus_HAL_UartProtocolError = MAKE_STATUS(
-        kStatusGroup_HAL_UART,
-        6),                                                        /*!< Error occurs for Noise, Framing, Parity, etc.
+typedef enum _hal_uart_status {
+	kStatus_HAL_UartSuccess = kStatus_Success,                       /*!< Successfully */
+	kStatus_HAL_UartTxBusy  = MAKE_STATUS(kStatusGroup_HAL_UART, 1), /*!< TX busy */
+	kStatus_HAL_UartRxBusy  = MAKE_STATUS(kStatusGroup_HAL_UART, 2), /*!< RX busy */
+	kStatus_HAL_UartTxIdle  = MAKE_STATUS(kStatusGroup_HAL_UART, 3), /*!< HAL UART transmitter is idle. */
+	kStatus_HAL_UartRxIdle  = MAKE_STATUS(kStatusGroup_HAL_UART, 4), /*!< HAL UART receiver is idle */
+	kStatus_HAL_UartBaudrateNotSupport =
+	        MAKE_STATUS(kStatusGroup_HAL_UART, 5), /*!< Baudrate is not support in current clock source */
+	kStatus_HAL_UartProtocolError = MAKE_STATUS(
+	                kStatusGroup_HAL_UART,
+	                6),                                                        /*!< Error occurs for Noise, Framing, Parity, etc.
                                                                         For transactional transfer, The up layer needs to abort the transfer and then starts again */
-    kStatus_HAL_UartError = MAKE_STATUS(kStatusGroup_HAL_UART, 7), /*!< Error occurs on HAL UART */
+	kStatus_HAL_UartError = MAKE_STATUS(kStatusGroup_HAL_UART, 7), /*!< Error occurs on HAL UART */
 } hal_uart_status_t;
 
 /*! @brief UART parity mode. */
-typedef enum _hal_uart_parity_mode
-{
-    kHAL_UartParityDisabled = 0x0U, /*!< Parity disabled */
-    kHAL_UartParityEven     = 0x2U, /*!< Parity even enabled */
-    kHAL_UartParityOdd      = 0x3U, /*!< Parity odd enabled */
+typedef enum _hal_uart_parity_mode {
+	kHAL_UartParityDisabled = 0x0U, /*!< Parity disabled */
+	kHAL_UartParityEven     = 0x2U, /*!< Parity even enabled */
+	kHAL_UartParityOdd      = 0x3U, /*!< Parity odd enabled */
 } hal_uart_parity_mode_t;
 
 #if (defined(UART_ADAPTER_NON_BLOCKING_MODE) && (UART_ADAPTER_NON_BLOCKING_MODE > 0U))
 /*! @brief UART Block Mode. */
-typedef enum _hal_uart_block_mode
-{
-    kHAL_UartNonBlockMode = 0x0U, /*!< Uart NonBlock Mode */
-    kHAL_UartBlockMode    = 0x1U, /*!< Uart Block Mode */
+typedef enum _hal_uart_block_mode {
+	kHAL_UartNonBlockMode = 0x0U, /*!< Uart NonBlock Mode */
+	kHAL_UartBlockMode    = 0x1U, /*!< Uart Block Mode */
 } hal_uart_block_mode_t;
 #endif /* UART_ADAPTER_NON_BLOCKING_MODE */
 
 /*! @brief UART stop bit count. */
-typedef enum _hal_uart_stop_bit_count
-{
-    kHAL_UartOneStopBit = 0U, /*!< One stop bit */
-    kHAL_UartTwoStopBit = 1U, /*!< Two stop bits */
+typedef enum _hal_uart_stop_bit_count {
+	kHAL_UartOneStopBit = 0U, /*!< One stop bit */
+	kHAL_UartTwoStopBit = 1U, /*!< Two stop bits */
 } hal_uart_stop_bit_count_t;
 
 /*! @brief UART configuration structure. */
-typedef struct _hal_uart_config
-{
-    uint32_t srcClock_Hz;                   /*!< Source clock */
-    uint32_t baudRate_Bps;                  /*!< Baud rate  */
-    hal_uart_parity_mode_t parityMode;      /*!< Parity mode, disabled (default), even, odd */
-    hal_uart_stop_bit_count_t stopBitCount; /*!< Number of stop bits, 1 stop bit (default) or 2 stop bits  */
-    uint8_t enableRx;                       /*!< Enable RX */
-    uint8_t enableTx;                       /*!< Enable TX */
-    uint8_t enableRxRTS;                    /*!< Enable RX RTS */
-    uint8_t enableTxCTS;                    /*!< Enable TX CTS */
-    uint8_t instance; /*!< Instance (0 - UART0, 1 - UART1, ...), detail information please refer to the
+typedef struct _hal_uart_config {
+	uint32_t srcClock_Hz;                   /*!< Source clock */
+	uint32_t baudRate_Bps;                  /*!< Baud rate  */
+	hal_uart_parity_mode_t parityMode;      /*!< Parity mode, disabled (default), even, odd */
+	hal_uart_stop_bit_count_t stopBitCount; /*!< Number of stop bits, 1 stop bit (default) or 2 stop bits  */
+	uint8_t enableRx;                       /*!< Enable RX */
+	uint8_t enableTx;                       /*!< Enable TX */
+	uint8_t enableRxRTS;                    /*!< Enable RX RTS */
+	uint8_t enableTxCTS;                    /*!< Enable TX CTS */
+	uint8_t instance; /*!< Instance (0 - UART0, 1 - UART1, ...), detail information please refer to the
                            SOC corresponding RM.
                            Invalid instance value will cause initialization failure. */
 #if (defined(UART_ADAPTER_NON_BLOCKING_MODE) && (UART_ADAPTER_NON_BLOCKING_MODE > 0U))
-    hal_uart_block_mode_t mode; /*!< Uart  block mode */
+	hal_uart_block_mode_t mode; /*!< Uart  block mode */
 #endif                          /* UART_ADAPTER_NON_BLOCKING_MODE */
 } hal_uart_config_t;
 
@@ -159,10 +154,9 @@ typedef struct _hal_uart_config
 typedef void (*hal_uart_transfer_callback_t)(hal_uart_handle_t handle, hal_uart_status_t status, void *callbackParam);
 
 /*! @brief UART transfer structure. */
-typedef struct _hal_uart_transfer
-{
-    uint8_t *data;   /*!< The buffer of data to be transfer.*/
-    size_t dataSize; /*!< The byte count to be transfer. */
+typedef struct _hal_uart_transfer {
+	uint8_t *data;   /*!< The buffer of data to be transfer.*/
+	size_t dataSize; /*!< The byte count to be transfer. */
 } hal_uart_transfer_t;
 
 /*******************************************************************************
@@ -290,8 +284,8 @@ hal_uart_status_t HAL_UartSendBlocking(hal_uart_handle_t handle, const uint8_t *
  * @retval kStatus_HAL_UartSuccess Successfully install the callback.
  */
 hal_uart_status_t HAL_UartTransferInstallCallback(hal_uart_handle_t handle,
-                                                  hal_uart_transfer_callback_t callback,
-                                                  void *callbackParam);
+        hal_uart_transfer_callback_t callback,
+        void *callbackParam);
 
 /*!
  * @brief Receives a buffer of data using an interrupt method.
@@ -411,8 +405,8 @@ hal_uart_status_t HAL_UartTransferAbortSend(hal_uart_handle_t handle);
  * @retval kStatus_HAL_UartSuccess Successfully install the callback.
  */
 hal_uart_status_t HAL_UartInstallCallback(hal_uart_handle_t handle,
-                                          hal_uart_transfer_callback_t callback,
-                                          void *callbackParam);
+        hal_uart_transfer_callback_t callback,
+        void *callbackParam);
 
 /*!
  * @brief Receives a buffer of data using an interrupt method.

@@ -55,29 +55,30 @@ BOARD_InitPins:
  * Description   : Configures pin routing and optionally pin electrical features.
  *
  * END ****************************************************************************************************************/
-void BOARD_InitPins(void) {                                /*!< Function assigned for the core: Cortex-M7F[m7] */
-    IOMUXC_SetPinMux(IOMUXC_SAI5_RXC_AUDIOMIX_PDM_CLK, 0U);
-    IOMUXC_SetPinConfig(IOMUXC_SAI5_RXC_AUDIOMIX_PDM_CLK, 
-                        IOMUXC_SW_PAD_CTL_PAD_DSE(3U) |
-                        IOMUXC_SW_PAD_CTL_PAD_FSEL_MASK |
-                        IOMUXC_SW_PAD_CTL_PAD_PUE_MASK |
-                        IOMUXC_SW_PAD_CTL_PAD_HYS_MASK |
-                        IOMUXC_SW_PAD_CTL_PAD_PE_MASK);
-    IOMUXC_SetPinMux(IOMUXC_SAI5_RXD0_AUDIOMIX_PDM_BIT_STREAM0, 0U);
-    IOMUXC_SetPinConfig(IOMUXC_SAI5_RXD0_AUDIOMIX_PDM_BIT_STREAM0, 
-                        IOMUXC_SW_PAD_CTL_PAD_DSE(3U) |
-                        IOMUXC_SW_PAD_CTL_PAD_FSEL_MASK |
-                        IOMUXC_SW_PAD_CTL_PAD_PUE_MASK |
-                        IOMUXC_SW_PAD_CTL_PAD_HYS_MASK |
-                        IOMUXC_SW_PAD_CTL_PAD_PE_MASK);
-    IOMUXC_SetPinMux(IOMUXC_UART4_RXD_UART4_RX, 0U);
-    IOMUXC_SetPinConfig(IOMUXC_UART4_RXD_UART4_RX, 
-                        IOMUXC_SW_PAD_CTL_PAD_PUE_MASK |
-                        IOMUXC_SW_PAD_CTL_PAD_PE_MASK);
-    IOMUXC_SetPinMux(IOMUXC_UART4_TXD_UART4_TX, 0U);
-    IOMUXC_SetPinConfig(IOMUXC_UART4_TXD_UART4_TX, 
-                        IOMUXC_SW_PAD_CTL_PAD_PUE_MASK |
-                        IOMUXC_SW_PAD_CTL_PAD_PE_MASK);
+void BOARD_InitPins(void)                                  /*!< Function assigned for the core: Cortex-M7F[m7] */
+{
+	IOMUXC_SetPinMux(IOMUXC_SAI5_RXC_AUDIOMIX_PDM_CLK, 0U);
+	IOMUXC_SetPinConfig(IOMUXC_SAI5_RXC_AUDIOMIX_PDM_CLK,
+	        IOMUXC_SW_PAD_CTL_PAD_DSE(3U) |
+	        IOMUXC_SW_PAD_CTL_PAD_FSEL_MASK |
+	        IOMUXC_SW_PAD_CTL_PAD_PUE_MASK |
+	        IOMUXC_SW_PAD_CTL_PAD_HYS_MASK |
+	        IOMUXC_SW_PAD_CTL_PAD_PE_MASK);
+	IOMUXC_SetPinMux(IOMUXC_SAI5_RXD0_AUDIOMIX_PDM_BIT_STREAM0, 0U);
+	IOMUXC_SetPinConfig(IOMUXC_SAI5_RXD0_AUDIOMIX_PDM_BIT_STREAM0,
+	        IOMUXC_SW_PAD_CTL_PAD_DSE(3U) |
+	        IOMUXC_SW_PAD_CTL_PAD_FSEL_MASK |
+	        IOMUXC_SW_PAD_CTL_PAD_PUE_MASK |
+	        IOMUXC_SW_PAD_CTL_PAD_HYS_MASK |
+	        IOMUXC_SW_PAD_CTL_PAD_PE_MASK);
+	IOMUXC_SetPinMux(IOMUXC_UART4_RXD_UART4_RX, 0U);
+	IOMUXC_SetPinConfig(IOMUXC_UART4_RXD_UART4_RX,
+	        IOMUXC_SW_PAD_CTL_PAD_PUE_MASK |
+	        IOMUXC_SW_PAD_CTL_PAD_PE_MASK);
+	IOMUXC_SetPinMux(IOMUXC_UART4_TXD_UART4_TX, 0U);
+	IOMUXC_SetPinConfig(IOMUXC_UART4_TXD_UART4_TX,
+	        IOMUXC_SW_PAD_CTL_PAD_PUE_MASK |
+	        IOMUXC_SW_PAD_CTL_PAD_PE_MASK);
 }
 
 /***********************************************************************************************************************

@@ -31,30 +31,26 @@
 
 static list_status_t LIST_Error_Check(list_handle_t list, list_element_handle_t newElement)
 {
-    list_status_t listStatus = kLIST_Ok;
+	list_status_t listStatus = kLIST_Ok;
 #if (defined(GENERIC_LIST_DUPLICATED_CHECKING) && (GENERIC_LIST_DUPLICATED_CHECKING > 0U))
-    list_element_handle_t element = list->head;
+	list_element_handle_t element = list->head;
 #endif
-    if ((list->max != 0U) && (list->max == list->size))
-    {
-        listStatus = kLIST_Full; /*List is full*/
-    }
+	if ((list->max != 0U) && (list->max == list->size)) {
+		listStatus = kLIST_Full; /*List is full*/
+	}
 #if (defined(GENERIC_LIST_DUPLICATED_CHECKING) && (GENERIC_LIST_DUPLICATED_CHECKING > 0U))
-    else
-    {
-        while (element != NULL) /*Scan list*/
-        {
-            /* Determine if element is duplicated */
-            if (element == newElement)
-            {
-                listStatus = kLIST_DuplicateError;
-                break;
-            }
-            element = element->next;
-        }
-    }
+	else {
+		while (element != NULL) { /*Scan list*/
+			/* Determine if element is duplicated */
+			if (element == newElement) {
+				listStatus = kLIST_DuplicateError;
+				break;
+			}
+			element = element->next;
+		}
+	}
 #endif
-    return listStatus;
+	return listStatus;
 }
 
 /*! *********************************************************************************
@@ -79,10 +75,10 @@ static list_status_t LIST_Error_Check(list_handle_t list, list_element_handle_t 
  ********************************************************************************** */
 void LIST_Init(list_handle_t list, uint32_t max)
 {
-    list->head = NULL;
-    list->tail = NULL;
-    list->max  = (uint16_t)max;
-    list->size = 0;
+	list->head = NULL;
+	list->tail = NULL;
+	list->max  = (uint16_t)max;
+	list->size = 0;
 }
 
 /*! *********************************************************************************
@@ -102,7 +98,7 @@ void LIST_Init(list_handle_t list, uint32_t max)
  ********************************************************************************** */
 list_handle_t LIST_GetList(list_element_handle_t element)
 {
-    return element->list;
+	return element->list;
 }
 
 /*! *********************************************************************************
@@ -123,32 +119,28 @@ list_handle_t LIST_GetList(list_element_handle_t element)
  ********************************************************************************** */
 list_status_t LIST_AddTail(list_handle_t list, list_element_handle_t element)
 {
-    LIST_ENTER_CRITICAL();
-    list_status_t listStatus = kLIST_Ok;
+	LIST_ENTER_CRITICAL();
+	list_status_t listStatus = kLIST_Ok;
 
-    listStatus = LIST_Error_Check(list, element);
-    if (listStatus == kLIST_Ok) /* Avoiding list status error */
-    {
-        if (list->size == 0U)
-        {
-            list->head = element;
-        }
-        else
-        {
-            list->tail->next = element;
-        }
+	listStatus = LIST_Error_Check(list, element);
+	if (listStatus == kLIST_Ok) { /* Avoiding list status error */
+		if (list->size == 0U) {
+			list->head = element;
+		} else {
+			list->tail->next = element;
+		}
 #if (defined(GENERIC_LIST_LIGHT) && (GENERIC_LIST_LIGHT > 0U))
 #else
-        element->prev = list->tail;
+		element->prev = list->tail;
 #endif
-        element->list = list;
-        element->next = NULL;
-        list->tail    = element;
-        list->size++;
-    }
+		element->list = list;
+		element->next = NULL;
+		list->tail    = element;
+		list->size++;
+	}
 
-    LIST_EXIT_CRITICAL();
-    return listStatus;
+	LIST_EXIT_CRITICAL();
+	return listStatus;
 }
 
 /*! *********************************************************************************
@@ -169,33 +161,30 @@ list_status_t LIST_AddTail(list_handle_t list, list_element_handle_t element)
  ********************************************************************************** */
 list_status_t LIST_AddHead(list_handle_t list, list_element_handle_t element)
 {
-    LIST_ENTER_CRITICAL();
-    list_status_t listStatus = kLIST_Ok;
+	LIST_ENTER_CRITICAL();
+	list_status_t listStatus = kLIST_Ok;
 
-    listStatus = LIST_Error_Check(list, element);
-    if (listStatus == kLIST_Ok) /* Avoiding list status error */
-    {
-        /* Links element to the head of the list */
-        if (list->size == 0U)
-        {
-            list->tail = element;
-        }
+	listStatus = LIST_Error_Check(list, element);
+	if (listStatus == kLIST_Ok) { /* Avoiding list status error */
+		/* Links element to the head of the list */
+		if (list->size == 0U) {
+			list->tail = element;
+		}
 #if (defined(GENERIC_LIST_LIGHT) && (GENERIC_LIST_LIGHT > 0U))
 #else
-        else
-        {
-            list->head->prev = element;
-        }
-        element->prev = NULL;
+		else {
+			list->head->prev = element;
+		}
+		element->prev = NULL;
 #endif
-        element->list = list;
-        element->next = list->head;
-        list->head    = element;
-        list->size++;
-    }
+		element->list = list;
+		element->next = list->head;
+		list->head    = element;
+		list->size++;
+	}
 
-    LIST_EXIT_CRITICAL();
-    return listStatus;
+	LIST_EXIT_CRITICAL();
+	return listStatus;
 }
 
 /*! *********************************************************************************
@@ -215,35 +204,30 @@ list_status_t LIST_AddHead(list_handle_t list, list_element_handle_t element)
  ********************************************************************************** */
 list_element_handle_t LIST_RemoveHead(list_handle_t list)
 {
-    list_element_handle_t element;
+	list_element_handle_t element;
 
-    LIST_ENTER_CRITICAL();
+	LIST_ENTER_CRITICAL();
 
-    if ((NULL == list) || (list->size == 0U))
-    {
-        element = NULL; /*LIST_ is empty*/
-    }
-    else
-    {
-        element = list->head;
-        list->size--;
-        if (list->size == 0U)
-        {
-            list->tail = NULL;
-        }
+	if ((NULL == list) || (list->size == 0U)) {
+		element = NULL; /*LIST_ is empty*/
+	} else {
+		element = list->head;
+		list->size--;
+		if (list->size == 0U) {
+			list->tail = NULL;
+		}
 #if (defined(GENERIC_LIST_LIGHT) && (GENERIC_LIST_LIGHT > 0U))
 #else
-        else
-        {
-            element->next->prev = NULL;
-        }
+		else {
+			element->next->prev = NULL;
+		}
 #endif
-        element->list = NULL;
-        list->head    = element->next; /*Is NULL if element is head*/
-    }
+		element->list = NULL;
+		list->head    = element->next; /*Is NULL if element is head*/
+	}
 
-    LIST_EXIT_CRITICAL();
-    return element;
+	LIST_EXIT_CRITICAL();
+	return element;
 }
 
 /*! *********************************************************************************
@@ -263,7 +247,7 @@ list_element_handle_t LIST_RemoveHead(list_handle_t list)
  ********************************************************************************** */
 list_element_handle_t LIST_GetHead(list_handle_t list)
 {
-    return list->head;
+	return list->head;
 }
 
 /*! *********************************************************************************
@@ -283,7 +267,7 @@ list_element_handle_t LIST_GetHead(list_handle_t list)
  ********************************************************************************** */
 list_element_handle_t LIST_GetNext(list_element_handle_t element)
 {
-    return element->next;
+	return element->next;
 }
 
 /*! *********************************************************************************
@@ -304,9 +288,9 @@ list_element_handle_t LIST_GetNext(list_element_handle_t element)
 list_element_handle_t LIST_GetPrev(list_element_handle_t element)
 {
 #if (defined(GENERIC_LIST_LIGHT) && (GENERIC_LIST_LIGHT > 0U))
-    return NULL;
+	return NULL;
 #else
-    return element->prev;
+	return element->prev;
 #endif
 }
 
@@ -327,55 +311,45 @@ list_element_handle_t LIST_GetPrev(list_element_handle_t element)
  ********************************************************************************** */
 list_status_t LIST_RemoveElement(list_element_handle_t element)
 {
-    list_status_t listStatus = kLIST_Ok;
-    LIST_ENTER_CRITICAL();
+	list_status_t listStatus = kLIST_Ok;
+	LIST_ENTER_CRITICAL();
 
-    if (element->list == NULL)
-    {
-        listStatus = kLIST_OrphanElement; /*Element was previusly removed or never added*/
-    }
-    else
-    {
+	if (element->list == NULL) {
+		listStatus = kLIST_OrphanElement; /*Element was previusly removed or never added*/
+	} else {
 #if (defined(GENERIC_LIST_LIGHT) && (GENERIC_LIST_LIGHT > 0U))
-        list_element_handle_t element_list = element->list->head;
-        while (NULL != element_list)
-        {
-            if (element->list->head == element)
-            {
-                element->list->head = element_list->next;
-                break;
-            }
-            if (element_list->next == element)
-            {
-                element_list->next = element->next;
-                break;
-            }
-            element_list = element_list->next;
-        }
+		list_element_handle_t element_list = element->list->head;
+		while (NULL != element_list) {
+			if (element->list->head == element) {
+				element->list->head = element_list->next;
+				break;
+			}
+			if (element_list->next == element) {
+				element_list->next = element->next;
+				break;
+			}
+			element_list = element_list->next;
+		}
 #else
-        if (element->prev == NULL) /*Element is head or solo*/
-        {
-            element->list->head = element->next; /*is null if solo*/
-        }
-        if (element->next == NULL) /*Element is tail or solo*/
-        {
-            element->list->tail = element->prev; /*is null if solo*/
-        }
-        if (element->prev != NULL) /*Element is not head*/
-        {
-            element->prev->next = element->next;
-        }
-        if (element->next != NULL) /*Element is not tail*/
-        {
-            element->next->prev = element->prev;
-        }
+		if (element->prev == NULL) { /*Element is head or solo*/
+			element->list->head = element->next; /*is null if solo*/
+		}
+		if (element->next == NULL) { /*Element is tail or solo*/
+			element->list->tail = element->prev; /*is null if solo*/
+		}
+		if (element->prev != NULL) { /*Element is not head*/
+			element->prev->next = element->next;
+		}
+		if (element->next != NULL) { /*Element is not tail*/
+			element->next->prev = element->prev;
+		}
 #endif
-        element->list->size--;
-        element->list = NULL;
-    }
+		element->list->size--;
+		element->list = NULL;
+	}
 
-    LIST_EXIT_CRITICAL();
-    return listStatus;
+	LIST_EXIT_CRITICAL();
+	return listStatus;
 }
 
 /*! *********************************************************************************
@@ -398,60 +372,48 @@ list_status_t LIST_RemoveElement(list_element_handle_t element)
  ********************************************************************************** */
 list_status_t LIST_AddPrevElement(list_element_handle_t element, list_element_handle_t newElement)
 {
-    list_status_t listStatus = kLIST_Ok;
-    LIST_ENTER_CRITICAL();
+	list_status_t listStatus = kLIST_Ok;
+	LIST_ENTER_CRITICAL();
 
-    if (element->list == NULL)
-    {
-        listStatus = kLIST_OrphanElement; /*Element was previusly removed or never added*/
-    }
-    else
-    {
-        listStatus = LIST_Error_Check(element->list, newElement);
-        if (listStatus == kLIST_Ok)
-        {
+	if (element->list == NULL) {
+		listStatus = kLIST_OrphanElement; /*Element was previusly removed or never added*/
+	} else {
+		listStatus = LIST_Error_Check(element->list, newElement);
+		if (listStatus == kLIST_Ok) {
 #if (defined(GENERIC_LIST_LIGHT) && (GENERIC_LIST_LIGHT > 0U))
-            list_element_handle_t element_list = element->list->head;
-            while (NULL != element_list)
-            {
-                if ((element_list->next == element) || (element_list == element))
-                {
-                    if (element_list == element)
-                    {
-                        element->list->head = newElement;
-                    }
-                    else
-                    {
-                        element_list->next = newElement;
-                    }
-                    newElement->list = element->list;
-                    newElement->next = element;
-                    element->list->size++;
-                    break;
-                }
-                element_list = element_list->next;
-            }
+			list_element_handle_t element_list = element->list->head;
+			while (NULL != element_list) {
+				if ((element_list->next == element) || (element_list == element)) {
+					if (element_list == element) {
+						element->list->head = newElement;
+					} else {
+						element_list->next = newElement;
+					}
+					newElement->list = element->list;
+					newElement->next = element;
+					element->list->size++;
+					break;
+				}
+				element_list = element_list->next;
+			}
 
 #else
-            if (element->prev == NULL) /*Element is list head*/
-            {
-                element->list->head = newElement;
-            }
-            else
-            {
-                element->prev->next = newElement;
-            }
-            newElement->list = element->list;
-            element->list->size++;
-            newElement->next = element;
-            newElement->prev = element->prev;
-            element->prev = newElement;
+			if (element->prev == NULL) { /*Element is list head*/
+				element->list->head = newElement;
+			} else {
+				element->prev->next = newElement;
+			}
+			newElement->list = element->list;
+			element->list->size++;
+			newElement->next = element;
+			newElement->prev = element->prev;
+			element->prev = newElement;
 #endif
-        }
-    }
+		}
+	}
 
-    LIST_EXIT_CRITICAL();
-    return listStatus;
+	LIST_EXIT_CRITICAL();
+	return listStatus;
 }
 
 /*! *********************************************************************************
@@ -470,7 +432,7 @@ list_status_t LIST_AddPrevElement(list_element_handle_t element, list_element_ha
  ********************************************************************************** */
 uint32_t LIST_GetSize(list_handle_t list)
 {
-    return list->size;
+	return list->size;
 }
 
 /*! *********************************************************************************
@@ -489,5 +451,5 @@ uint32_t LIST_GetSize(list_handle_t list)
  ********************************************************************************** */
 uint32_t LIST_GetAvailableSize(list_handle_t list)
 {
-    return ((uint32_t)list->max - (uint32_t)list->size); /*Gets the number of free places in the list*/
+	return ((uint32_t)list->max - (uint32_t)list->size); /*Gets the number of free places in the list*/
 }

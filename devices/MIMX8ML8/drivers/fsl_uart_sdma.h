@@ -29,23 +29,22 @@ typedef struct _uart_sdma_handle uart_sdma_handle_t;
 
 /*! @brief UART transfer callback function. */
 typedef void (*uart_sdma_transfer_callback_t)(UART_Type *base,
-                                              uart_sdma_handle_t *handle,
-                                              status_t status,
-                                              void *userData);
+        uart_sdma_handle_t *handle,
+        status_t status,
+        void *userData);
 
 /*!
  * @brief UART sDMA handle
  */
-struct _uart_sdma_handle
-{
-    uart_sdma_transfer_callback_t callback; /*!< Callback function. */
-    void *userData;                         /*!< UART callback function parameter.*/
-    size_t rxDataSizeAll;                   /*!< Size of the data to receive. */
-    size_t txDataSizeAll;                   /*!< Size of the data to send out. */
-    sdma_handle_t *txSdmaHandle;            /*!< The sDMA TX channel used. */
-    sdma_handle_t *rxSdmaHandle;            /*!< The sDMA RX channel used. */
-    volatile uint8_t txState;               /*!< TX transfer state. */
-    volatile uint8_t rxState;               /*!< RX transfer state */
+struct _uart_sdma_handle {
+	uart_sdma_transfer_callback_t callback; /*!< Callback function. */
+	void *userData;                         /*!< UART callback function parameter.*/
+	size_t rxDataSizeAll;                   /*!< Size of the data to receive. */
+	size_t txDataSizeAll;                   /*!< Size of the data to send out. */
+	sdma_handle_t *txSdmaHandle;            /*!< The sDMA TX channel used. */
+	sdma_handle_t *rxSdmaHandle;            /*!< The sDMA RX channel used. */
+	volatile uint8_t txState;               /*!< TX transfer state. */
+	volatile uint8_t rxState;               /*!< RX transfer state */
 };
 
 /*******************************************************************************
@@ -73,13 +72,13 @@ extern "C" {
  * @param eventSourceRx Eventsource for RX DMA transfer.
  */
 void UART_TransferCreateHandleSDMA(UART_Type *base,
-                                   uart_sdma_handle_t *handle,
-                                   uart_sdma_transfer_callback_t callback,
-                                   void *userData,
-                                   sdma_handle_t *txSdmaHandle,
-                                   sdma_handle_t *rxSdmaHandle,
-                                   uint32_t eventSourceTx,
-                                   uint32_t eventSourceRx);
+        uart_sdma_handle_t *handle,
+        uart_sdma_transfer_callback_t callback,
+        void *userData,
+        sdma_handle_t *txSdmaHandle,
+        sdma_handle_t *rxSdmaHandle,
+        uint32_t eventSourceTx,
+        uint32_t eventSourceRx);
 
 /*!
  * @brief Sends data using sDMA.

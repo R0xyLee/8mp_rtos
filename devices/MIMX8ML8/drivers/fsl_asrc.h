@@ -31,153 +31,139 @@
 #define ASRC_SUPPORT_MAXIMUM_CONTEXT_PROCESSOR_NUMBER 4U
 
 /*! @brief ASRC return status, _asrc_status*/
-enum
-{
-    kStatus_ASRCIdle                     = MAKE_STATUS(kStatusGroup_ASRC, 0),  /*!< ASRC  is idle. */
-    kStatus_ASRCBusy                     = MAKE_STATUS(kStatusGroup_ASRC, 1),  /*!< ASRC  is busy. */
-    kStatus_ASRCInvalidArgument          = MAKE_STATUS(kStatusGroup_ASRC, 2),  /*!< ASRC invalid argument. */
-    kStatus_ASRCConfigureFailed          = MAKE_STATUS(kStatusGroup_ASRC, 3),  /*!< ASRC configure failed */
-    kStatus_ASRCConvertError             = MAKE_STATUS(kStatusGroup_ASRC, 4),  /*!< ASRC convert error failed */
-    kStatus_ASRCNotSupport               = MAKE_STATUS(kStatusGroup_ASRC, 5),  /*!< ASRC not support */
-    kStatus_ASRCQueueFull                = MAKE_STATUS(kStatusGroup_ASRC, 6),  /*!< ASRC queue full */
-    kStatus_ASRCQueueIdle                = MAKE_STATUS(kStatusGroup_ASRC, 7),  /*!< ASRC quue idle */
-    kStatus_ASRCLoadFirmwareFailed       = MAKE_STATUS(kStatusGroup_ASRC, 8),  /*!< ASRC load firmware failed*/
-    kStatus_ASRCResamplerConfigureFailed = MAKE_STATUS(kStatusGroup_ASRC, 9),  /*!< ASRC resampler configured failed */
-    kStatus_ASRCPrefilterConfigureFailed = MAKE_STATUS(kStatusGroup_ASRC, 10), /*!< ASRC prefilter configured failed */
+enum {
+	kStatus_ASRCIdle                     = MAKE_STATUS(kStatusGroup_ASRC, 0),  /*!< ASRC  is idle. */
+	kStatus_ASRCBusy                     = MAKE_STATUS(kStatusGroup_ASRC, 1),  /*!< ASRC  is busy. */
+	kStatus_ASRCInvalidArgument          = MAKE_STATUS(kStatusGroup_ASRC, 2),  /*!< ASRC invalid argument. */
+	kStatus_ASRCConfigureFailed          = MAKE_STATUS(kStatusGroup_ASRC, 3),  /*!< ASRC configure failed */
+	kStatus_ASRCConvertError             = MAKE_STATUS(kStatusGroup_ASRC, 4),  /*!< ASRC convert error failed */
+	kStatus_ASRCNotSupport               = MAKE_STATUS(kStatusGroup_ASRC, 5),  /*!< ASRC not support */
+	kStatus_ASRCQueueFull                = MAKE_STATUS(kStatusGroup_ASRC, 6),  /*!< ASRC queue full */
+	kStatus_ASRCQueueIdle                = MAKE_STATUS(kStatusGroup_ASRC, 7),  /*!< ASRC quue idle */
+	kStatus_ASRCLoadFirmwareFailed       = MAKE_STATUS(kStatusGroup_ASRC, 8),  /*!< ASRC load firmware failed*/
+	kStatus_ASRCResamplerConfigureFailed = MAKE_STATUS(kStatusGroup_ASRC, 9),  /*!< ASRC resampler configured failed */
+	kStatus_ASRCPrefilterConfigureFailed = MAKE_STATUS(kStatusGroup_ASRC, 10), /*!< ASRC prefilter configured failed */
 };
 
 /*! @brief asrc context id */
-typedef enum _asrc_context
-{
-    kASRC_Context0 = 0, /*!< Context 0 value */
-    kASRC_Context1 = 1, /*!< Context 1 value */
-    kASRC_Context2 = 2, /*!< Context 2 value */
-    kASRC_Context3 = 3, /*!< Context 3 value */
+typedef enum _asrc_context {
+	kASRC_Context0 = 0, /*!< Context 0 value */
+	kASRC_Context1 = 1, /*!< Context 1 value */
+	kASRC_Context2 = 2, /*!< Context 2 value */
+	kASRC_Context3 = 3, /*!< Context 3 value */
 } asrc_context_t;
 
 /*! @brief The ASRC interrupt enable flag, _asrc_interrupt_mask*/
-enum
-{
-    kASRC_Context0InputFifoOverflow = 1U,       /*!< context 0 input fifo overflow */
-    kASRC_Context1InputFifoOverflow = 1U << 1U, /*!< context 1 input fifo overflow */
-    kASRC_Context2InputFifoOverflow = 1U << 2U, /*!< context 2 input fifo overflow */
-    kASRC_Context3InputFifoOverflow = 1U << 3U, /*!< context 3 input fifo overflow */
+enum {
+	kASRC_Context0InputFifoOverflow = 1U,       /*!< context 0 input fifo overflow */
+	kASRC_Context1InputFifoOverflow = 1U << 1U, /*!< context 1 input fifo overflow */
+	kASRC_Context2InputFifoOverflow = 1U << 2U, /*!< context 2 input fifo overflow */
+	kASRC_Context3InputFifoOverflow = 1U << 3U, /*!< context 3 input fifo overflow */
 
-    kASRC_Context0OutFifoReadEmpty = 1U << 4U, /*!< context 0 out fifo read empty */
-    kASRC_Context1OutFifoReadEmpty = 1U << 5U, /*!< context 1 out fifo read empty */
-    kASRC_Context2OutFifoReadEmpty = 1U << 6U, /*!< context 2 out fifo read empty */
-    kASRC_Context3OutFifoReadEmpty = 1U << 7U, /*!< context 3 out fifo read empty */
+	kASRC_Context0OutFifoReadEmpty = 1U << 4U, /*!< context 0 out fifo read empty */
+	kASRC_Context1OutFifoReadEmpty = 1U << 5U, /*!< context 1 out fifo read empty */
+	kASRC_Context2OutFifoReadEmpty = 1U << 6U, /*!< context 2 out fifo read empty */
+	kASRC_Context3OutFifoReadEmpty = 1U << 7U, /*!< context 3 out fifo read empty */
 
-    kASRC_Context0RunStopDone       = 1U << 8U,  /*!< context 0 run stop done interrupt */
-    kASRC_Context1RunStopDone       = 1U << 9U,  /*!< context 1 run stop done interrupt */
-    kASRC_Context2RunStopDone       = 1U << 10U, /*!< context 2 run stop done interrupt */
-    kASRC_Context3RunStopDone       = 1U << 11U, /*!< context 3 run stop done interrupt */
-    kASRC_ContextAllInterruptStatus = 0xFFFU,    /*!< all the context interrupt status */
+	kASRC_Context0RunStopDone       = 1U << 8U,  /*!< context 0 run stop done interrupt */
+	kASRC_Context1RunStopDone       = 1U << 9U,  /*!< context 1 run stop done interrupt */
+	kASRC_Context2RunStopDone       = 1U << 10U, /*!< context 2 run stop done interrupt */
+	kASRC_Context3RunStopDone       = 1U << 11U, /*!< context 3 run stop done interrupt */
+	kASRC_ContextAllInterruptStatus = 0xFFFU,    /*!< all the context interrupt status */
 };
 
 /*! @brief ASRC fifo status, _asrc_fifo_status*/
-enum
-{
-    kASRC_FifoStatusInputFifoWatermarkFlag =
-        ASRC_SAMPLE_FIFO_STATUS_INFIFO_WTMK_MASK, /*!< input water mark flag raised */
-    kASRC_FifoStatusOutputFifoWatermarkFlag =
-        ASRC_SAMPLE_FIFO_STATUS_OUTFIFO_WTMK_MASK, /*!< output water mark flag raised */
+enum {
+	kASRC_FifoStatusInputFifoWatermarkFlag =
+	        ASRC_SAMPLE_FIFO_STATUS_INFIFO_WTMK_MASK, /*!< input water mark flag raised */
+	kASRC_FifoStatusOutputFifoWatermarkFlag =
+	        ASRC_SAMPLE_FIFO_STATUS_OUTFIFO_WTMK_MASK, /*!< output water mark flag raised */
 };
 
 /*! @brief arsc data endianness */
-typedef enum _asrc_data_endianness
-{
-    kASRC_DataEndianLittle = 0U, /*!< context data little endian */
-    kASRC_DataEndianBig    = 1U, /*!< context data big endian */
+typedef enum _asrc_data_endianness {
+	kASRC_DataEndianLittle = 0U, /*!< context data little endian */
+	kASRC_DataEndianBig    = 1U, /*!< context data big endian */
 } asrc_data_endianness_t;
 
 /*! @brief data width */
-typedef enum _asrc_data_width
-{
-    kASRC_DataWidth32Bit = 3U, /*!< data width 32bit */
-    kASRC_DataWidth24Bit = 2U, /*!< data width 24bit */
-    kASRC_DataWidth20Bit = 1U, /*!< data width 20bit */
-    kASRC_DataWidth16Bit = 0U, /*!< data width 16bit */
+typedef enum _asrc_data_width {
+	kASRC_DataWidth32Bit = 3U, /*!< data width 32bit */
+	kASRC_DataWidth24Bit = 2U, /*!< data width 24bit */
+	kASRC_DataWidth20Bit = 1U, /*!< data width 20bit */
+	kASRC_DataWidth16Bit = 0U, /*!< data width 16bit */
 } asrc_data_width_t;
 
 /*! @brief data type */
-typedef enum _asrc_data_type
-{
-    kASRC_DataTypeInteger = 0U, /*!< data type int */
-    kASRC_DataTypeFloat   = 1U, /*!< data type float, single precision floating point format */
+typedef enum _asrc_data_type {
+	kASRC_DataTypeInteger = 0U, /*!< data type int */
+	kASRC_DataTypeFloat   = 1U, /*!< data type float, single precision floating point format */
 } asrc_data_type_t;
 
 /*! @brief sign extension */
-typedef enum _asrc_data_sign
-{
-    kASRC_DataSigned   = 0U, /*!< input data is signed */
-    kASRC_DataUnsigned = 1U, /*!< input data is unsinged */
+typedef enum _asrc_data_sign {
+	kASRC_DataSigned   = 0U, /*!< input data is signed */
+	kASRC_DataUnsigned = 1U, /*!< input data is unsinged */
 } asrc_data_sign_t;
 
 /*! @brief  asrc prefilter and resampler sample buffer init mode */
-typedef enum _asrc_sampleBuffer_init_mode
-{
-    kASRC_SampleBufferNoPreFillOnInit = 0U, /*!< do not pre-fill */
-    kASRC_SampleBufferFillFirstSampleOnInit =
-        1U, /*!< replicate the first sample to fill the right half of the sample buffer */
-    kASRC_SampleBufferFillZeroOnInit = 2U, /*!< zero fill the right half og the sample buffer */
+typedef enum _asrc_sampleBuffer_init_mode {
+	kASRC_SampleBufferNoPreFillOnInit = 0U, /*!< do not pre-fill */
+	kASRC_SampleBufferFillFirstSampleOnInit =
+	        1U, /*!< replicate the first sample to fill the right half of the sample buffer */
+	kASRC_SampleBufferFillZeroOnInit = 2U, /*!< zero fill the right half og the sample buffer */
 } asrc_sampleBuffer_init_mode_t;
 
 /*! @brief  asrc prefilter and resampler sample buffer stop mode */
-typedef enum _asrc_sampleBuffer_stop_mode
-{
-    kASRC_SampleBufferFillLastSampleOnStop =
-        0U,                                /*!< replicate the last sample to fill the left half of the sample buffer */
-    kASRC_SampleBufferFillZeroOnStop = 1U, /*!< zero fill the left half of the sample buffer */
+typedef enum _asrc_sampleBuffer_stop_mode {
+	kASRC_SampleBufferFillLastSampleOnStop =
+	        0U,                                /*!< replicate the last sample to fill the left half of the sample buffer */
+	kASRC_SampleBufferFillZeroOnStop = 1U, /*!< zero fill the left half of the sample buffer */
 } asrc_sampleBuffer_stop_mode_t;
 
 /*! @brief ASRC prefilter stage1 result format */
-typedef enum _asrc_prefilter_stage1_result
-{
-    kASRC_PrefilterStage1ResultInt   = 0U, /*!< prefilter stage1 results are stored in 32 bit int format */
-    kASRC_PrefilterStage1ResultFloat = 1U, /*!< prefilter stage1 results are stored in 32 bit float format */
+typedef enum _asrc_prefilter_stage1_result {
+	kASRC_PrefilterStage1ResultInt   = 0U, /*!< prefilter stage1 results are stored in 32 bit int format */
+	kASRC_PrefilterStage1ResultFloat = 1U, /*!< prefilter stage1 results are stored in 32 bit float format */
 } asrc_prefilter_stage1_result_t;
 
 /*! @brief ASRC resampler taps */
-typedef enum _asrc_resampler_taps
-{
-    kASRC_ResamplerTaps_32  = 32U,  /*!< resampler taps 32 */
-    kASRC_ResamplerTaps_64  = 64U,  /*!< resampler taps 64 */
-    kASRC_ResamplerTaps_128 = 128U, /*!< resampler taps 128 */
+typedef enum _asrc_resampler_taps {
+	kASRC_ResamplerTaps_32  = 32U,  /*!< resampler taps 32 */
+	kASRC_ResamplerTaps_64  = 64U,  /*!< resampler taps 64 */
+	kASRC_ResamplerTaps_128 = 128U, /*!< resampler taps 128 */
 } asrc_resampler_taps_t;
 
 /*! @brief ASRC support sample rate, _asrc_sample_rate */
-enum
-{
-    kASRC_SampleRate_8000   = 8000,   /*!< 8K sample rate */
-    kASRC_SampleRate_11025  = 11025,  /*!< 11025 sample rate */
-    kASRC_SampleRate_12000  = 12000,  /*!< 12K sample rate */
-    kASRC_SampleRate_16000  = 16000,  /*!< 16K sample rate */
-    kASRC_SampleRate_22050  = 22050,  /*!< 22.05K sample rate */
-    kASRC_SampleRate_24000  = 24000,  /*!< 24K sample rate */
-    kASRC_SampleRate_32000  = 32000,  /*!< 32K sample rate */
-    kASRC_SampleRate_44100  = 44100,  /*!< 44.1K sample rate */
-    kASRC_SampleRate_48000  = 48000,  /*!< 48K sample rate */
-    kASRC_SampleRate_64000  = 64000,  /*!< 64K sample rate */
-    kASRC_SampleRate_88200  = 88200,  /*!< 88.2K sample rate */
-    kASRC_SampleRate_96000  = 96000,  /*!< 96K sample rate */
-    kASRC_SampleRate_128000 = 128000, /*!< 128K sample rate */
-    kASRC_SampleRate_176400 = 176400, /*!< 176K sample rate */
-    kASRC_SampleRate_192000 = 192000, /*!< 256K sample rate */
-    kASRC_SampleRate_256000 = 256000, /*!< 256K sample rate */
-    kASRC_SampleRate_352800 = 352800, /*!< 352.8K sample rate */
-    kASRC_SampleRate_384000 = 384000, /*!< 384K sample rate */
-    kASRC_SampleRate_768000 = 768000, /*!< 768K sample rate */
+enum {
+	kASRC_SampleRate_8000   = 8000,   /*!< 8K sample rate */
+	kASRC_SampleRate_11025  = 11025,  /*!< 11025 sample rate */
+	kASRC_SampleRate_12000  = 12000,  /*!< 12K sample rate */
+	kASRC_SampleRate_16000  = 16000,  /*!< 16K sample rate */
+	kASRC_SampleRate_22050  = 22050,  /*!< 22.05K sample rate */
+	kASRC_SampleRate_24000  = 24000,  /*!< 24K sample rate */
+	kASRC_SampleRate_32000  = 32000,  /*!< 32K sample rate */
+	kASRC_SampleRate_44100  = 44100,  /*!< 44.1K sample rate */
+	kASRC_SampleRate_48000  = 48000,  /*!< 48K sample rate */
+	kASRC_SampleRate_64000  = 64000,  /*!< 64K sample rate */
+	kASRC_SampleRate_88200  = 88200,  /*!< 88.2K sample rate */
+	kASRC_SampleRate_96000  = 96000,  /*!< 96K sample rate */
+	kASRC_SampleRate_128000 = 128000, /*!< 128K sample rate */
+	kASRC_SampleRate_176400 = 176400, /*!< 176K sample rate */
+	kASRC_SampleRate_192000 = 192000, /*!< 256K sample rate */
+	kASRC_SampleRate_256000 = 256000, /*!< 256K sample rate */
+	kASRC_SampleRate_352800 = 352800, /*!< 352.8K sample rate */
+	kASRC_SampleRate_384000 = 384000, /*!< 384K sample rate */
+	kASRC_SampleRate_768000 = 768000, /*!< 768K sample rate */
 };
 
 /*! @brief asrc context data format */
-typedef struct _asrc_data_format
-{
-    uint8_t dataPosition;                  /*!< context input data sample position */
-    asrc_data_endianness_t dataEndianness; /*!< context input data endianness */
-    asrc_data_width_t dataWidth;           /*!< context input data width */
-    asrc_data_type_t dataType;             /*!< context input data type */
-    asrc_data_sign_t dataSign;             /*!< context input data signed or unsigned */
+typedef struct _asrc_data_format {
+	uint8_t dataPosition;                  /*!< context input data sample position */
+	asrc_data_endianness_t dataEndianness; /*!< context input data endianness */
+	asrc_data_width_t dataWidth;           /*!< context input data width */
+	asrc_data_type_t dataType;             /*!< context input data type */
+	asrc_data_sign_t dataSign;             /*!< context input data signed or unsigned */
 } asrc_data_format_t;
 
 /*! @brief asrc context access control
@@ -188,82 +174,75 @@ typedef struct _asrc_data_format
  * samples accessIterations = 2, the 2 sequential ACCESS_LENGTH read from single source accessLen = 2, the 2 samples
  * fetch from one source.
  */
-typedef struct _asrc_access_ctrl
-{
-    uint8_t accessIterations; /*!< number of sequential fetches per source */
-    uint8_t accessGroupLen;   /*!< number of channels in a context */
-    uint8_t accessLen;        /*!< number of channels per source1 */
+typedef struct _asrc_access_ctrl {
+	uint8_t accessIterations; /*!< number of sequential fetches per source */
+	uint8_t accessGroupLen;   /*!< number of channels in a context */
+	uint8_t accessLen;        /*!< number of channels per source1 */
 } asrc_access_ctrl_t;
 
 /*! @brief asrc context input configuration */
-typedef struct _asrc_context_input_config
-{
-    uint32_t sampleRate;           /*!< input audio data sample rate */
-    uint8_t watermark;             /*!< input water mark per samples */
-    asrc_access_ctrl_t accessCtrl; /*!< input access control */
-    asrc_data_format_t dataFormat; /*!< input data format */
+typedef struct _asrc_context_input_config {
+	uint32_t sampleRate;           /*!< input audio data sample rate */
+	uint8_t watermark;             /*!< input water mark per samples */
+	asrc_access_ctrl_t accessCtrl; /*!< input access control */
+	asrc_data_format_t dataFormat; /*!< input data format */
 } asrc_context_input_config_t;
 
 /*! @brief asrc context output configuration */
-typedef struct _asrc_context_output_config
-{
-    uint32_t sampleRate;           /*!< output audio data sample rate */
-    uint8_t watermark;             /*!< output water mark per samples */
-    asrc_access_ctrl_t accessCtrl; /*!< output access control */
-    asrc_data_format_t dataFormat; /*!< output data format */
-    bool enableDither;   /*!< output path contains a TPDF dither function. The dither function support all fixed output
+typedef struct _asrc_context_output_config {
+	uint32_t sampleRate;           /*!< output audio data sample rate */
+	uint8_t watermark;             /*!< output water mark per samples */
+	asrc_access_ctrl_t accessCtrl; /*!< output access control */
+	asrc_data_format_t dataFormat; /*!< output data format */
+	bool enableDither;   /*!< output path contains a TPDF dither function. The dither function support all fixed output
                             modes(16, 20, 24, 32bits)   dither is not supported in 32bit floating point output mode */
-    bool enableIEC60958; /*!< output IEC60958 bit field insertion enable */
+	bool enableIEC60958; /*!< output IEC60958 bit field insertion enable */
 } asrc_context_output_config_t;
 
 /*! @brief asrc context prefilter configuration */
-typedef struct _asrc_context_prefilter_config
-{
-    asrc_sampleBuffer_init_mode_t initMode;      /*!< prefilter initial mode */
-    asrc_sampleBuffer_stop_mode_t stopMode;      /*!< prefilter stop mode */
-    asrc_prefilter_stage1_result_t stage1Result; /*!< stage1 data store format */
-    /*
-     * applciation can untouch below configuration by set filterCoeffAddress to NULL , driver will load it from the
-     * driver firmware table, otherwise driver will use the value directly.
-     */
-    uint32_t filterSt1Taps;             /*!< prefilter stage1 taps */
-    uint32_t filterSt2Taps;             /*!< prefilter stage2 taps */
-    uint32_t filterSt1Exp;              /*!< prefilter stage1 expansion factor */
-    const uint32_t *filterCoeffAddress; /*!< prefilter coeff address */
+typedef struct _asrc_context_prefilter_config {
+	asrc_sampleBuffer_init_mode_t initMode;      /*!< prefilter initial mode */
+	asrc_sampleBuffer_stop_mode_t stopMode;      /*!< prefilter stop mode */
+	asrc_prefilter_stage1_result_t stage1Result; /*!< stage1 data store format */
+	/*
+	 * applciation can untouch below configuration by set filterCoeffAddress to NULL , driver will load it from the
+	 * driver firmware table, otherwise driver will use the value directly.
+	 */
+	uint32_t filterSt1Taps;             /*!< prefilter stage1 taps */
+	uint32_t filterSt2Taps;             /*!< prefilter stage2 taps */
+	uint32_t filterSt1Exp;              /*!< prefilter stage1 expansion factor */
+	const uint32_t *filterCoeffAddress; /*!< prefilter coeff address */
 } asrc_context_prefilter_config_t;
 
 /*! @brief asrc context resampler configuration */
-typedef struct _asrc_context_resampler_config
-{
-    asrc_sampleBuffer_init_mode_t initMode; /*!< initial mode */
-    asrc_sampleBuffer_stop_mode_t stopMode; /*!< resampler stop mode */
-    asrc_resampler_taps_t tap;              /*!< resampleer taps */
-    /*
-     * applciation can untouch below configuration by set filterCoeffAddress to NULL , driver will load it from the
-     * driver firmware table, otherwise driver will use the value directly.
-     */
-    uint32_t filterPhases;              /*!< interpolation phases */
-    uint64_t filterCenterTap;           /*!< interpolation center tap */
-    const uint32_t *filterCoeffAddress; /*!< interpolation coeff address */
+typedef struct _asrc_context_resampler_config {
+	asrc_sampleBuffer_init_mode_t initMode; /*!< initial mode */
+	asrc_sampleBuffer_stop_mode_t stopMode; /*!< resampler stop mode */
+	asrc_resampler_taps_t tap;              /*!< resampleer taps */
+	/*
+	 * applciation can untouch below configuration by set filterCoeffAddress to NULL , driver will load it from the
+	 * driver firmware table, otherwise driver will use the value directly.
+	 */
+	uint32_t filterPhases;              /*!< interpolation phases */
+	uint64_t filterCenterTap;           /*!< interpolation center tap */
+	const uint32_t *filterCoeffAddress; /*!< interpolation coeff address */
 } asrc_context_resampler_config_t;
 
 /*! @brief asrc context configuration */
-typedef struct _asrc_context_config
-{
-    uint8_t contextChannelNums;                       /*!< context channel numbers */
-    asrc_context_input_config_t contextInput;         /*!< context input configuration */
-    asrc_context_output_config_t contextOutput;       /*!< context output configuration */
-    asrc_context_prefilter_config_t contextPrefilter; /*!< context pre filter configuration */
-    asrc_context_resampler_config_t contextResampler; /*!< context resampler configuration */
+typedef struct _asrc_context_config {
+	uint8_t contextChannelNums;                       /*!< context channel numbers */
+	asrc_context_input_config_t contextInput;         /*!< context input configuration */
+	asrc_context_output_config_t contextOutput;       /*!< context output configuration */
+	asrc_context_prefilter_config_t contextPrefilter; /*!< context pre filter configuration */
+	asrc_context_resampler_config_t contextResampler; /*!< context resampler configuration */
 } asrc_context_config_t;
 
 /*! @brief ASRC transfer */
-typedef struct _asrc_transfer
-{
-    uint32_t *inDataAddr;  /*!< address of audio data to be converted */
-    uint32_t inDataSize;   /*!< size of the audio data */
-    uint32_t *outDataAddr; /*!< address of audio data that is been converted */
-    uint32_t outDataSize;  /*!< size of the audio data */
+typedef struct _asrc_transfer {
+	uint32_t *inDataAddr;  /*!< address of audio data to be converted */
+	uint32_t inDataSize;   /*!< size of the audio data */
+	uint32_t *outDataAddr; /*!< address of audio data that is been converted */
+	uint32_t outDataSize;  /*!< size of the audio data */
 } asrc_transfer_t;
 /*******************************************************************************
  * API
@@ -312,9 +291,9 @@ void ASRC_Deinit(ASRC_Type *base);
  * @param outSampleRate output sample rate.
  */
 void ASRC_GetContextDefaultConfig(asrc_context_config_t *config,
-                                  uint32_t channels,
-                                  uint32_t inSampleRate,
-                                  uint32_t outSampleRate);
+        uint32_t channels,
+        uint32_t inSampleRate,
+        uint32_t outSampleRate);
 
 /*!
  * @brief ASRC configure context.
@@ -357,14 +336,11 @@ status_t ASRC_SetContextInputConfig(ASRC_Type *base, asrc_context_t context, asr
  */
 static inline void ASRC_EnableContextRun(ASRC_Type *base, asrc_context_t context, bool enable)
 {
-    if (enable)
-    {
-        base->CTX_CTRL[context] |= ASRC_CTX_CTRL_RUN_EN_MASK;
-    }
-    else
-    {
-        base->CTX_CTRL[context] &= ~ASRC_CTX_CTRL_RUN_EN_MASK;
-    }
+	if (enable) {
+		base->CTX_CTRL[context] |= ASRC_CTX_CTRL_RUN_EN_MASK;
+	} else {
+		base->CTX_CTRL[context] &= ~ASRC_CTX_CTRL_RUN_EN_MASK;
+	}
 }
 
 /*!
@@ -377,14 +353,11 @@ static inline void ASRC_EnableContextRun(ASRC_Type *base, asrc_context_t context
  */
 static inline void ASRC_EnableContextRunStop(ASRC_Type *base, asrc_context_t context, bool enable)
 {
-    if (enable)
-    {
-        base->CTX_CTRL[context] |= ASRC_CTX_CTRL_RUN_STOP_MASK;
-    }
-    else
-    {
-        base->CTX_CTRL[context] &= ~ASRC_CTX_CTRL_RUN_STOP_MASK;
-    }
+	if (enable) {
+		base->CTX_CTRL[context] |= ASRC_CTX_CTRL_RUN_STOP_MASK;
+	} else {
+		base->CTX_CTRL[context] &= ~ASRC_CTX_CTRL_RUN_STOP_MASK;
+	}
 }
 
 /*!
@@ -396,14 +369,11 @@ static inline void ASRC_EnableContextRunStop(ASRC_Type *base, asrc_context_t con
  */
 static inline void ASRC_EnableContextInDMA(ASRC_Type *base, asrc_context_t context, bool enable)
 {
-    if (enable)
-    {
-        base->CTX_CTRL[context] |= ASRC_CTX_CTRL_FWMDE_MASK;
-    }
-    else
-    {
-        base->CTX_CTRL[context] &= ~ASRC_CTX_CTRL_FWMDE_MASK;
-    }
+	if (enable) {
+		base->CTX_CTRL[context] |= ASRC_CTX_CTRL_FWMDE_MASK;
+	} else {
+		base->CTX_CTRL[context] &= ~ASRC_CTX_CTRL_FWMDE_MASK;
+	}
 }
 
 /*!
@@ -415,14 +385,11 @@ static inline void ASRC_EnableContextInDMA(ASRC_Type *base, asrc_context_t conte
  */
 static inline void ASRC_EnableContextOutDMA(ASRC_Type *base, asrc_context_t context, bool enable)
 {
-    if (enable)
-    {
-        base->CTX_OUT_CTRL[context] |= ASRC_CTX_OUT_CTRL_FWMDE_MASK;
-    }
-    else
-    {
-        base->CTX_OUT_CTRL[context] &= ~ASRC_CTX_OUT_CTRL_FWMDE_MASK;
-    }
+	if (enable) {
+		base->CTX_OUT_CTRL[context] |= ASRC_CTX_OUT_CTRL_FWMDE_MASK;
+	} else {
+		base->CTX_OUT_CTRL[context] &= ~ASRC_CTX_OUT_CTRL_FWMDE_MASK;
+	}
 }
 
 /*!
@@ -435,16 +402,13 @@ static inline void ASRC_EnableContextOutDMA(ASRC_Type *base, asrc_context_t cont
  */
 static inline void ASRC_EnablePreFilterBypass(ASRC_Type *base, asrc_context_t context, bool bypass)
 {
-    if (bypass)
-    {
-        base->CTX_CTRL_EXT1[context] |= ASRC_CTX_CTRL_EXT1_PF_BYPASS_MODE_MASK;
-        base->CTX_CTRL_EXT1[context] &= ~ASRC_CTX_CTRL_EXT1_PF_EXPANSION_FACTOR_MASK;
-        base->CTX_CTRL_EXT2[context] &= ~ASRC_CTX_CTRL_EXT2_ST1_NUM_TAPS_MASK;
-    }
-    else
-    {
-        base->CTX_CTRL_EXT1[context] &= ~ASRC_CTX_CTRL_EXT1_PF_BYPASS_MODE_MASK;
-    }
+	if (bypass) {
+		base->CTX_CTRL_EXT1[context] |= ASRC_CTX_CTRL_EXT1_PF_BYPASS_MODE_MASK;
+		base->CTX_CTRL_EXT1[context] &= ~ASRC_CTX_CTRL_EXT1_PF_EXPANSION_FACTOR_MASK;
+		base->CTX_CTRL_EXT2[context] &= ~ASRC_CTX_CTRL_EXT2_ST1_NUM_TAPS_MASK;
+	} else {
+		base->CTX_CTRL_EXT1[context] &= ~ASRC_CTX_CTRL_EXT1_PF_BYPASS_MODE_MASK;
+	}
 }
 
 /*!
@@ -457,14 +421,11 @@ static inline void ASRC_EnablePreFilterBypass(ASRC_Type *base, asrc_context_t co
  */
 static inline void ASRC_EnableResamplerBypass(ASRC_Type *base, asrc_context_t context, bool bypass)
 {
-    if (bypass)
-    {
-        base->CTX_CTRL_EXT1[context] |= ASRC_CTX_CTRL_EXT1_RS_BYPASS_MODE_MASK;
-    }
-    else
-    {
-        base->CTX_CTRL_EXT1[context] &= ~ASRC_CTX_CTRL_EXT1_RS_BYPASS_MODE_MASK;
-    }
+	if (bypass) {
+		base->CTX_CTRL_EXT1[context] |= ASRC_CTX_CTRL_EXT1_RS_BYPASS_MODE_MASK;
+	} else {
+		base->CTX_CTRL_EXT1[context] &= ~ASRC_CTX_CTRL_EXT1_RS_BYPASS_MODE_MASK;
+	}
 }
 
 /*!
@@ -477,8 +438,8 @@ static inline void ASRC_EnableResamplerBypass(ASRC_Type *base, asrc_context_t co
  */
 static inline void ASRC_SetContextChannelNumber(ASRC_Type *base, asrc_context_t context, uint32_t channels)
 {
-    base->CTX_CTRL[context] &= ~ASRC_CTX_CTRL_NUM_CH_EN_MASK;
-    base->CTX_CTRL[context] |= ASRC_CTX_CTRL_NUM_CH_EN(channels - 1U);
+	base->CTX_CTRL[context] &= ~ASRC_CTX_CTRL_NUM_CH_EN_MASK;
+	base->CTX_CTRL[context] |= ASRC_CTX_CTRL_NUM_CH_EN(channels - 1U);
 }
 
 /*!
@@ -492,7 +453,7 @@ static inline void ASRC_SetContextChannelNumber(ASRC_Type *base, asrc_context_t 
  * @retval output samples size.
  */
 uint32_t ASRC_GetContextOutSampleSize(
-    uint32_t inSampleRate, uint32_t inSamplesSize, uint32_t inWidth, uint32_t outSampleRate, uint32_t outWidth);
+        uint32_t inSampleRate, uint32_t inSamplesSize, uint32_t inWidth, uint32_t outSampleRate, uint32_t outWidth);
 
 /*! @} */
 
@@ -510,7 +471,7 @@ uint32_t ASRC_GetContextOutSampleSize(
  */
 static inline void ASRC_EnableInterrupt(ASRC_Type *base, uint32_t mask)
 {
-    base->IRQ_CTRL &= ~mask;
+	base->IRQ_CTRL &= ~mask;
 }
 
 /*!
@@ -522,7 +483,7 @@ static inline void ASRC_EnableInterrupt(ASRC_Type *base, uint32_t mask)
  */
 static inline void ASRC_DisableInterrupt(ASRC_Type *base, uint32_t mask)
 {
-    base->IRQ_CTRL |= mask;
+	base->IRQ_CTRL |= mask;
 }
 /*! @} */
 
@@ -539,7 +500,7 @@ static inline void ASRC_DisableInterrupt(ASRC_Type *base, uint32_t mask)
  */
 static inline uint32_t ASRC_GetInterruptStatus(ASRC_Type *base)
 {
-    return base->IRQ_FLAGS;
+	return base->IRQ_FLAGS;
 }
 
 /*!
@@ -550,7 +511,7 @@ static inline uint32_t ASRC_GetInterruptStatus(ASRC_Type *base)
  */
 static inline void ASRC_ClearInterruptStatus(ASRC_Type *base, uint32_t status)
 {
-    base->IRQ_FLAGS |= status;
+	base->IRQ_FLAGS |= status;
 }
 
 /*!
@@ -561,8 +522,8 @@ static inline void ASRC_ClearInterruptStatus(ASRC_Type *base, uint32_t status)
  */
 static inline uint32_t ASRC_GetFifoStatus(ASRC_Type *base, asrc_context_t context)
 {
-    return (uint32_t)(base->SAMPLE_FIFO_STATUS[context] &
-                      (ASRC_SAMPLE_FIFO_STATUS_OUTFIFO_WTMK_MASK | ASRC_SAMPLE_FIFO_STATUS_INFIFO_WTMK_MASK));
+	return (uint32_t)(base->SAMPLE_FIFO_STATUS[context] &
+	                (ASRC_SAMPLE_FIFO_STATUS_OUTFIFO_WTMK_MASK | ASRC_SAMPLE_FIFO_STATUS_INFIFO_WTMK_MASK));
 }
 
 /*! @} */
@@ -580,7 +541,7 @@ static inline uint32_t ASRC_GetFifoStatus(ASRC_Type *base, asrc_context_t contex
  */
 static inline void ASRC_WriteContextFifo(ASRC_Type *base, asrc_context_t context, uint32_t data)
 {
-    base->WRFIFO[context] = data;
+	base->WRFIFO[context] = data;
 }
 
 /*!
@@ -592,7 +553,7 @@ static inline void ASRC_WriteContextFifo(ASRC_Type *base, asrc_context_t context
  */
 static inline uint32_t ASRC_ReadContextFifo(ASRC_Type *base, asrc_context_t context)
 {
-    return base->RDFIFO[context];
+	return base->RDFIFO[context];
 }
 
 /*!
@@ -604,7 +565,7 @@ static inline uint32_t ASRC_ReadContextFifo(ASRC_Type *base, asrc_context_t cont
  */
 static inline uint32_t ASRC_GetWriteContextFifoAddr(ASRC_Type *base, asrc_context_t context)
 {
-    return (uint32_t)&base->WRFIFO[context];
+	return (uint32_t)&base->WRFIFO[context];
 }
 
 /*!
@@ -616,7 +577,7 @@ static inline uint32_t ASRC_GetWriteContextFifoAddr(ASRC_Type *base, asrc_contex
  */
 static inline uint32_t ASRC_GetReadContextFifoAddr(ASRC_Type *base, asrc_context_t context)
 {
-    return (uint32_t)&base->RDFIFO[context];
+	return (uint32_t)&base->RDFIFO[context];
 }
 
 /*!
@@ -633,7 +594,7 @@ static inline uint32_t ASRC_GetReadContextFifoAddr(ASRC_Type *base, asrc_context
  * @retval sample counts actual read from output fifo.
  */
 uint32_t ASRC_ReadFIFORemainedSample(
-    ASRC_Type *base, asrc_context_t context, uint32_t *outAddr, uint32_t outWidth, uint32_t sampleCount);
+        ASRC_Type *base, asrc_context_t context, uint32_t *outAddr, uint32_t outWidth, uint32_t sampleCount);
 
 /*! @} */
 

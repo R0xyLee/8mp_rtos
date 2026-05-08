@@ -29,29 +29,28 @@
  */
 int main(void)
 {
-    char ch;
+	char ch;
 
-    /* Init board hardware. */
-    /* M7 has its local cache and enabled by default,
-     * need to set smart subsystems (0x28000000 ~ 0x3FFFFFFF)
-     * non-cacheable before accessing this address region */
-    BOARD_InitMemory();
+	/* Init board hardware. */
+	/* M7 has its local cache and enabled by default,
+	 * need to set smart subsystems (0x28000000 ~ 0x3FFFFFFF)
+	 * non-cacheable before accessing this address region */
+	BOARD_InitMemory();
 
-    /* Board specific RDC settings */
-    BOARD_RdcInit();
+	/* Board specific RDC settings */
+	BOARD_RdcInit();
 
-    BOARD_InitPins();
-    BOARD_BootClockRUN();
-    BOARD_InitDebugConsole();
+	BOARD_InitPins();
+	BOARD_BootClockRUN();
+	BOARD_InitDebugConsole();
 
-    PRINTF("hello world.\r\n");
-    PRINTF("hello world.\r\n");
-    PRINTF("hello world.\r\n");
-    PRINTF("#########.\r\n");
+	PRINTF("hello world.\r\n");
+	PRINTF("hello world.\r\n");
+	PRINTF("hello world.\r\n");
+	PRINTF("#########.\r\n");
 
-    while (1)
-    {
-        ch = GETCHAR();
-        PUTCHAR(ch);
-    }
+	while (1) {
+		ch = GETCHAR();
+		PUTCHAR(ch);
+	}
 }

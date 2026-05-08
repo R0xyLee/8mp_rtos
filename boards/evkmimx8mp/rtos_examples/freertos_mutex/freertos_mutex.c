@@ -40,37 +40,35 @@ static void write_task_2(void *pvParameters);
  */
 int main(void)
 {
-    xMutex = xSemaphoreCreateMutex();
+	xMutex = xSemaphoreCreateMutex();
 
-    /* M7 has its local cache and enabled by default,
-     * need to set smart subsystems (0x28000000 ~ 0x3FFFFFFF)
-     * non-cacheable before accessing this address region */
-    BOARD_InitMemory();
+	/* M7 has its local cache and enabled by default,
+	 * need to set smart subsystems (0x28000000 ~ 0x3FFFFFFF)
+	 * non-cacheable before accessing this address region */
+	BOARD_InitMemory();
 
-    /* Board specific RDC settings */
-    BOARD_RdcInit();
+	/* Board specific RDC settings */
+	BOARD_RdcInit();
 
-    BOARD_InitPins();
-    BOARD_BootClockRUN();
-    BOARD_InitDebugConsole();
-    if (xTaskCreate(write_task_1, "WRITE_TASK_1", configMINIMAL_STACK_SIZE + 128, NULL, tskIDLE_PRIORITY + 1, NULL) !=
-        pdPASS)
-    {
-        PRINTF("Task creation failed!.\r\n");
-        while (1)
-            ;
-    }
-    if (xTaskCreate(write_task_2, "WRITE_TASK_2", configMINIMAL_STACK_SIZE + 128, NULL, tskIDLE_PRIORITY + 1, NULL) !=
-        pdPASS)
-    {
-        PRINTF("Task creation failed!.\r\n");
-        while (1)
-            ;
-    }
-    /* Start scheduling. */
-    vTaskStartScheduler();
-    for (;;)
-        ;
+	BOARD_InitPins();
+	BOARD_BootClockRUN();
+	BOARD_InitDebugConsole();
+	if (xTaskCreate(write_task_1, "WRITE_TASK_1", configMINIMAL_STACK_SIZE + 128, NULL, tskIDLE_PRIORITY + 1, NULL) !=
+	        pdPASS) {
+		PRINTF("Task creation failed!.\r\n");
+		while (1)
+			;
+	}
+	if (xTaskCreate(write_task_2, "WRITE_TASK_2", configMINIMAL_STACK_SIZE + 128, NULL, tskIDLE_PRIORITY + 1, NULL) !=
+	        pdPASS) {
+		PRINTF("Task creation failed!.\r\n");
+		while (1)
+			;
+	}
+	/* Start scheduling. */
+	vTaskStartScheduler();
+	for (;;)
+		;
 }
 
 /*!
@@ -78,18 +76,16 @@ int main(void)
  */
 static void write_task_1(void *pvParameters)
 {
-    while (1)
-    {
-        if (xSemaphoreTake(xMutex, portMAX_DELAY) != pdTRUE)
-        {
-            PRINTF("Failed to take semaphore.\r\n");
-        }
-        PRINTF("ABCD |");
-        taskYIELD();
-        PRINTF(" EFGH\r\n");
-        xSemaphoreGive(xMutex);
-        taskYIELD();
-    }
+	while (1) {
+		if (xSemaphoreTake(xMutex, portMAX_DELAY) != pdTRUE) {
+			PRINTF("Failed to take semaphore.\r\n");
+		}
+		PRINTF("ABCD |");
+		taskYIELD();
+		PRINTF(" EFGH\r\n");
+		xSemaphoreGive(xMutex);
+		taskYIELD();
+	}
 }
 
 /*!
@@ -97,16 +93,14 @@ static void write_task_1(void *pvParameters)
  */
 static void write_task_2(void *pvParameters)
 {
-    while (1)
-    {
-        if (xSemaphoreTake(xMutex, portMAX_DELAY) != pdTRUE)
-        {
-            PRINTF("Failed to take semaphore.\r\n");
-        }
-        PRINTF("1234 |");
-        taskYIELD();
-        PRINTF(" 5678\r\n");
-        xSemaphoreGive(xMutex);
-        taskYIELD();
-    }
+	while (1) {
+		if (xSemaphoreTake(xMutex, portMAX_DELAY) != pdTRUE) {
+			PRINTF("Failed to take semaphore.\r\n");
+		}
+		PRINTF("1234 |");
+		taskYIELD();
+		PRINTF(" 5678\r\n");
+		xSemaphoreGive(xMutex);
+		taskYIELD();
+	}
 }

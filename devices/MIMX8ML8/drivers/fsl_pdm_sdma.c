@@ -17,10 +17,9 @@
  ******************************************************************************/
 
 /*<! Structure definition for uart_sdma_private_handle_t. The structure is private. */
-typedef struct _pdm_sdma_private_handle
-{
-    PDM_Type *base;
-    pdm_sdma_handle_t *handle;
+typedef struct _pdm_sdma_private_handle {
+	PDM_Type *base;
+	pdm_sdma_handle_t *handle;
 } pdm_sdma_private_handle_t;
 
 /* Base pointer array */
@@ -46,22 +45,20 @@ static void PDM_SDMACallback(sdma_handle_t *handle, void *userData, bool done, u
  ******************************************************************************/
 static void PDM_SDMACallback(sdma_handle_t *handle, void *userData, bool done, uint32_t tcds)
 {
-    pdm_sdma_private_handle_t *privHandle = (pdm_sdma_private_handle_t *)userData;
-    pdm_sdma_handle_t *pdmHandle          = privHandle->handle;
+	pdm_sdma_private_handle_t *privHandle = (pdm_sdma_private_handle_t *)userData;
+	pdm_sdma_handle_t *pdmHandle          = privHandle->handle;
 
-    /* If finished a block, call the callback function */
-    (void)memset(&pdmHandle->pdmQueue[pdmHandle->queueDriver], 0, sizeof(pdm_transfer_t));
-    pdmHandle->queueDriver = (pdmHandle->queueDriver + 1U) % PDM_XFER_QUEUE_SIZE;
-    if (pdmHandle->callback != NULL)
-    {
-        (pdmHandle->callback)(privHandle->base, pdmHandle, kStatus_PDM_Idle, pdmHandle->userData);
-    }
+	/* If finished a block, call the callback function */
+	(void)memset(&pdmHandle->pdmQueue[pdmHandle->queueDriver], 0, sizeof(pdm_transfer_t));
+	pdmHandle->queueDriver = (pdmHandle->queueDriver + 1U) % PDM_XFER_QUEUE_SIZE;
+	if (pdmHandle->callback != NULL) {
+		(pdmHandle->callback)(privHandle->base, pdmHandle, kStatus_PDM_Idle, pdmHandle->userData);
+	}
 
-    /* If all data finished, just stop the transfer */
-    if (pdmHandle->pdmQueue[pdmHandle->queueDriver].data == NULL)
-    {
-        PDM_TransferAbortReceiveSDMA(privHandle->base, pdmHandle);
-    }
+	/* If all data finished, just stop the transfer */
+	if (pdmHandle->pdmQueue[pdmHandle->queueDriver].data == NULL) {
+		PDM_TransferAbortReceiveSDMA(privHandle->base, pdmHandle);
+	}
 }
 
 /*!
@@ -79,37 +76,37 @@ static void PDM_SDMACallback(sdma_handle_t *handle, void *userData, bool done, u
  * param dma request source.
  */
 void PDM_TransferCreateHandleSDMA(PDM_Type *base,
-                                  pdm_sdma_handle_t *handle,
-                                  pdm_sdma_callback_t callback,
-                                  void *userData,
-                                  sdma_handle_t *dmaHandle,
-                                  uint32_t eventSource)
+        pdm_sdma_handle_t *handle,
+        pdm_sdma_callback_t callback,
+        void *userData,
+        sdma_handle_t *dmaHandle,
+        uint32_t eventSource)
 {
-    assert((handle != NULL) && (dmaHandle != NULL));
+	assert((handle != NULL) && (dmaHandle != NULL));
 
-    uint32_t instance = PDM_GetInstance(base);
+	uint32_t instance = PDM_GetInstance(base);
 
-    /* Zero the handle */
-    (void)memset(handle, 0, sizeof(*handle));
+	/* Zero the handle */
+	(void)memset(handle, 0, sizeof(*handle));
 
-    /* Set pdm base to handle */
-    handle->dmaHandle   = dmaHandle;
-    handle->callback    = callback;
-    handle->userData    = userData;
-    handle->eventSource = eventSource;
-    handle->fifoWidth   = FSL_FEATURE_PDM_FIFO_WIDTH;
+	/* Set pdm base to handle */
+	handle->dmaHandle   = dmaHandle;
+	handle->callback    = callback;
+	handle->userData    = userData;
+	handle->eventSource = eventSource;
+	handle->fifoWidth   = FSL_FEATURE_PDM_FIFO_WIDTH;
 
-    /* Set PDM state to idle */
-    handle->state = kStatus_PDM_Idle;
+	/* Set PDM state to idle */
+	handle->state = kStatus_PDM_Idle;
 
-    s_sdmaPrivateHandle[instance].base   = base;
-    s_sdmaPrivateHandle[instance].handle = handle;
+	s_sdmaPrivateHandle[instance].base   = base;
+	s_sdmaPrivateHandle[instance].handle = handle;
 
-    /* Need to use scatter gather */
-    SDMA_InstallBDMemory(dmaHandle, handle->bdPool, PDM_XFER_QUEUE_SIZE);
+	/* Need to use scatter gather */
+	SDMA_InstallBDMemory(dmaHandle, handle->bdPool, PDM_XFER_QUEUE_SIZE);
 
-    /* Install callback for Tx dma channel */
-    SDMA_SetCallback(dmaHandle, PDM_SDMACallback, &s_sdmaPrivateHandle[instance]);
+	/* Install callback for Tx dma channel */
+	SDMA_SetCallback(dmaHandle, PDM_SDMACallback, &s_sdmaPrivateHandle[instance]);
 }
 
 /*!
@@ -121,21 +118,21 @@ void PDM_TransferCreateHandleSDMA(PDM_Type *base,
  * param config channel configurations.
  */
 void PDM_SetChannelConfigSDMA(PDM_Type *base,
-                              pdm_sdma_handle_t *handle,
-                              uint32_t channel,
-                              const pdm_channel_config_t *config)
+        pdm_sdma_handle_t *handle,
+        uint32_t channel,
+        const pdm_channel_config_t *config)
 {
-    assert(NULL != config);
+	assert(NULL != config);
 
-    /* channel configurations */
-    PDM_SetChannelConfig(base, channel, config);
+	/* channel configurations */
+	PDM_SetChannelConfig(base, channel, config);
 
-    /* record end channel number */
-    handle->endChannel = (uint8_t)channel;
-    /* increase totoal enabled channel number */
-    handle->channelNums++;
-    /* increase count pre channel numbers */
-    handle->count = (uint8_t)(handle->channelNums * (base->FIFO_CTRL & PDM_FIFO_CTRL_FIFOWMK_MASK));
+	/* record end channel number */
+	handle->endChannel = (uint8_t)channel;
+	/* increase totoal enabled channel number */
+	handle->channelNums++;
+	/* increase count pre channel numbers */
+	handle->count = (uint8_t)(handle->channelNums * (base->FIFO_CTRL & PDM_FIFO_CTRL_FIFOWMK_MASK));
 }
 
 /*!
@@ -153,71 +150,65 @@ void PDM_SetChannelConfigSDMA(PDM_Type *base,
  */
 status_t PDM_TransferReceiveSDMA(PDM_Type *base, pdm_sdma_handle_t *handle, pdm_transfer_t *xfer)
 {
-    assert((handle != NULL) && (xfer != NULL));
+	assert((handle != NULL) && (xfer != NULL));
 
-    sdma_transfer_config_t config = {0};
-    uint32_t startAddr =
-        PDM_GetDataRegisterAddress(base, ((uint32_t)handle->endChannel - ((uint32_t)handle->channelNums - 1U)));
-    sdma_peripheral_t perType = kSDMA_PeripheralMultiFifoPDM;
+	sdma_transfer_config_t config = {0};
+	uint32_t startAddr =
+	        PDM_GetDataRegisterAddress(base, ((uint32_t)handle->endChannel - ((uint32_t)handle->channelNums - 1U)));
+	sdma_peripheral_t perType = kSDMA_PeripheralMultiFifoPDM;
 
-    /* Check if input parameter invalid */
-    if ((xfer->data == NULL) || (xfer->dataSize == 0U))
-    {
-        return kStatus_InvalidArgument;
-    }
+	/* Check if input parameter invalid */
+	if ((xfer->data == NULL) || (xfer->dataSize == 0U)) {
+		return kStatus_InvalidArgument;
+	}
 
-    if (handle->pdmQueue[handle->queueUser].data != NULL)
-    {
-        return kStatus_PDM_QueueFull;
-    }
+	if (handle->pdmQueue[handle->queueUser].data != NULL) {
+		return kStatus_PDM_QueueFull;
+	}
 
-    /* Update queue state  */
-    handle->transferSize[handle->queueUser]      = xfer->dataSize;
-    handle->pdmQueue[handle->queueUser].data     = xfer->data;
-    handle->pdmQueue[handle->queueUser].dataSize = xfer->dataSize;
+	/* Update queue state  */
+	handle->transferSize[handle->queueUser]      = xfer->dataSize;
+	handle->pdmQueue[handle->queueUser].data     = xfer->data;
+	handle->pdmQueue[handle->queueUser].dataSize = xfer->dataSize;
 
-    /* Prepare sdma configure */
-    SDMA_PrepareTransfer(&config, startAddr, (uint32_t)xfer->data, handle->fifoWidth, handle->fifoWidth,
-                         (uint32_t)handle->count * handle->fifoWidth, xfer->dataSize, handle->eventSource, perType,
-                         kSDMA_PeripheralToMemory);
+	/* Prepare sdma configure */
+	SDMA_PrepareTransfer(&config, startAddr, (uint32_t)xfer->data, handle->fifoWidth, handle->fifoWidth,
+	        (uint32_t)handle->count * handle->fifoWidth, xfer->dataSize, handle->eventSource, perType,
+	        kSDMA_PeripheralToMemory);
 
-    /* multi fifo configurations */
-    SDMA_SetMultiFifoConfig(&config, handle->channelNums,
-                            (uint32_t)FSL_FEATURE_PDM_FIFO_OFFSET / sizeof(uint32_t) - 1U);
-    /* enable sw done for PDM */
-    SDMA_SetDoneConfig(handle->dmaHandle->base, &config, kSDMA_PeripheralMultiFifoPDM, kSDMA_DoneSrcSW);
+	/* multi fifo configurations */
+	SDMA_SetMultiFifoConfig(&config, handle->channelNums,
+	        (uint32_t)FSL_FEATURE_PDM_FIFO_OFFSET / sizeof(uint32_t) - 1U);
+	/* enable sw done for PDM */
+	SDMA_SetDoneConfig(handle->dmaHandle->base, &config, kSDMA_PeripheralMultiFifoPDM, kSDMA_DoneSrcSW);
 
-    if (handle->queueUser == PDM_XFER_QUEUE_SIZE - 1U)
-    {
-        SDMA_ConfigBufferDescriptor(&handle->bdPool[handle->queueUser], startAddr, (uint32_t)xfer->data,
-                                    config.destTransferSize, xfer->dataSize, true, true, true,
-                                    kSDMA_PeripheralToMemory);
-    }
-    else
-    {
-        SDMA_ConfigBufferDescriptor(&handle->bdPool[handle->queueUser], startAddr, (uint32_t)xfer->data,
-                                    config.destTransferSize, xfer->dataSize, true, true, false,
-                                    kSDMA_PeripheralToMemory);
-    }
+	if (handle->queueUser == PDM_XFER_QUEUE_SIZE - 1U) {
+		SDMA_ConfigBufferDescriptor(&handle->bdPool[handle->queueUser], startAddr, (uint32_t)xfer->data,
+		        config.destTransferSize, xfer->dataSize, true, true, true,
+		        kSDMA_PeripheralToMemory);
+	} else {
+		SDMA_ConfigBufferDescriptor(&handle->bdPool[handle->queueUser], startAddr, (uint32_t)xfer->data,
+		        config.destTransferSize, xfer->dataSize, true, true, false,
+		        kSDMA_PeripheralToMemory);
+	}
 
-    handle->queueUser = (handle->queueUser + 1U) % PDM_XFER_QUEUE_SIZE;
+	handle->queueUser = (handle->queueUser + 1U) % PDM_XFER_QUEUE_SIZE;
 
-    if (handle->state != (uint32_t)kStatus_PDM_Busy)
-    {
-        SDMA_SubmitTransfer(handle->dmaHandle, &config);
+	if (handle->state != (uint32_t)kStatus_PDM_Busy) {
+		SDMA_SubmitTransfer(handle->dmaHandle, &config);
 
-        /* Start DMA transfer */
-        SDMA_StartTransfer(handle->dmaHandle);
-    }
+		/* Start DMA transfer */
+		SDMA_StartTransfer(handle->dmaHandle);
+	}
 
-    handle->state = kStatus_PDM_Busy;
+	handle->state = kStatus_PDM_Busy;
 
-    /* Enable DMA enable bit */
-    PDM_EnableDMA(base, true);
-    /* enable PDM */
-    PDM_Enable(base, true);
+	/* Enable DMA enable bit */
+	PDM_EnableDMA(base, true);
+	/* enable PDM */
+	PDM_Enable(base, true);
 
-    return kStatus_Success;
+	return kStatus_Success;
 }
 
 /*!
@@ -228,14 +219,14 @@ status_t PDM_TransferReceiveSDMA(PDM_Type *base, pdm_sdma_handle_t *handle, pdm_
  */
 void PDM_TransferAbortReceiveSDMA(PDM_Type *base, pdm_sdma_handle_t *handle)
 {
-    assert(handle != NULL);
+	assert(handle != NULL);
 
-    /* Disable dma */
-    SDMA_AbortTransfer(handle->dmaHandle);
+	/* Disable dma */
+	SDMA_AbortTransfer(handle->dmaHandle);
 
-    /* Disable DMA enable bit */
-    PDM_EnableDMA(base, false);
+	/* Disable DMA enable bit */
+	PDM_EnableDMA(base, false);
 
-    /* Set the handle state */
-    handle->state = kStatus_PDM_Idle;
+	/* Set the handle state */
+	handle->state = kStatus_PDM_Idle;
 }

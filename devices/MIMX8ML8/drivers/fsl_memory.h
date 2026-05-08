@@ -53,10 +53,9 @@
 /* System level OCRAMS memory address = CM7 subsystem local OCRAMS address - FSL_MEM_M7_OCRAMS_OFFSET */
 #define FSL_MEM_M7_OCRAMS_OFFSET 0x20000000U
 
-typedef enum _mem_direction
-{
-    kMEMORY_Local2DMA = 0,
-    kMEMORY_DMA2Local,
+typedef enum _mem_direction {
+	kMEMORY_Local2DMA = 0,
+	kMEMORY_DMA2Local,
 } mem_direction_t;
 
 /*******************************************************************************
@@ -77,68 +76,47 @@ extern "C" {
  */
 static inline uint32_t MEMORY_ConvertMemoryMapAddress(uint32_t addr, mem_direction_t direction)
 {
-    uint32_t dest;
+	uint32_t dest;
 
-    switch (direction)
-    {
-        case kMEMORY_Local2DMA:
-        {
-            if ((addr <= FSL_MEM_M7_ITCM_END))
-            {
-                dest = addr + FSL_MEM_M7_ITCM_OFFSET;
-            }
-            else if ((addr >= FSL_MEM_M7_DTCM_BEGIN) && (addr <= FSL_MEM_M7_DTCM_END))
-            {
-                dest = addr - FSL_MEM_M7_DTCM_OFFSET;
-            }
-            else if ((addr >= FSL_MEM_M7_OCRAM_BEGIN) && (addr <= FSL_MEM_M7_OCRAM_END))
-            {
-                dest = addr - FSL_MEM_M7_OCRAM_OFFSET;
-            }
-            else if ((addr >= FSL_MEM_M7_OCRAMS_BEGIN) && (addr <= FSL_MEM_M7_OCRAMS_END))
-            {
-                dest = addr - FSL_MEM_M7_OCRAMS_OFFSET;
-            }
-            else
-            {
-                dest = addr;
-            }
-            break;
-        }
-        case kMEMORY_DMA2Local:
-        {
-            if ((addr >= (FSL_MEM_M7_ITCM_BEGIN + FSL_MEM_M7_ITCM_OFFSET)) &&
-                (addr <= (FSL_MEM_M7_ITCM_END + FSL_MEM_M7_ITCM_OFFSET)))
-            {
-                dest = addr - FSL_MEM_M7_ITCM_OFFSET;
-            }
-            else if ((addr >= (FSL_MEM_M7_DTCM_BEGIN - FSL_MEM_M7_DTCM_OFFSET)) &&
-                     (addr <= (FSL_MEM_M7_DTCM_END - FSL_MEM_M7_DTCM_OFFSET)))
-            {
-                dest = addr + FSL_MEM_M7_DTCM_OFFSET;
-            }
-            else if ((addr >= (FSL_MEM_M7_OCRAM_BEGIN - FSL_MEM_M7_OCRAM_OFFSET)) &&
-                     (addr <= (FSL_MEM_M7_OCRAM_END - FSL_MEM_M7_OCRAM_OFFSET)))
-            {
-                dest = addr + FSL_MEM_M7_OCRAM_OFFSET;
-            }
-            else if ((addr >= (FSL_MEM_M7_OCRAMS_BEGIN - FSL_MEM_M7_OCRAMS_OFFSET)) &&
-                     (addr <= (FSL_MEM_M7_OCRAMS_END - FSL_MEM_M7_OCRAMS_OFFSET)))
-            {
-                dest = addr + FSL_MEM_M7_OCRAMS_OFFSET;
-            }
-            else
-            {
-                dest = addr;
-            }
-            break;
-        }
-        default:
-            dest = addr;
-            break;
-    }
+	switch (direction) {
+	case kMEMORY_Local2DMA: {
+		if ((addr <= FSL_MEM_M7_ITCM_END)) {
+			dest = addr + FSL_MEM_M7_ITCM_OFFSET;
+		} else if ((addr >= FSL_MEM_M7_DTCM_BEGIN) && (addr <= FSL_MEM_M7_DTCM_END)) {
+			dest = addr - FSL_MEM_M7_DTCM_OFFSET;
+		} else if ((addr >= FSL_MEM_M7_OCRAM_BEGIN) && (addr <= FSL_MEM_M7_OCRAM_END)) {
+			dest = addr - FSL_MEM_M7_OCRAM_OFFSET;
+		} else if ((addr >= FSL_MEM_M7_OCRAMS_BEGIN) && (addr <= FSL_MEM_M7_OCRAMS_END)) {
+			dest = addr - FSL_MEM_M7_OCRAMS_OFFSET;
+		} else {
+			dest = addr;
+		}
+		break;
+	}
+	case kMEMORY_DMA2Local: {
+		if ((addr >= (FSL_MEM_M7_ITCM_BEGIN + FSL_MEM_M7_ITCM_OFFSET)) &&
+		        (addr <= (FSL_MEM_M7_ITCM_END + FSL_MEM_M7_ITCM_OFFSET))) {
+			dest = addr - FSL_MEM_M7_ITCM_OFFSET;
+		} else if ((addr >= (FSL_MEM_M7_DTCM_BEGIN - FSL_MEM_M7_DTCM_OFFSET)) &&
+		        (addr <= (FSL_MEM_M7_DTCM_END - FSL_MEM_M7_DTCM_OFFSET))) {
+			dest = addr + FSL_MEM_M7_DTCM_OFFSET;
+		} else if ((addr >= (FSL_MEM_M7_OCRAM_BEGIN - FSL_MEM_M7_OCRAM_OFFSET)) &&
+		        (addr <= (FSL_MEM_M7_OCRAM_END - FSL_MEM_M7_OCRAM_OFFSET))) {
+			dest = addr + FSL_MEM_M7_OCRAM_OFFSET;
+		} else if ((addr >= (FSL_MEM_M7_OCRAMS_BEGIN - FSL_MEM_M7_OCRAMS_OFFSET)) &&
+		        (addr <= (FSL_MEM_M7_OCRAMS_END - FSL_MEM_M7_OCRAMS_OFFSET))) {
+			dest = addr + FSL_MEM_M7_OCRAMS_OFFSET;
+		} else {
+			dest = addr;
+		}
+		break;
+	}
+	default:
+		dest = addr;
+		break;
+	}
 
-    return dest;
+	return dest;
 }
 #if defined(__cplusplus)
 }

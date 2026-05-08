@@ -34,10 +34,9 @@
  * Prototypes
  ******************************************************************************/
 /* Define a structure to hold SRTM_MESSAGE_BUF_SIZE buffer. */
-typedef struct
-{
-    srtm_list_t node;
-    uint8_t buf[SRTM_MESSAGE_BUF_SIZE - sizeof(srtm_list_t)];
+typedef struct {
+	srtm_list_t node;
+	uint8_t buf[SRTM_MESSAGE_BUF_SIZE - sizeof(srtm_list_t)];
 } srtm_message_buf_t;
 
 /*******************************************************************************
@@ -56,84 +55,71 @@ static uint32_t minFreeMsgCount;
  ******************************************************************************/
 void *SRTM_MessagePool_Alloc(uint32_t size)
 {
-    uint32_t i;
-    void *buf;
-    uint32_t primask;
+	uint32_t i;
+	void *buf;
+	uint32_t primask;
 
-    if (!srtmMsgList.next)
-    {
-        primask = DisableGlobalIRQ();
-        if (!srtmMsgList.next)
-        {
-            /* Message list not initialized, initialize now */
-            SRTM_List_Init(&srtmMsgList);
-            for (i = 0; i < sizeof(srtmMsgs) / sizeof(srtm_message_buf_t); i++)
-            {
-                SRTM_List_AddTail(&srtmMsgList, &srtmMsgs[i].node);
-            }
+	if (!srtmMsgList.next) {
+		primask = DisableGlobalIRQ();
+		if (!srtmMsgList.next) {
+			/* Message list not initialized, initialize now */
+			SRTM_List_Init(&srtmMsgList);
+			for (i = 0; i < sizeof(srtmMsgs) / sizeof(srtm_message_buf_t); i++) {
+				SRTM_List_AddTail(&srtmMsgList, &srtmMsgs[i].node);
+			}
 #ifdef SRTM_DEBUG_MESSAGE_FUNC
-            freeMsgCount    = sizeof(srtmMsgs) / sizeof(srtm_message_buf_t);
-            minFreeMsgCount = freeMsgCount;
+			freeMsgCount    = sizeof(srtmMsgs) / sizeof(srtm_message_buf_t);
+			minFreeMsgCount = freeMsgCount;
 #endif
-        }
-        EnableGlobalIRQ(primask);
-    }
+		}
+		EnableGlobalIRQ(primask);
+	}
 
-    if (size > sizeof(srtm_message_buf_t))
-    {
-        SRTM_DEBUG_MESSAGE(SRTM_DEBUG_VERBOSE_INFO,
-                           "Message size larger than SRTM_MESSAGE_BUF_SIZE %d, allocated in heap.\r\n",
-                           SRTM_MESSAGE_BUF_SIZE);
-        buf = SRTM_Heap_Malloc(size);
-    }
-    else
-    {
-        primask = DisableGlobalIRQ();
-        if (SRTM_List_IsEmpty(&srtmMsgList))
-        {
-            EnableGlobalIRQ(primask);
-            SRTM_DEBUG_MESSAGE(SRTM_DEBUG_VERBOSE_WARN, "Message pool (size %d) used up, allocated in heap.\r\n",
-                               SRTM_MESSAGE_POOL_SIZE);
-            buf = SRTM_Heap_Malloc(size);
-        }
-        else
-        {
-            buf = (void *)srtmMsgList.next;
-            SRTM_List_Remove(srtmMsgList.next);
+	if (size > sizeof(srtm_message_buf_t)) {
+		SRTM_DEBUG_MESSAGE(SRTM_DEBUG_VERBOSE_INFO,
+		        "Message size larger than SRTM_MESSAGE_BUF_SIZE %d, allocated in heap.\r\n",
+		        SRTM_MESSAGE_BUF_SIZE);
+		buf = SRTM_Heap_Malloc(size);
+	} else {
+		primask = DisableGlobalIRQ();
+		if (SRTM_List_IsEmpty(&srtmMsgList)) {
+			EnableGlobalIRQ(primask);
+			SRTM_DEBUG_MESSAGE(SRTM_DEBUG_VERBOSE_WARN, "Message pool (size %d) used up, allocated in heap.\r\n",
+			        SRTM_MESSAGE_POOL_SIZE);
+			buf = SRTM_Heap_Malloc(size);
+		} else {
+			buf = (void *)srtmMsgList.next;
+			SRTM_List_Remove(srtmMsgList.next);
 #ifdef SRTM_DEBUG_MESSAGE_FUNC
-            freeMsgCount--;
-            if (freeMsgCount < minFreeMsgCount)
-            {
-                minFreeMsgCount = freeMsgCount;
-            }
+			freeMsgCount--;
+			if (freeMsgCount < minFreeMsgCount) {
+				minFreeMsgCount = freeMsgCount;
+			}
 #endif
-            EnableGlobalIRQ(primask);
-        }
-    }
+			EnableGlobalIRQ(primask);
+		}
+	}
 
-    return buf;
+	return buf;
 }
 
 void SRTM_MessagePool_Free(void *buf)
 {
-    srtm_message_buf_t *msgBuf;
-    uint32_t primask;
+	srtm_message_buf_t *msgBuf;
+	uint32_t primask;
 
-    if ((uint32_t *)buf >= (uint32_t *)&srtmMsgs[0] &&
-        (uint32_t *)buf < (uint32_t *)&srtmMsgs[sizeof(srtmMsgs) / sizeof(srtm_message_buf_t)])
-    {
-        /* buffer locates in message pool */
-        assert(((uint32_t)buf - (uint32_t)&srtmMsgs[0]) % sizeof(srtm_message_buf_t) == 0);
-        msgBuf  = (srtm_message_buf_t *)buf;
-        primask = DisableGlobalIRQ();
-        SRTM_List_AddTail(&srtmMsgList, &msgBuf->node);
+	if ((uint32_t *)buf >= (uint32_t *)&srtmMsgs[0] &&
+	        (uint32_t *)buf < (uint32_t *)&srtmMsgs[sizeof(srtmMsgs) / sizeof(srtm_message_buf_t)]) {
+		/* buffer locates in message pool */
+		assert(((uint32_t)buf - (uint32_t)&srtmMsgs[0]) % sizeof(srtm_message_buf_t) == 0);
+		msgBuf  = (srtm_message_buf_t *)buf;
+		primask = DisableGlobalIRQ();
+		SRTM_List_AddTail(&srtmMsgList, &msgBuf->node);
 #ifdef SRTM_DEBUG_MESSAGE_FUNC
-        freeMsgCount++;
+		freeMsgCount++;
 #endif
-        EnableGlobalIRQ(primask);
-    }
-    else
-    {
-        SRTM_Heap_Free(buf);
-    }
+		EnableGlobalIRQ(primask);
+	} else {
+		SRTM_Heap_Free(buf);
+	}
 }

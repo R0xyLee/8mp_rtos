@@ -52,36 +52,34 @@ static void log_task(void *pvParameters);
  */
 int main(void)
 {
-    /* M7 has its local cache and enabled by default,
-     * need to set smart subsystems (0x28000000 ~ 0x3FFFFFFF)
-     * non-cacheable before accessing this address region */
-    BOARD_InitMemory();
+	/* M7 has its local cache and enabled by default,
+	 * need to set smart subsystems (0x28000000 ~ 0x3FFFFFFF)
+	 * non-cacheable before accessing this address region */
+	BOARD_InitMemory();
 
-    /* Board specific RDC settings */
-    BOARD_RdcInit();
+	/* Board specific RDC settings */
+	BOARD_RdcInit();
 
-    BOARD_InitPins();
-    BOARD_BootClockRUN();
-    BOARD_InitDebugConsole();
-    /* Initialize logger for 10 logs with maximum lenght of one log 20 B */
-    log_init(10, MAX_LOG_LENGTH);
-    if (xTaskCreate(write_task_1, "WRITE_TASK_1", configMINIMAL_STACK_SIZE + 166, NULL, tskIDLE_PRIORITY + 2, NULL) !=
-        pdPASS)
-    {
-        PRINTF("Task creation failed!.\r\n");
-        while (1)
-            ;
-    }
-    if (xTaskCreate(write_task_2, "WRITE_TASK_2", configMINIMAL_STACK_SIZE + 166, NULL, tskIDLE_PRIORITY + 2, NULL) !=
-        pdPASS)
-    {
-        PRINTF("Task creation failed!.\r\n");
-        while (1)
-            ;
-    }
-    vTaskStartScheduler();
-    for (;;)
-        ;
+	BOARD_InitPins();
+	BOARD_BootClockRUN();
+	BOARD_InitDebugConsole();
+	/* Initialize logger for 10 logs with maximum lenght of one log 20 B */
+	log_init(10, MAX_LOG_LENGTH);
+	if (xTaskCreate(write_task_1, "WRITE_TASK_1", configMINIMAL_STACK_SIZE + 166, NULL, tskIDLE_PRIORITY + 2, NULL) !=
+	        pdPASS) {
+		PRINTF("Task creation failed!.\r\n");
+		while (1)
+			;
+	}
+	if (xTaskCreate(write_task_2, "WRITE_TASK_2", configMINIMAL_STACK_SIZE + 166, NULL, tskIDLE_PRIORITY + 2, NULL) !=
+	        pdPASS) {
+		PRINTF("Task creation failed!.\r\n");
+		while (1)
+			;
+	}
+	vTaskStartScheduler();
+	for (;;)
+		;
 }
 
 /*******************************************************************************
@@ -92,15 +90,14 @@ int main(void)
  */
 static void write_task_1(void *pvParameters)
 {
-    char log[MAX_LOG_LENGTH + 1];
-    uint32_t i = 0;
-    for (i = 0; i < 5; i++)
-    {
-        sprintf(log, "Task1 Message %d", (int)i);
-        log_add(log);
-        taskYIELD();
-    }
-    vTaskSuspend(NULL);
+	char log[MAX_LOG_LENGTH + 1];
+	uint32_t i = 0;
+	for (i = 0; i < 5; i++) {
+		sprintf(log, "Task1 Message %d", (int)i);
+		log_add(log);
+		taskYIELD();
+	}
+	vTaskSuspend(NULL);
 }
 
 /*!
@@ -108,15 +105,14 @@ static void write_task_1(void *pvParameters)
  */
 static void write_task_2(void *pvParameters)
 {
-    char log[MAX_LOG_LENGTH + 1];
-    uint32_t i = 0;
-    for (i = 0; i < 5; i++)
-    {
-        sprintf(log, "Task2 Message %d", (int)i);
-        log_add(log);
-        taskYIELD();
-    }
-    vTaskSuspend(NULL);
+	char log[MAX_LOG_LENGTH + 1];
+	uint32_t i = 0;
+	for (i = 0; i < 5; i++) {
+		sprintf(log, "Task2 Message %d", (int)i);
+		log_add(log);
+		taskYIELD();
+	}
+	vTaskSuspend(NULL);
 }
 
 /*******************************************************************************
@@ -127,7 +123,7 @@ static void write_task_2(void *pvParameters)
  */
 void log_add(char *log)
 {
-    xQueueSend(log_queue, log, 0);
+	xQueueSend(log_queue, log, 0);
 }
 
 /*!
@@ -135,18 +131,16 @@ void log_add(char *log)
  */
 void log_init(uint32_t queue_length, uint32_t max_log_lenght)
 {
-    log_queue = xQueueCreate(queue_length, max_log_lenght);
-    /* Enable queue view in MCUX IDE FreeRTOS TAD plugin. */
-    if (log_queue != NULL)
-    {
-        vQueueAddToRegistry(log_queue, "LogQ");
-    }
-    if (xTaskCreate(log_task, "log_task", configMINIMAL_STACK_SIZE + 166, NULL, tskIDLE_PRIORITY + 1, NULL) != pdPASS)
-    {
-        PRINTF("Task creation failed!.\r\n");
-        while (1)
-            ;
-    }
+	log_queue = xQueueCreate(queue_length, max_log_lenght);
+	/* Enable queue view in MCUX IDE FreeRTOS TAD plugin. */
+	if (log_queue != NULL) {
+		vQueueAddToRegistry(log_queue, "LogQ");
+	}
+	if (xTaskCreate(log_task, "log_task", configMINIMAL_STACK_SIZE + 166, NULL, tskIDLE_PRIORITY + 1, NULL) != pdPASS) {
+		PRINTF("Task creation failed!.\r\n");
+		while (1)
+			;
+	}
 }
 
 /*!
@@ -154,15 +148,13 @@ void log_init(uint32_t queue_length, uint32_t max_log_lenght)
  */
 static void log_task(void *pvParameters)
 {
-    uint32_t counter = 0;
-    char log[MAX_LOG_LENGTH + 1];
-    while (1)
-    {
-        if (xQueueReceive(log_queue, log, portMAX_DELAY) != pdTRUE)
-        {
-            PRINTF("Failed to receive queue.\r\n");
-        }
-        PRINTF("Log %d: %s\r\n", counter, log);
-        counter++;
-    }
+	uint32_t counter = 0;
+	char log[MAX_LOG_LENGTH + 1];
+	while (1) {
+		if (xQueueReceive(log_queue, log, portMAX_DELAY) != pdTRUE) {
+			PRINTF("Failed to receive queue.\r\n");
+		}
+		PRINTF("Log %d: %s\r\n", counter, log);
+		counter++;
+	}
 }

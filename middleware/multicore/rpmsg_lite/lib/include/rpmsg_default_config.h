@@ -140,9 +140,8 @@
 //! Default implementation of hang assert function
 static inline void RL_HANG(void)
 {
-    for (;;)
-    {
-    }
+	for (;;) {
+	}
 }
 
 //! @def RL_ASSERT

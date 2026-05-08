@@ -101,7 +101,7 @@ uint32_t SRTM_RawData_GetDataLen(srtm_rawdata_t data);
  * @return SRTM request handle, or NULL on failure.
  */
 srtm_request_t SRTM_Request_Create(
-    srtm_channel_t channel, uint8_t category, uint16_t version, uint8_t command, uint16_t payloadLen);
+        srtm_channel_t channel, uint8_t category, uint16_t version, uint8_t command, uint16_t payloadLen);
 
 /*!
  * @brief Destroy SRTM request message.
@@ -131,7 +131,7 @@ srtm_status_t SRTM_Request_GetErrorCode(srtm_request_t request);
  * @return SRTM response handle, or NULL on failure.
  */
 srtm_response_t SRTM_Response_Create(
-    srtm_channel_t channel, uint8_t category, uint16_t version, uint8_t command, uint16_t payloadLen);
+        srtm_channel_t channel, uint8_t category, uint16_t version, uint8_t command, uint16_t payloadLen);
 
 /*!
  * @brief Destroy SRTM response message.
@@ -151,7 +151,7 @@ void SRTM_Response_Destroy(srtm_response_t response);
  * @return SRTM notification handle, or NULL on failure.
  */
 srtm_notification_t SRTM_Notification_Create(
-    srtm_channel_t channel, uint8_t category, uint16_t version, uint8_t command, uint16_t payloadLen);
+        srtm_channel_t channel, uint8_t category, uint16_t version, uint8_t command, uint16_t payloadLen);
 
 /*!
  * @brief Destroy SRTM notification message.

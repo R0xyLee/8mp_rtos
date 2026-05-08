@@ -25,65 +25,62 @@
 /*!
  * @brief TMU interrupt enable, _tmu_interrupt_enable.
  */
-enum
-{
-    kTMU_ImmediateTemperature0InterruptEnable =
-        TMU_TIER_ITTEIE0_MASK, /*!< Immediate temperature threshold exceeded interrupt enable of probe0. */
-    kTMU_AverageTemperature0InterruptEnable =
-        TMU_TIER_ATTEIE0_MASK, /*!< Average temperature threshold exceeded interrupt enable of probe0. */
-    kTMU_AverageTemperature0CriticalInterruptEnable =
-        TMU_TIER_ATCTEIE0_MASK, /*!< Average temperature critical threshold exceeded interrupt enable of probe0. */
-    kTMU_ImmediateTemperature1Interrupt1Enable =
-        TMU_TIER_ITTEIE1_MASK, /*!< Immediate temperature threshold exceeded interrupt enable of probe1. */
-    kTMU_AverageTemperature1Interrupt1Enable =
-        TMU_TIER_ATTEIE1_MASK, /*!< Average temperature threshold exceeded interrupt enable of probe1. */
-    kTMU_AverageTemperature1CriticalInterrupt1Enable =
-        TMU_TIER_ATCTEIE1_MASK, /*!< Average temperature critical threshold exceeded interrupt enable of probe1. */
+enum {
+	kTMU_ImmediateTemperature0InterruptEnable =
+	        TMU_TIER_ITTEIE0_MASK, /*!< Immediate temperature threshold exceeded interrupt enable of probe0. */
+	kTMU_AverageTemperature0InterruptEnable =
+	        TMU_TIER_ATTEIE0_MASK, /*!< Average temperature threshold exceeded interrupt enable of probe0. */
+	kTMU_AverageTemperature0CriticalInterruptEnable =
+	        TMU_TIER_ATCTEIE0_MASK, /*!< Average temperature critical threshold exceeded interrupt enable of probe0. */
+	kTMU_ImmediateTemperature1Interrupt1Enable =
+	        TMU_TIER_ITTEIE1_MASK, /*!< Immediate temperature threshold exceeded interrupt enable of probe1. */
+	kTMU_AverageTemperature1Interrupt1Enable =
+	        TMU_TIER_ATTEIE1_MASK, /*!< Average temperature threshold exceeded interrupt enable of probe1. */
+	kTMU_AverageTemperature1CriticalInterrupt1Enable =
+	        TMU_TIER_ATCTEIE1_MASK, /*!< Average temperature critical threshold exceeded interrupt enable of probe1. */
 };
 
 /*!
  * @brief TMU interrupt enable, _tmu_interrupt_status_flags.
  */
-enum
-{
-    kTMU_ImmediateTemperature0InterruptStausFlags =
-        TMU_TIDR_ITTE0_MASK, /*!< Immediate temperature threshold exceeded interrupt status of probe0. */
-    kTMU_AverageTemperature0InterruptStausFlags =
-        TMU_TIDR_ATTE0_MASK, /*!< Average temperature threshold exceeded interrupt status of probe0. */
-    kTMU_AverageTemperature0CriticalInterruptStausFlags =
-        TMU_TIDR_ATCTE0_MASK, /*!< Average temperature critical threshold exceeded interrupt status of probe0. */
-    kTMU_ImmediateTemperature1Interrupt1StausFlags =
-        TMU_TIDR_ITTE1_MASK, /*!< Immediate temperature threshold exceeded interrupt status of probe1. */
-    kTMU_AverageTemperature1Interrupt1StausFlags =
-        TMU_TIDR_ATTE1_MASK, /*!< Average temperature threshold exceeded interrupt status of probe1. */
-    kTMU_AverageTemperature1CriticalInterrupt1StausFlags =
-        TMU_TIDR_ATCTE1_MASK, /*!< Average temperature critical threshold exceeded interrupt status of probe1. */
+enum {
+	kTMU_ImmediateTemperature0InterruptStausFlags =
+	        TMU_TIDR_ITTE0_MASK, /*!< Immediate temperature threshold exceeded interrupt status of probe0. */
+	kTMU_AverageTemperature0InterruptStausFlags =
+	        TMU_TIDR_ATTE0_MASK, /*!< Average temperature threshold exceeded interrupt status of probe0. */
+	kTMU_AverageTemperature0CriticalInterruptStausFlags =
+	        TMU_TIDR_ATCTE0_MASK, /*!< Average temperature critical threshold exceeded interrupt status of probe0. */
+	kTMU_ImmediateTemperature1Interrupt1StausFlags =
+	        TMU_TIDR_ITTE1_MASK, /*!< Immediate temperature threshold exceeded interrupt status of probe1. */
+	kTMU_AverageTemperature1Interrupt1StausFlags =
+	        TMU_TIDR_ATTE1_MASK, /*!< Average temperature threshold exceeded interrupt status of probe1. */
+	kTMU_AverageTemperature1CriticalInterrupt1StausFlags =
+	        TMU_TIDR_ATCTE1_MASK, /*!< Average temperature critical threshold exceeded interrupt status of probe1. */
 };
 
 /*!
  * @brief configuration for TMU threshold.
  */
-typedef struct _tmu_threshold_config
-{
-    bool immediateThresholdEnable;       /*!< Enable high temperature immediate threshold. */
-    bool AverageThresholdEnable;         /*!< Enable high temperature average threshold. */
-    bool AverageCriticalThresholdEnable; /*!< Enable high temperature average critical threshold. */
-    uint8_t immediateThresholdValueOfMainProbe; /*!< Range:-40~125. Valid when corresponding threshold is enabled. High temperature
+typedef struct _tmu_threshold_config {
+	bool immediateThresholdEnable;       /*!< Enable high temperature immediate threshold. */
+	bool AverageThresholdEnable;         /*!< Enable high temperature average threshold. */
+	bool AverageCriticalThresholdEnable; /*!< Enable high temperature average critical threshold. */
+	uint8_t immediateThresholdValueOfMainProbe; /*!< Range:-40~125. Valid when corresponding threshold is enabled. High temperature
                                        immediate threshold value of main probe.
                                           Besides, bit-8 is sign bit: 1 means nagetive and 0 means positive. */
-    uint8_t averageThresholdValueOfMainProbe;   /*!< Range:-40~125. Valid when corresponding threshold is enabled. High temperature
+	uint8_t averageThresholdValueOfMainProbe;   /*!< Range:-40~125. Valid when corresponding threshold is enabled. High temperature
                                        average threshold value of main probe.
                                           Besides, bit-8 is sign bit: 1 means nagetive and 0 means positive. */
-    uint8_t averageCriticalThresholdValueOfMainProbe; /*!< Range:-40~125. Valid when corresponding threshold is enabled. High
+	uint8_t averageCriticalThresholdValueOfMainProbe; /*!< Range:-40~125. Valid when corresponding threshold is enabled. High
                                              temperature average critical threshold value of main probe.
                                                 Besides, bit-8 is sign bit: 1 means nagetive and 0 means positive. */
-    uint8_t immediateThresholdValueOfRemoteProbe; /*!< Range:-40~125. Valid when corresponding threshold is enabled. High temperature
+	uint8_t immediateThresholdValueOfRemoteProbe; /*!< Range:-40~125. Valid when corresponding threshold is enabled. High temperature
                                        immediate threshold value of remote probe.
                                           Besides, bit-8 is sign bit: 1 means nagetive and 0 means positive. */
-    uint8_t averageThresholdValueOfRemoteProbe;   /*!< Range:-40~125. Valid when corresponding threshold is enabled. High temperature
+	uint8_t averageThresholdValueOfRemoteProbe;   /*!< Range:-40~125. Valid when corresponding threshold is enabled. High temperature
                                        average threshold value of remote probe.
                                           Besides, bit-8 is sign bit: 1 means nagetive and 0 means positive. */
-    uint8_t averageCriticalThresholdValueOfRemoteProbe; /*!< Range:-40~125. Valid when corresponding threshold is enabled. High
+	uint8_t averageCriticalThresholdValueOfRemoteProbe; /*!< Range:-40~125. Valid when corresponding threshold is enabled. High
                                              temperature average critical threshold value of remote probe.
                                                 Besides, bit-8 is sign bit: 1 means nagetive and 0 means positive. */
 } tmu_threshold_config_t;
@@ -91,34 +88,31 @@ typedef struct _tmu_threshold_config
 /*!
  * @brief Probe selection.
  */
-typedef enum _tmu_probe_select
-{
-    kTMU_ProbeSelectMainProbe   = 1U << 0U, /*!< Select the main probe only. */
-    kTMU_ProbeSelectRemoteProbe = 1U << 1U, /*!< Select the remote probe(near A53) only. */
-    kTMU_ProbeSelectBothProbes  = ( 1U << 0U) |  (1U << 1U), /*!< Select both 2 probes. */
+typedef enum _tmu_probe_select {
+	kTMU_ProbeSelectMainProbe   = 1U << 0U, /*!< Select the main probe only. */
+	kTMU_ProbeSelectRemoteProbe = 1U << 1U, /*!< Select the remote probe(near A53) only. */
+	kTMU_ProbeSelectBothProbes  = (1U << 0U) | (1U << 1U),   /*!< Select both 2 probes. */
 } tmu_probe_select_t;
 
 /*!
  * @brief Average low pass filter setting.
  */
-typedef enum _tmu_average_low_pass_filter
-{
-    kTMU_AverageLowPassFilter1_0   = 0U, /*!< Average low pass filter = 1. */
-    kTMU_AverageLowPassFilter0_5   = 1U, /*!< Average low pass filter = 0.5. */
-    kTMU_AverageLowPassFilter0_25  = 2U, /*!< Average low pass filter = 0.25. */
-    kTMU_AverageLowPassFilter0_125 = 3U, /*!< Average low pass filter = 0.125. */
+typedef enum _tmu_average_low_pass_filter {
+	kTMU_AverageLowPassFilter1_0   = 0U, /*!< Average low pass filter = 1. */
+	kTMU_AverageLowPassFilter0_5   = 1U, /*!< Average low pass filter = 0.5. */
+	kTMU_AverageLowPassFilter0_25  = 2U, /*!< Average low pass filter = 0.25. */
+	kTMU_AverageLowPassFilter0_125 = 3U, /*!< Average low pass filter = 0.125. */
 } tmu_average_low_pass_filter_t;
 
 /*!
  * @brief Configuration for TMU module.
  */
-typedef struct _tmu_config
-{
-    tmu_probe_select_t probeSelect; /*!< The temperature monitor probe select.*/
-    tmu_average_low_pass_filter_t averageLPF; /*!< The average temperature is calculated as:
+typedef struct _tmu_config {
+	tmu_probe_select_t probeSelect; /*!< The temperature monitor probe select.*/
+	tmu_average_low_pass_filter_t averageLPF; /*!< The average temperature is calculated as:
                                                    ALPF x Current_Temp + (1 - ALPF) x Average_Temp.
                                                    For proper operation, this field should only change when monitoring is disabled. */
-    tmu_threshold_config_t thresholdConfig; /*!< The high temperature threshold configuration. */
+	tmu_threshold_config_t thresholdConfig; /*!< The high temperature threshold configuration. */
 } tmu_config_t;
 
 #if defined(__cplusplus)
@@ -180,7 +174,7 @@ void TMU_GetDefaultConfig(tmu_config_t *config);
  */
 static inline void TMU_EnableInterrupts(TMU_Type *base, uint32_t mask)
 {
-    base->TIER |= mask;
+	base->TIER |= mask;
 }
 
 /*!
@@ -191,7 +185,7 @@ static inline void TMU_EnableInterrupts(TMU_Type *base, uint32_t mask)
  */
 static inline void TMU_DisableInterrupts(TMU_Type *base, uint32_t mask)
 {
-    base->TIER &= ~mask;
+	base->TIER &= ~mask;
 }
 
 /*!
@@ -202,7 +196,7 @@ static inline void TMU_DisableInterrupts(TMU_Type *base, uint32_t mask)
  */
 static inline uint32_t TMU_GetInterruptStatusFlags(TMU_Type *base)
 {
-    return base->TIDR;
+	return base->TIDR;
 }
 
 /*!
@@ -213,7 +207,7 @@ static inline uint32_t TMU_GetInterruptStatusFlags(TMU_Type *base)
  */
 static inline void TMU_ClearInterruptStatusFlags(TMU_Type *base, uint32_t mask)
 {
-    base->TIDR = mask;
+	base->TIDR = mask;
 }
 
 /*!
@@ -249,8 +243,8 @@ status_t TMU_GetAverageTemperature(TMU_Type *base, tmu_probe_select_t probe, int
  * @param thresholdConfig threshold configuration. Refer to "tmu_threshold_config_t" structure.
  */
 void TMU_UpdateHighTemperatureThreshold(TMU_Type *base,
-                                        tmu_probe_select_t probe,
-                                        const tmu_threshold_config_t *thresholdConfig);
+        tmu_probe_select_t probe,
+        const tmu_threshold_config_t *thresholdConfig);
 
 #if defined(__cplusplus)
 }

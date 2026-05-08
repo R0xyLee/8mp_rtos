@@ -29,17 +29,16 @@ typedef struct _ecspi_sdma_handle ecspi_sdma_handle_t;
 typedef void (*ecspi_sdma_callback_t)(ECSPI_Type *base, ecspi_sdma_handle_t *handle, status_t status, void *userData);
 
 /*! @brief ECSPI SDMA transfer handle, users should not touch the content of the handle.*/
-struct _ecspi_sdma_handle
-{
-    bool txInProgress;              /*!< Send transfer finished */
-    bool rxInProgress;              /*!< Receive transfer finished */
-    sdma_handle_t *txSdmaHandle;    /*!< DMA handler for ECSPI send */
-    sdma_handle_t *rxSdmaHandle;    /*!< DMA handler for ECSPI receive */
-    ecspi_sdma_callback_t callback; /*!< Callback for ECSPI SDMA transfer */
-    void *userData;                 /*!< User Data for ECSPI SDMA callback */
-    uint32_t state;                 /*!< Internal state of ECSPI SDMA transfer */
-    uint32_t ChannelTx;             /*!< Channel for send handle */
-    uint32_t ChannelRx;             /*!< Channel for receive handler */
+struct _ecspi_sdma_handle {
+	bool txInProgress;              /*!< Send transfer finished */
+	bool rxInProgress;              /*!< Receive transfer finished */
+	sdma_handle_t *txSdmaHandle;    /*!< DMA handler for ECSPI send */
+	sdma_handle_t *rxSdmaHandle;    /*!< DMA handler for ECSPI receive */
+	ecspi_sdma_callback_t callback; /*!< Callback for ECSPI SDMA transfer */
+	void *userData;                 /*!< User Data for ECSPI SDMA callback */
+	uint32_t state;                 /*!< Internal state of ECSPI SDMA transfer */
+	uint32_t ChannelTx;             /*!< Channel for send handle */
+	uint32_t ChannelRx;             /*!< Channel for receive handler */
 };
 
 /*******************************************************************************
@@ -72,15 +71,15 @@ extern "C" {
  * @param RxChannel SDMA channel for ECSPI receive.
  */
 void ECSPI_MasterTransferCreateHandleSDMA(ECSPI_Type *base,
-                                          ecspi_sdma_handle_t *handle,
-                                          ecspi_sdma_callback_t callback,
-                                          void *userData,
-                                          sdma_handle_t *txHandle,
-                                          sdma_handle_t *rxHandle,
-                                          uint32_t eventSourceTx,
-                                          uint32_t eventSourceRx,
-                                          uint32_t TxChannel,
-                                          uint32_t RxChannel);
+        ecspi_sdma_handle_t *handle,
+        ecspi_sdma_callback_t callback,
+        void *userData,
+        sdma_handle_t *txHandle,
+        sdma_handle_t *rxHandle,
+        uint32_t eventSourceTx,
+        uint32_t eventSourceRx,
+        uint32_t TxChannel,
+        uint32_t RxChannel);
 
 /*!
  * @brief Initialize the ECSPI Slave SDMA handle.
@@ -100,15 +99,15 @@ void ECSPI_MasterTransferCreateHandleSDMA(ECSPI_Type *base,
  * @param RxChannel SDMA channel for ECSPI receive.
  */
 void ECSPI_SlaveTransferCreateHandleSDMA(ECSPI_Type *base,
-                                         ecspi_sdma_handle_t *handle,
-                                         ecspi_sdma_callback_t callback,
-                                         void *userData,
-                                         sdma_handle_t *txHandle,
-                                         sdma_handle_t *rxHandle,
-                                         uint32_t eventSourceTx,
-                                         uint32_t eventSourceRx,
-                                         uint32_t TxChannel,
-                                         uint32_t RxChannel);
+        ecspi_sdma_handle_t *handle,
+        ecspi_sdma_callback_t callback,
+        void *userData,
+        sdma_handle_t *txHandle,
+        sdma_handle_t *rxHandle,
+        uint32_t eventSourceTx,
+        uint32_t eventSourceRx,
+        uint32_t TxChannel,
+        uint32_t RxChannel);
 
 /*!
  * @brief Perform a non-blocking ECSPI master transfer using SDMA.

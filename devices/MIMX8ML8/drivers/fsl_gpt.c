@@ -33,20 +33,18 @@ static const clock_ip_name_t s_gptClocks[] = GPT_CLOCKS;
  ******************************************************************************/
 static uint32_t GPT_GetInstance(GPT_Type *base)
 {
-    uint32_t instance;
+	uint32_t instance;
 
-    /* Find the instance index from base address mappings. */
-    for (instance = 0U; instance < ARRAY_SIZE(s_gptBases); instance++)
-    {
-        if (s_gptBases[instance] == base)
-        {
-            break;
-        }
-    }
+	/* Find the instance index from base address mappings. */
+	for (instance = 0U; instance < ARRAY_SIZE(s_gptBases); instance++) {
+		if (s_gptBases[instance] == base) {
+			break;
+		}
+	}
 
-    assert(instance < ARRAY_SIZE(s_gptBases));
+	assert(instance < ARRAY_SIZE(s_gptBases));
 
-    return instance;
+	return instance;
 }
 
 /*!
@@ -57,24 +55,24 @@ static uint32_t GPT_GetInstance(GPT_Type *base)
  */
 void GPT_Init(GPT_Type *base, const gpt_config_t *initConfig)
 {
-    assert(NULL != initConfig);
+	assert(NULL != initConfig);
 
 #if !(defined(FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL) && FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL)
-    /* Ungate the GPT clock*/
-    (void)CLOCK_EnableClock(s_gptClocks[GPT_GetInstance(base)]);
+	/* Ungate the GPT clock*/
+	(void)CLOCK_EnableClock(s_gptClocks[GPT_GetInstance(base)]);
 #endif /* FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL */
-    base->CR = 0U;
+	base->CR = 0U;
 
-    GPT_SoftwareReset(base);
+	GPT_SoftwareReset(base);
 
-    base->CR =
-        (initConfig->enableFreeRun ? GPT_CR_FRR_MASK : 0UL) | (initConfig->enableRunInWait ? GPT_CR_WAITEN_MASK : 0UL) |
-        (initConfig->enableRunInStop ? GPT_CR_STOPEN_MASK : 0UL) |
-        (initConfig->enableRunInDoze ? GPT_CR_DOZEEN_MASK : 0UL) |
-        (initConfig->enableRunInDbg ? GPT_CR_DBGEN_MASK : 0UL) | (initConfig->enableMode ? GPT_CR_ENMOD_MASK : 0UL);
+	base->CR =
+	        (initConfig->enableFreeRun ? GPT_CR_FRR_MASK : 0UL) | (initConfig->enableRunInWait ? GPT_CR_WAITEN_MASK : 0UL) |
+	        (initConfig->enableRunInStop ? GPT_CR_STOPEN_MASK : 0UL) |
+	        (initConfig->enableRunInDoze ? GPT_CR_DOZEEN_MASK : 0UL) |
+	        (initConfig->enableRunInDbg ? GPT_CR_DBGEN_MASK : 0UL) | (initConfig->enableMode ? GPT_CR_ENMOD_MASK : 0UL);
 
-    GPT_SetClockSource(base, initConfig->clockSource);
-    GPT_SetClockDivider(base, initConfig->divider);
+	GPT_SetClockSource(base, initConfig->clockSource);
+	GPT_SetClockDivider(base, initConfig->divider);
 }
 
 /*!
@@ -84,12 +82,12 @@ void GPT_Init(GPT_Type *base, const gpt_config_t *initConfig)
  */
 void GPT_Deinit(GPT_Type *base)
 {
-    /* Disable GPT timers */
-    base->CR = 0U;
+	/* Disable GPT timers */
+	base->CR = 0U;
 
 #if !(defined(FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL) && FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL)
-    /* Gate the GPT clock*/
-    (void)CLOCK_DisableClock(s_gptClocks[GPT_GetInstance(base)]);
+	/* Gate the GPT clock*/
+	(void)CLOCK_DisableClock(s_gptClocks[GPT_GetInstance(base)]);
 #endif /* FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL */
 }
 
@@ -111,17 +109,17 @@ void GPT_Deinit(GPT_Type *base)
  */
 void GPT_GetDefaultConfig(gpt_config_t *config)
 {
-    assert(NULL != config);
+	assert(NULL != config);
 
-    /* Initializes the configure structure to zero. */
-    (void)memset(config, 0, sizeof(*config));
+	/* Initializes the configure structure to zero. */
+	(void)memset(config, 0, sizeof(*config));
 
-    config->clockSource     = kGPT_ClockSource_Periph;
-    config->divider         = 1U;
-    config->enableRunInStop = true;
-    config->enableRunInWait = true;
-    config->enableRunInDoze = false;
-    config->enableRunInDbg  = false;
-    config->enableFreeRun   = false;
-    config->enableMode      = true;
+	config->clockSource     = kGPT_ClockSource_Periph;
+	config->divider         = 1U;
+	config->enableRunInStop = true;
+	config->enableRunInWait = true;
+	config->enableRunInDoze = false;
+	config->enableRunInDbg  = false;
+	config->enableFreeRun   = false;
+	config->enableMode      = true;
 }

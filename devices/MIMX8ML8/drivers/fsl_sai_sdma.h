@@ -31,24 +31,23 @@ typedef struct _sai_sdma_handle sai_sdma_handle_t;
 typedef void (*sai_sdma_callback_t)(I2S_Type *base, sai_sdma_handle_t *handle, status_t status, void *userData);
 
 /*! @brief SAI DMA transfer handle, users should not touch the content of the handle. */
-struct _sai_sdma_handle
-{
-    sdma_handle_t *dmaHandle;     /*!< DMA handler for SAI send */
-    uint8_t bytesPerFrame;        /*!< Bytes in a frame */
-    uint8_t channel;              /*!< start data channel */
-    uint8_t channelNums;          /*!< total transfer channel numbers, used for multififo */
-    uint8_t channelMask;          /*!< enabled channel mask value, refernece _sai_channel_mask */
-    uint8_t fifoOffset;           /*!< fifo address offset between multifo*/
-    uint8_t count;                /*!< The transfer data count in a DMA request */
-    uint32_t state;               /*!< Internal state for SAI SDMA transfer */
-    uint32_t eventSource;         /*!< SAI event source number */
-    sai_sdma_callback_t callback; /*!< Callback for users while transfer finish or error occurs */
-    void *userData;               /*!< User callback parameter */
-    sdma_buffer_descriptor_t bdPool[SAI_XFER_QUEUE_SIZE]; /*!< BD pool for SDMA transfer. */
-    sai_transfer_t saiQueue[SAI_XFER_QUEUE_SIZE];         /*!< Transfer queue storing queued transfer. */
-    size_t transferSize[SAI_XFER_QUEUE_SIZE];             /*!< Data bytes need to transfer */
-    volatile uint8_t queueUser;                           /*!< Index for user to queue transfer. */
-    volatile uint8_t queueDriver;                         /*!< Index for driver to get the transfer data and size */
+struct _sai_sdma_handle {
+	sdma_handle_t *dmaHandle;     /*!< DMA handler for SAI send */
+	uint8_t bytesPerFrame;        /*!< Bytes in a frame */
+	uint8_t channel;              /*!< start data channel */
+	uint8_t channelNums;          /*!< total transfer channel numbers, used for multififo */
+	uint8_t channelMask;          /*!< enabled channel mask value, refernece _sai_channel_mask */
+	uint8_t fifoOffset;           /*!< fifo address offset between multifo*/
+	uint8_t count;                /*!< The transfer data count in a DMA request */
+	uint32_t state;               /*!< Internal state for SAI SDMA transfer */
+	uint32_t eventSource;         /*!< SAI event source number */
+	sai_sdma_callback_t callback; /*!< Callback for users while transfer finish or error occurs */
+	void *userData;               /*!< User callback parameter */
+	sdma_buffer_descriptor_t bdPool[SAI_XFER_QUEUE_SIZE]; /*!< BD pool for SDMA transfer. */
+	sai_transfer_t saiQueue[SAI_XFER_QUEUE_SIZE];         /*!< Transfer queue storing queued transfer. */
+	size_t transferSize[SAI_XFER_QUEUE_SIZE];             /*!< Data bytes need to transfer */
+	volatile uint8_t queueUser;                           /*!< Index for user to queue transfer. */
+	volatile uint8_t queueDriver;                         /*!< Index for driver to get the transfer data and size */
 };
 
 /*******************************************************************************
@@ -77,11 +76,11 @@ extern "C" {
  * @param eventSource SAI event source number.
  */
 void SAI_TransferTxCreateHandleSDMA(I2S_Type *base,
-                                    sai_sdma_handle_t *handle,
-                                    sai_sdma_callback_t callback,
-                                    void *userData,
-                                    sdma_handle_t *dmaHandle,
-                                    uint32_t eventSource);
+        sai_sdma_handle_t *handle,
+        sai_sdma_callback_t callback,
+        void *userData,
+        sdma_handle_t *dmaHandle,
+        uint32_t eventSource);
 
 /*!
  * @brief Initializes the SAI Rx SDMA handle.
@@ -98,11 +97,11 @@ void SAI_TransferTxCreateHandleSDMA(I2S_Type *base,
  * @param eventSource SAI event source number.
  */
 void SAI_TransferRxCreateHandleSDMA(I2S_Type *base,
-                                    sai_sdma_handle_t *handle,
-                                    sai_sdma_callback_t callback,
-                                    void *userData,
-                                    sdma_handle_t *dmaHandle,
-                                    uint32_t eventSource);
+        sai_sdma_handle_t *handle,
+        sai_sdma_callback_t callback,
+        void *userData,
+        sdma_handle_t *dmaHandle,
+        uint32_t eventSource);
 
 /*!
  * @brief Configures the SAI Tx audio format.
@@ -120,10 +119,10 @@ void SAI_TransferRxCreateHandleSDMA(I2S_Type *base,
  * @retval kStatus_InvalidArgument The input argument is invalid.
  */
 void SAI_TransferTxSetFormatSDMA(I2S_Type *base,
-                                 sai_sdma_handle_t *handle,
-                                 sai_transfer_format_t *format,
-                                 uint32_t mclkSourceClockHz,
-                                 uint32_t bclkSourceClockHz);
+        sai_sdma_handle_t *handle,
+        sai_transfer_format_t *format,
+        uint32_t mclkSourceClockHz,
+        uint32_t bclkSourceClockHz);
 
 /*!
  * @brief Configures the SAI Rx audio format.
@@ -141,10 +140,10 @@ void SAI_TransferTxSetFormatSDMA(I2S_Type *base,
  * @retval kStatus_InvalidArgument The input argument is invalid.
  */
 void SAI_TransferRxSetFormatSDMA(I2S_Type *base,
-                                 sai_sdma_handle_t *handle,
-                                 sai_transfer_format_t *format,
-                                 uint32_t mclkSourceClockHz,
-                                 uint32_t bclkSourceClockHz);
+        sai_sdma_handle_t *handle,
+        sai_transfer_format_t *format,
+        uint32_t mclkSourceClockHz,
+        uint32_t bclkSourceClockHz);
 
 /*!
  * @brief Performs a non-blocking SAI transfer using DMA.

@@ -109,56 +109,51 @@
 #define GPC_PCG_TIME_SLOT_TOTAL_NUMBER GPC_SLT_CFG_PU_COUNT
 
 /*! @brief GPC LPM mode definition */
-enum _gpc_lpm_mode
-{
-    kGPC_RunMode  = 0U, /*!< run mode */
-    kGPC_WaitMode = 1U, /*!< wait mode */
-    kGPC_StopMode = 2U, /*!< stop mode */
+enum _gpc_lpm_mode {
+	kGPC_RunMode  = 0U, /*!< run mode */
+	kGPC_WaitMode = 1U, /*!< wait mode */
+	kGPC_StopMode = 2U, /*!< stop mode */
 };
 
 /*! @brief PGC ack signal selection  */
-enum _gpc_pgc_ack_sel
-{
-    kGPC_DummyPGCPowerUpAck     = GPC_PGC_ACK_SEL_DUMMY_PGC_PUP_ACK_MASK,   /*!< dummy power up ack signal */
-    kGPC_VirtualPGCPowerUpAck   = GPC_PGC_ACK_SEL_VIRTUAL_PGC_PUP_ACK_MASK, /*!< virtual pgc power up ack signal */
-    kGPC_DummyPGCPowerDownAck   = GPC_PGC_ACK_SEL_DUMMY_PGC_PDN_ACK_MASK,   /*!< dummy power down ack signal */
-    kGPC_VirtualPGCPowerDownAck = GPC_PGC_ACK_SEL_VIRTUAL_PGC_PDN_ACK_MASK, /*!< virtual pgc power down ack signal */
-    kGPC_NocPGCPowerUpAck       = GPC_PGC_ACK_SEL_NOC_PGC_PUP_ACK,          /*!< NOC power up ack signal */
-    kGPC_NocPGCPowerDownAck     = GPC_PGC_ACK_SEL_NOC_PGC_PDN_ACK,          /*!< NOC power  */
+enum _gpc_pgc_ack_sel {
+	kGPC_DummyPGCPowerUpAck     = GPC_PGC_ACK_SEL_DUMMY_PGC_PUP_ACK_MASK,   /*!< dummy power up ack signal */
+	kGPC_VirtualPGCPowerUpAck   = GPC_PGC_ACK_SEL_VIRTUAL_PGC_PUP_ACK_MASK, /*!< virtual pgc power up ack signal */
+	kGPC_DummyPGCPowerDownAck   = GPC_PGC_ACK_SEL_DUMMY_PGC_PDN_ACK_MASK,   /*!< dummy power down ack signal */
+	kGPC_VirtualPGCPowerDownAck = GPC_PGC_ACK_SEL_VIRTUAL_PGC_PDN_ACK_MASK, /*!< virtual pgc power down ack signal */
+	kGPC_NocPGCPowerUpAck       = GPC_PGC_ACK_SEL_NOC_PGC_PUP_ACK,          /*!< NOC power up ack signal */
+	kGPC_NocPGCPowerDownAck     = GPC_PGC_ACK_SEL_NOC_PGC_PDN_ACK,          /*!< NOC power  */
 };
 
 /*! @brief Standby counter which GPC will wait between PMIC_STBY_REQ negation and assertion of PMIC_READY  */
-enum _gpc_standby_count
-{
-    kGPC_StandbyCounter4CkilClk   = 0U, /*!< 4 ckil clocks */
-    kGPC_StandbyCounter8CkilClk   = 1U, /*!< 8 ckil clocks */
-    kGPC_StandbyCounter16CkilClk  = 2U, /*!< 16 ckil clocks */
-    kGPC_StandbyCounter32CkilClk  = 3U, /*!< 32 ckil clocks */
-    kGPC_StandbyCounter64CkilClk  = 4U, /*!< 64 ckil clocks */
-    kGPC_StandbyCounter128CkilClk = 5U, /*!< 128 ckil clocks */
-    kGPC_StandbyCounter256CkilClk = 6U, /*!< 256 ckil clocks */
-    kGPC_StandbyCounter512CkilClk = 7U, /*!< 512 ckil clocks */
+enum _gpc_standby_count {
+	kGPC_StandbyCounter4CkilClk   = 0U, /*!< 4 ckil clocks */
+	kGPC_StandbyCounter8CkilClk   = 1U, /*!< 8 ckil clocks */
+	kGPC_StandbyCounter16CkilClk  = 2U, /*!< 16 ckil clocks */
+	kGPC_StandbyCounter32CkilClk  = 3U, /*!< 32 ckil clocks */
+	kGPC_StandbyCounter64CkilClk  = 4U, /*!< 64 ckil clocks */
+	kGPC_StandbyCounter128CkilClk = 5U, /*!< 128 ckil clocks */
+	kGPC_StandbyCounter256CkilClk = 6U, /*!< 256 ckil clocks */
+	kGPC_StandbyCounter512CkilClk = 7U, /*!< 512 ckil clocks */
 };
 
 /*!< configuration for enter LPM mode */
-typedef struct _gpc_lpm_config
-{
-    bool enFastWakeUp;          /*!< enable fast wake up from lpm mode */
-    bool enCpuClk;              /*!< enable CPU clock when LPM enter */
-    bool enVirtualPGCPowerup;   /*!< enable virtual PGC power up with LPM enter */
-    bool enVirtualPGCPowerdown; /*!< enable virtual PGC power down with LPM enter */
-    bool enWfiMask;             /*!< enable WFI Mask */
-    bool enDsmMask;             /*!< enable DSM Mask */
+typedef struct _gpc_lpm_config {
+	bool enFastWakeUp;          /*!< enable fast wake up from lpm mode */
+	bool enCpuClk;              /*!< enable CPU clock when LPM enter */
+	bool enVirtualPGCPowerup;   /*!< enable virtual PGC power up with LPM enter */
+	bool enVirtualPGCPowerdown; /*!< enable virtual PGC power down with LPM enter */
+	bool enWfiMask;             /*!< enable WFI Mask */
+	bool enDsmMask;             /*!< enable DSM Mask */
 } gpc_lpm_config_t;
 
 /*!< configuration for enter DSM mode */
-typedef struct _gpc_dsm_config
-{
-    bool disableRamLpctl; /*!< Memory can be defined to go to retention mode or not */
+typedef struct _gpc_dsm_config {
+	bool disableRamLpctl; /*!< Memory can be defined to go to retention mode or not */
 
-    bool enPMICStandBy;         /*!< PMIC can be defined to be stand-by mode or not */
-    uint8_t pmicStandByCounter; /*!< PMIC standby counter, reference _gpc_standby_count */
-    uint8_t regBypassCounter; /*!< if PMIC standby is request, regulator bypass should be enable, and the counter can be
+	bool enPMICStandBy;         /*!< PMIC can be defined to be stand-by mode or not */
+	uint8_t pmicStandByCounter; /*!< PMIC standby counter, reference _gpc_standby_count */
+	uint8_t regBypassCounter; /*!< if PMIC standby is request, regulator bypass should be enable, and the counter can be
                                  defined */
 
 } gpc_dsm_config_t;
@@ -178,7 +173,7 @@ extern "C" {
  */
 static inline void GPC_AllowIRQs(GPC_Type *base)
 {
-    base->MISC &= ~GPC_MISC_GPC_IRQ_MASK_MASK; /* Events would not be masked. */
+	base->MISC &= ~GPC_MISC_GPC_IRQ_MASK_MASK; /* Events would not be masked. */
 }
 
 /*!
@@ -188,7 +183,7 @@ static inline void GPC_AllowIRQs(GPC_Type *base)
  */
 static inline void GPC_DisallowIRQs(GPC_Type *base)
 {
-    base->MISC |= GPC_MISC_GPC_IRQ_MASK_MASK; /* Mask all the events. */
+	base->MISC |= GPC_MISC_GPC_IRQ_MASK_MASK; /* Mask all the events. */
 }
 
 /*!
@@ -199,7 +194,7 @@ static inline void GPC_DisallowIRQs(GPC_Type *base)
  */
 static inline uint32_t GPC_GetLpmMode(GPC_Type *base)
 {
-    return base->GPC_LPCR & GPC_LPCR_LPM0_MASK;
+	return base->GPC_LPCR & GPC_LPCR_LPM0_MASK;
 }
 
 /*!
@@ -235,14 +230,11 @@ bool GPC_GetIRQStatusFlag(GPC_Type *base, uint32_t irqId);
  */
 static inline void GPC_DsmTriggerMask(GPC_Type *base, bool enable)
 {
-    if (enable)
-    {
-        base->GPC_LPCR |= GPC_LPCR_MASK_DSM_TRIGGER_MASK;
-    }
-    else
-    {
-        base->GPC_LPCR &= ~GPC_LPCR_MASK_DSM_TRIGGER_MASK;
-    }
+	if (enable) {
+		base->GPC_LPCR |= GPC_LPCR_MASK_DSM_TRIGGER_MASK;
+	} else {
+		base->GPC_LPCR &= ~GPC_LPCR_MASK_DSM_TRIGGER_MASK;
+	}
 }
 
 /*!
@@ -253,14 +245,11 @@ static inline void GPC_DsmTriggerMask(GPC_Type *base, bool enable)
  */
 static inline void GPC_WFIMask(GPC_Type *base, bool enable)
 {
-    if (enable)
-    {
-        base->GPC_LPCR |= GPC_LPCR_MASK_WFI_MASK;
-    }
-    else
-    {
-        base->GPC_LPCR &= ~GPC_LPCR_MASK_WFI_MASK;
-    }
+	if (enable) {
+		base->GPC_LPCR |= GPC_LPCR_MASK_WFI_MASK;
+	} else {
+		base->GPC_LPCR &= ~GPC_LPCR_MASK_WFI_MASK;
+	}
 }
 
 /*!
@@ -271,7 +260,7 @@ static inline void GPC_WFIMask(GPC_Type *base, bool enable)
  */
 static inline void GPC_SelectPGCAckSignal(GPC_Type *base, uint32_t mask)
 {
-    base->GPC_PGC_ACK_SEL |= mask;
+	base->GPC_PGC_ACK_SEL |= mask;
 }
 
 /*!
@@ -282,14 +271,11 @@ static inline void GPC_SelectPGCAckSignal(GPC_Type *base, uint32_t mask)
  */
 static inline void GPC_PowerDownRequestMask(GPC_Type *base, bool enable)
 {
-    if (enable)
-    {
-        base->MISC &= ~GPC_MISC_PDN_REQ_MASK_MASK;
-    }
-    else
-    {
-        base->MISC |= GPC_MISC_PDN_REQ_MASK_MASK;
-    }
+	if (enable) {
+		base->MISC &= ~GPC_MISC_PDN_REQ_MASK_MASK;
+	} else {
+		base->MISC |= GPC_MISC_PDN_REQ_MASK_MASK;
+	}
 }
 
 /*!
@@ -301,9 +287,9 @@ static inline void GPC_PowerDownRequestMask(GPC_Type *base, bool enable)
 static inline void GPC_PGCMapping(GPC_Type *base, uint32_t mask)
 {
 #if !(defined(GPC_PGC_CPU_M7_MAPPING_MIX0_SUPERMIXM7_DOMAIN_MASK) && GPC_PGC_CPU_M7_MAPPING_MIX0_SUPERMIXM7_DOMAIN_MASK)
-    base->PGC_CPU_0_1_MAPPING |= mask & 0xFFFD0000U;
+	base->PGC_CPU_0_1_MAPPING |= mask & 0xFFFD0000U;
 #else
-    base->PGC_CPU_M7_MAPPING |= mask & 0x3FFFFFUL;
+	base->PGC_CPU_M7_MAPPING |= mask & 0x3FFFFFUL;
 #endif /* GPC_PGC_CPU_M7_MAPPING_MIX0_SUPERMIXM7_DOMAIN_MASK */
 }
 
@@ -316,12 +302,12 @@ static inline void GPC_PGCMapping(GPC_Type *base, uint32_t mask)
  */
 static inline void GPC_TimeSlotConfigureForPUS(GPC_Type *base, uint8_t slotIndex, uint32_t value)
 {
-    assert(slotIndex < GPC_PCG_TIME_SLOT_TOTAL_NUMBER);
+	assert(slotIndex < GPC_PCG_TIME_SLOT_TOTAL_NUMBER);
 
 #if !(defined(GPC_SLT_CFG_PU1_COUNT) && GPC_SLT_CFG_PU1_COUNT)
-    base->SLT_CFG_PU[slotIndex] |= value;
+	base->SLT_CFG_PU[slotIndex] |= value;
 #else
-    base->SLTn_CFG_PU[slotIndex].SLT_CFG_PU = value;
+	base->SLTn_CFG_PU[slotIndex].SLT_CFG_PU = value;
 #endif /* GPC_SLT_CFG_PU1_COUNT */
 }
 
@@ -335,9 +321,9 @@ static inline void GPC_TimeSlotConfigureForPUS(GPC_Type *base, uint8_t slotIndex
  */
 static inline void GPC_TimeSlotConfigureForExtendedPUS(GPC_Type *base, uint8_t slotIndex, uint32_t value)
 {
-    assert(slotIndex < GPC_PCG_TIME_SLOT_TOTAL_NUMBER);
+	assert(slotIndex < GPC_PCG_TIME_SLOT_TOTAL_NUMBER);
 
-    base->SLTn_CFG_PU[slotIndex].SLT_CFG_PU1 = value;
+	base->SLTn_CFG_PU[slotIndex].SLT_CFG_PU1 = value;
 }
 #endif /* GPC_SLT_CFG_PU1_COUNT */
 

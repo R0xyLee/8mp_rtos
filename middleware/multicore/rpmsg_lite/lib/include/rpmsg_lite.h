@@ -95,22 +95,20 @@ typedef int32_t (*rl_ept_rx_cb_t)(void *payload, uint32_t payload_len, uint32_t 
 /*!
  * RPMsg Lite Endpoint structure
  */
-struct rpmsg_lite_endpoint
-{
-    uint32_t addr;        /*!< endpoint address */
-    rl_ept_rx_cb_t rx_cb; /*!< ISR callback function */
-    void *rx_cb_data;     /*!< ISR callback data */
-    void *rfu;            /*!< reserved for future usage */
-    /* 16 bytes aligned on 32bit architecture */
+struct rpmsg_lite_endpoint {
+	uint32_t addr;        /*!< endpoint address */
+	rl_ept_rx_cb_t rx_cb; /*!< ISR callback function */
+	void *rx_cb_data;     /*!< ISR callback data */
+	void *rfu;            /*!< reserved for future usage */
+	/* 16 bytes aligned on 32bit architecture */
 };
 
 /*!
  * RPMsg Lite Endpoint static context
  */
-struct rpmsg_lite_ept_static_context
-{
-    struct rpmsg_lite_endpoint ept; /*!< memory for endpoint structure */
-    struct llist node;              /*!< memory for linked list node structure */
+struct rpmsg_lite_ept_static_context {
+	struct rpmsg_lite_endpoint ept; /*!< memory for endpoint structure */
+	struct llist node;              /*!< memory for linked list node structure */
 };
 
 /*!
@@ -119,23 +117,22 @@ struct rpmsg_lite_ept_static_context
  * holds all runtime variables needed internally
  * by the stack.
  */
-struct rpmsg_lite_instance
-{
-    struct virtqueue *rvq;              /*!< receive virtqueue */
-    struct virtqueue *tvq;              /*!< transmit virtqueue */
-    struct llist *rl_endpoints;         /*!< linked list of endpoints */
-    LOCK *lock;                         /*!< local RPMsg Lite mutex lock */
-    uint32_t link_state;                /*!< state of the link, up/down*/
-    char *sh_mem_base;                  /*!< base address of the shared memory */
-    uint32_t sh_mem_remaining;          /*!< amount of remaining unused buffers in shared memory */
-    uint32_t sh_mem_total;              /*!< total amount of buffers in shared memory */
-    struct virtqueue_ops const *vq_ops; /*!< ops functions table pointer */
+struct rpmsg_lite_instance {
+	struct virtqueue *rvq;              /*!< receive virtqueue */
+	struct virtqueue *tvq;              /*!< transmit virtqueue */
+	struct llist *rl_endpoints;         /*!< linked list of endpoints */
+	LOCK *lock;                         /*!< local RPMsg Lite mutex lock */
+	uint32_t link_state;                /*!< state of the link, up/down*/
+	char *sh_mem_base;                  /*!< base address of the shared memory */
+	uint32_t sh_mem_remaining;          /*!< amount of remaining unused buffers in shared memory */
+	uint32_t sh_mem_total;              /*!< total amount of buffers in shared memory */
+	struct virtqueue_ops const *vq_ops; /*!< ops functions table pointer */
 #if defined(RL_USE_ENVIRONMENT_CONTEXT) && (RL_USE_ENVIRONMENT_CONTEXT == 1)
-    void *env; /*!< pointer to the environment layer context */
+	void *env; /*!< pointer to the environment layer context */
 #endif
 
 #if defined(RL_USE_STATIC_API) && (RL_USE_STATIC_API == 1)
-    struct vq_static_context vq_ctxt[2];
+	struct vq_static_context vq_ctxt[2];
 #endif
 };
 
@@ -163,18 +160,18 @@ struct rpmsg_lite_instance
  */
 #if defined(RL_USE_STATIC_API) && (RL_USE_STATIC_API == 1)
 struct rpmsg_lite_instance *rpmsg_lite_master_init(void *shmem_addr,
-                                                   size_t shmem_length,
-                                                   uint32_t link_id,
-                                                   uint32_t init_flags,
-                                                   struct rpmsg_lite_instance *static_context);
+        size_t shmem_length,
+        uint32_t link_id,
+        uint32_t init_flags,
+        struct rpmsg_lite_instance *static_context);
 #elif defined(RL_USE_ENVIRONMENT_CONTEXT) && (RL_USE_ENVIRONMENT_CONTEXT == 1)
 struct rpmsg_lite_instance *rpmsg_lite_master_init(
-    void *shmem_addr, size_t shmem_length, uint32_t link_id, uint32_t init_flags, void *env_cfg);
+        void *shmem_addr, size_t shmem_length, uint32_t link_id, uint32_t init_flags, void *env_cfg);
 #else
 struct rpmsg_lite_instance *rpmsg_lite_master_init(void *shmem_addr,
-                                                   size_t shmem_length,
-                                                   uint32_t link_id,
-                                                   uint32_t init_flags);
+        size_t shmem_length,
+        uint32_t link_id,
+        uint32_t init_flags);
 #endif
 
 /**
@@ -194,14 +191,14 @@ struct rpmsg_lite_instance *rpmsg_lite_master_init(void *shmem_addr,
  */
 #if defined(RL_USE_STATIC_API) && (RL_USE_STATIC_API == 1)
 struct rpmsg_lite_instance *rpmsg_lite_remote_init(void *shmem_addr,
-                                                   uint32_t link_id,
-                                                   uint32_t init_flags,
-                                                   struct rpmsg_lite_instance *static_context);
+        uint32_t link_id,
+        uint32_t init_flags,
+        struct rpmsg_lite_instance *static_context);
 #elif defined(RL_USE_ENVIRONMENT_CONTEXT) && (RL_USE_ENVIRONMENT_CONTEXT == 1)
 struct rpmsg_lite_instance *rpmsg_lite_remote_init(void *shmem_addr,
-                                                   uint32_t link_id,
-                                                   uint32_t init_flags,
-                                                   void *env_cfg);
+        uint32_t link_id,
+        uint32_t init_flags,
+        void *env_cfg);
 #else
 struct rpmsg_lite_instance *rpmsg_lite_remote_init(void *shmem_addr, uint32_t link_id, uint32_t init_flags);
 #endif
@@ -234,15 +231,15 @@ int32_t rpmsg_lite_deinit(struct rpmsg_lite_instance *rpmsg_lite_dev);
  */
 #if defined(RL_USE_STATIC_API) && (RL_USE_STATIC_API == 1)
 struct rpmsg_lite_endpoint *rpmsg_lite_create_ept(struct rpmsg_lite_instance *rpmsg_lite_dev,
-                                                  uint32_t addr,
-                                                  rl_ept_rx_cb_t rx_cb,
-                                                  void *rx_cb_data,
-                                                  struct rpmsg_lite_ept_static_context *ept_context);
+        uint32_t addr,
+        rl_ept_rx_cb_t rx_cb,
+        void *rx_cb_data,
+        struct rpmsg_lite_ept_static_context *ept_context);
 #else
 struct rpmsg_lite_endpoint *rpmsg_lite_create_ept(struct rpmsg_lite_instance *rpmsg_lite_dev,
-                                                  uint32_t addr,
-                                                  rl_ept_rx_cb_t rx_cb,
-                                                  void *rx_cb_data);
+        uint32_t addr,
+        rl_ept_rx_cb_t rx_cb,
+        void *rx_cb_data);
 #endif
 
 /*!
@@ -272,11 +269,11 @@ int32_t rpmsg_lite_destroy_ept(struct rpmsg_lite_instance *rpmsg_lite_dev, struc
  *
  */
 int32_t rpmsg_lite_send(struct rpmsg_lite_instance *rpmsg_lite_dev,
-                        struct rpmsg_lite_endpoint *ept,
-                        uint32_t dst,
-                        char *data,
-                        uint32_t size,
-                        uint32_t timeout);
+        struct rpmsg_lite_endpoint *ept,
+        uint32_t dst,
+        char *data,
+        uint32_t size,
+        uint32_t timeout);
 
 /*!
  * @brief Function to get the link state
@@ -346,10 +343,10 @@ void *rpmsg_lite_alloc_tx_buffer(struct rpmsg_lite_instance *rpmsg_lite_dev, uin
  * @see rpmsg_lite_alloc_tx_buffer
  */
 int32_t rpmsg_lite_send_nocopy(struct rpmsg_lite_instance *rpmsg_lite_dev,
-                               struct rpmsg_lite_endpoint *ept,
-                               uint32_t dst,
-                               void *data,
-                               uint32_t size);
+        struct rpmsg_lite_endpoint *ept,
+        uint32_t dst,
+        void *data,
+        uint32_t size);
 #endif /* RL_API_HAS_ZEROCOPY */
 
 //! @}

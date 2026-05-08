@@ -33,16 +33,15 @@
  * @cond RTOS_PRIVATE
  * @brief ECSPI FreeRTOS handle
  */
-typedef struct _ecspi_rtos_handle
-{
-    ECSPI_Type *base;                 /*!< ECSPI base address */
-    ecspi_master_handle_t drv_handle; /*!< Handle of the underlying driver, treated as opaque by the RTOS layer */
-    status_t async_status;            /*!< Transactional state of the underlying driver */
-    SemaphoreHandle_t mutex;          /*!< Mutex to lock the handle during a trasfer */
-    SemaphoreHandle_t event;          /*!< Semaphore to notify and unblock task when transfer ends */
+typedef struct _ecspi_rtos_handle {
+	ECSPI_Type *base;                 /*!< ECSPI base address */
+	ecspi_master_handle_t drv_handle; /*!< Handle of the underlying driver, treated as opaque by the RTOS layer */
+	status_t async_status;            /*!< Transactional state of the underlying driver */
+	SemaphoreHandle_t mutex;          /*!< Mutex to lock the handle during a trasfer */
+	SemaphoreHandle_t event;          /*!< Semaphore to notify and unblock task when transfer ends */
 #if (configSUPPORT_STATIC_ALLOCATION == 1)
-    StaticSemaphore_t mutexBuffer;     /*!< Statically allocated memory for mutex */
-    StaticSemaphore_t semaphoreBuffer; /*!< Statically allocated memory for event */
+	StaticSemaphore_t mutexBuffer;     /*!< Statically allocated memory for mutex */
+	StaticSemaphore_t semaphoreBuffer; /*!< Statically allocated memory for event */
 #endif
 } ecspi_rtos_handle_t;
 /*! \endcond */
@@ -72,9 +71,9 @@ extern "C" {
  * @return status of the operation.
  */
 status_t ECSPI_RTOS_Init(ecspi_rtos_handle_t *handle,
-                         ECSPI_Type *base,
-                         const ecspi_master_config_t *masterConfig,
-                         uint32_t srcClock_Hz);
+        ECSPI_Type *base,
+        const ecspi_master_config_t *masterConfig,
+        uint32_t srcClock_Hz);
 
 /*!
  * @brief Deinitializes the ECSPI.

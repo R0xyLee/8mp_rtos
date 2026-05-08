@@ -34,7 +34,7 @@
  ******************************************************************************/
 
 uint8_t g_tipString[] =
-    "Uart functional API interrupt example\r\nBoard receives characters then sends them out\r\nNow please input:\r\n";
+        "Uart functional API interrupt example\r\nBoard receives characters then sends them out\r\nNow please input:\r\n";
 
 /*
   Ring buffer for data input and output, in this example, input data are saved
@@ -53,22 +53,20 @@ volatile uint16_t rxIndex; /* Index of the memory to save new arrived data. */
 
 void DEMO_UART_IRQHandler(void)
 {
-    uint8_t data;
+	uint8_t data;
 
-    /* If new data arrived. */
-    if ((UART_GetStatusFlag(DEMO_UART, kUART_RxDataReadyFlag)) || (UART_GetStatusFlag(DEMO_UART, kUART_RxOverrunFlag)))
-    {
-        data = UART_ReadByte(DEMO_UART);
+	/* If new data arrived. */
+	if ((UART_GetStatusFlag(DEMO_UART, kUART_RxDataReadyFlag)) || (UART_GetStatusFlag(DEMO_UART, kUART_RxOverrunFlag))) {
+		data = UART_ReadByte(DEMO_UART);
 
-        /* If ring buffer is not full, add data to ring buffer. */
-        if (((rxIndex + 1) % DEMO_RING_BUFFER_SIZE) != txIndex)
-        {
-            demoRingBuffer[rxIndex] = data;
-            rxIndex++;
-            rxIndex %= DEMO_RING_BUFFER_SIZE;
-        }
-    }
-    SDK_ISR_EXIT_BARRIER;
+		/* If ring buffer is not full, add data to ring buffer. */
+		if (((rxIndex + 1) % DEMO_RING_BUFFER_SIZE) != txIndex) {
+			demoRingBuffer[rxIndex] = data;
+			rxIndex++;
+			rxIndex %= DEMO_RING_BUFFER_SIZE;
+		}
+	}
+	SDK_ISR_EXIT_BARRIER;
 }
 
 /*!
@@ -76,56 +74,53 @@ void DEMO_UART_IRQHandler(void)
  */
 int main(void)
 {
-    status_t status;
-    uart_config_t config;
+	status_t status;
+	uart_config_t config;
 
-    /* M7 has its local cache and enabled by default,
-     * need to set smart subsystems (0x28000000 ~ 0x3FFFFFFF)
-     * non-cacheable before accessing this address region */
-    BOARD_InitMemory();
+	/* M7 has its local cache and enabled by default,
+	 * need to set smart subsystems (0x28000000 ~ 0x3FFFFFFF)
+	 * non-cacheable before accessing this address region */
+	BOARD_InitMemory();
 
-    /* Board specific RDC settings */
-    BOARD_RdcInit();
+	/* Board specific RDC settings */
+	BOARD_RdcInit();
 
-    BOARD_InitPins();
-    BOARD_BootClockRUN();
+	BOARD_InitPins();
+	BOARD_BootClockRUN();
 
-    /*
-     * config.baudRate_Bps = 115200U;
-     * config.parityMode = kUART_ParityDisabled;
-     * config.dataBitsCount = kUART_EightDataBits;
-     * config.stopBitCount = kUART_OneStopBit;
-     * config.txFifoWatermark = 2;
-     * config.rxFifoWatermark = 1;
-     * config.enableTx = false;
-     * config.enableRx = false;
-     */
-    UART_GetDefaultConfig(&config);
-    config.baudRate_Bps = DEMO_UART_BAUDRATE;
-    config.enableTx     = true;
-    config.enableRx     = true;
+	/*
+	 * config.baudRate_Bps = 115200U;
+	 * config.parityMode = kUART_ParityDisabled;
+	 * config.dataBitsCount = kUART_EightDataBits;
+	 * config.stopBitCount = kUART_OneStopBit;
+	 * config.txFifoWatermark = 2;
+	 * config.rxFifoWatermark = 1;
+	 * config.enableTx = false;
+	 * config.enableRx = false;
+	 */
+	UART_GetDefaultConfig(&config);
+	config.baudRate_Bps = DEMO_UART_BAUDRATE;
+	config.enableTx     = true;
+	config.enableRx     = true;
 
-    status = UART_Init(DEMO_UART, &config, DEMO_UART_CLK_FREQ);
-    if (kStatus_Success != status)
-    {
-        return kStatus_Fail;
-    }
+	status = UART_Init(DEMO_UART, &config, DEMO_UART_CLK_FREQ);
+	if (kStatus_Success != status) {
+		return kStatus_Fail;
+	}
 
-    /* Send g_tipString out. */
-    UART_WriteBlocking(DEMO_UART, g_tipString, sizeof(g_tipString) / sizeof(g_tipString[0]) - 1);
+	/* Send g_tipString out. */
+	UART_WriteBlocking(DEMO_UART, g_tipString, sizeof(g_tipString) / sizeof(g_tipString[0]) - 1);
 
-    /* Enable RX interrupt. */
-    UART_EnableInterrupts(DEMO_UART, kUART_RxDataReadyEnable | kUART_RxOverrunEnable);
-    EnableIRQ(DEMO_IRQn);
+	/* Enable RX interrupt. */
+	UART_EnableInterrupts(DEMO_UART, kUART_RxDataReadyEnable | kUART_RxOverrunEnable);
+	EnableIRQ(DEMO_IRQn);
 
-    while (1)
-    {
-        /* Send data only when UART TX register is empty and ring buffer has data to send out. */
-        while ((UART_GetStatusFlag(DEMO_UART, kUART_TxReadyFlag)) && (rxIndex != txIndex))
-        {
-            UART_WriteByte(DEMO_UART, demoRingBuffer[txIndex]);
-            txIndex++;
-            txIndex %= DEMO_RING_BUFFER_SIZE;
-        }
-    }
+	while (1) {
+		/* Send data only when UART TX register is empty and ring buffer has data to send out. */
+		while ((UART_GetStatusFlag(DEMO_UART, kUART_TxReadyFlag)) && (rxIndex != txIndex)) {
+			UART_WriteByte(DEMO_UART, demoRingBuffer[txIndex]);
+			txIndex++;
+			txIndex %= DEMO_RING_BUFFER_SIZE;
+		}
+	}
 }

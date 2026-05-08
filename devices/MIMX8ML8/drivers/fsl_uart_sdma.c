@@ -16,19 +16,17 @@
 #endif
 
 /*<! Structure definition for uart_sdma_private_handle_t. The structure is private. */
-typedef struct _uart_sdma_private_handle
-{
-    UART_Type *base;
-    uart_sdma_handle_t *handle;
+typedef struct _uart_sdma_private_handle {
+	UART_Type *base;
+	uart_sdma_handle_t *handle;
 } uart_sdma_private_handle_t;
 
 /* UART SDMA transfer handle. */
-enum _uart_sdma_tansfer_states
-{
-    kUART_TxIdle, /* TX idle. */
-    kUART_TxBusy, /* TX busy. */
-    kUART_RxIdle, /* RX idle. */
-    kUART_RxBusy  /* RX busy. */
+enum _uart_sdma_tansfer_states {
+	kUART_TxIdle, /* TX idle. */
+	kUART_TxBusy, /* TX busy. */
+	kUART_RxIdle, /* RX idle. */
+	kUART_RxBusy  /* RX busy. */
 };
 
 /*******************************************************************************
@@ -71,44 +69,39 @@ static void UART_ReceiveSDMACallback(sdma_handle_t *handle, void *param, bool tr
 
 static void UART_SendSDMACallback(sdma_handle_t *handle, void *param, bool transferDone, uint32_t tcds)
 {
-    assert(param != NULL);
+	assert(param != NULL);
 
-    uart_sdma_private_handle_t *uartPrivateHandle = (uart_sdma_private_handle_t *)param;
+	uart_sdma_private_handle_t *uartPrivateHandle = (uart_sdma_private_handle_t *)param;
 
-    if (transferDone)
-    {
-        UART_TransferAbortSendSDMA(uartPrivateHandle->base, uartPrivateHandle->handle);
+	if (transferDone) {
+		UART_TransferAbortSendSDMA(uartPrivateHandle->base, uartPrivateHandle->handle);
 
-        /* Wait for transmission complete */
-        while (0U == (uartPrivateHandle->base->USR2 & UART_USR2_TXDC_MASK))
-        {
-        }
+		/* Wait for transmission complete */
+		while (0U == (uartPrivateHandle->base->USR2 & UART_USR2_TXDC_MASK)) {
+		}
 
-        if (uartPrivateHandle->handle->callback != NULL)
-        {
-            uartPrivateHandle->handle->callback(uartPrivateHandle->base, uartPrivateHandle->handle, kStatus_UART_TxIdle,
-                                                uartPrivateHandle->handle->userData);
-        }
-    }
+		if (uartPrivateHandle->handle->callback != NULL) {
+			uartPrivateHandle->handle->callback(uartPrivateHandle->base, uartPrivateHandle->handle, kStatus_UART_TxIdle,
+			        uartPrivateHandle->handle->userData);
+		}
+	}
 }
 
 static void UART_ReceiveSDMACallback(sdma_handle_t *handle, void *param, bool transferDone, uint32_t tcds)
 {
-    assert(param != NULL);
+	assert(param != NULL);
 
-    uart_sdma_private_handle_t *uartPrivateHandle = (uart_sdma_private_handle_t *)param;
+	uart_sdma_private_handle_t *uartPrivateHandle = (uart_sdma_private_handle_t *)param;
 
-    if (transferDone)
-    {
-        /* Disable transfer. */
-        UART_TransferAbortReceiveSDMA(uartPrivateHandle->base, uartPrivateHandle->handle);
+	if (transferDone) {
+		/* Disable transfer. */
+		UART_TransferAbortReceiveSDMA(uartPrivateHandle->base, uartPrivateHandle->handle);
 
-        if (uartPrivateHandle->handle->callback != NULL)
-        {
-            uartPrivateHandle->handle->callback(uartPrivateHandle->base, uartPrivateHandle->handle, kStatus_UART_RxIdle,
-                                                uartPrivateHandle->handle->userData);
-        }
-    }
+		if (uartPrivateHandle->handle->callback != NULL) {
+			uartPrivateHandle->handle->callback(uartPrivateHandle->base, uartPrivateHandle->handle, kStatus_UART_RxIdle,
+			        uartPrivateHandle->handle->userData);
+		}
+	}
 }
 
 /*!
@@ -123,53 +116,49 @@ static void UART_ReceiveSDMACallback(sdma_handle_t *handle, void *param, bool tr
  * param eventSourceRx Eventsource for RX DMA transfer.
  */
 void UART_TransferCreateHandleSDMA(UART_Type *base,
-                                   uart_sdma_handle_t *handle,
-                                   uart_sdma_transfer_callback_t callback,
-                                   void *userData,
-                                   sdma_handle_t *txSdmaHandle,
-                                   sdma_handle_t *rxSdmaHandle,
-                                   uint32_t eventSourceTx,
-                                   uint32_t eventSourceRx)
+        uart_sdma_handle_t *handle,
+        uart_sdma_transfer_callback_t callback,
+        void *userData,
+        sdma_handle_t *txSdmaHandle,
+        sdma_handle_t *rxSdmaHandle,
+        uint32_t eventSourceTx,
+        uint32_t eventSourceRx)
 {
-    assert(handle != NULL);
+	assert(handle != NULL);
 
-    uint32_t instance = UART_GetInstance(base);
+	uint32_t instance = UART_GetInstance(base);
 
-    (void)memset(handle, 0, sizeof(*handle));
+	(void)memset(handle, 0, sizeof(*handle));
 
-    handle->rxState = (uint8_t)kUART_RxIdle;
-    handle->txState = (uint8_t)kUART_TxIdle;
+	handle->rxState = (uint8_t)kUART_RxIdle;
+	handle->txState = (uint8_t)kUART_TxIdle;
 
-    if (rxSdmaHandle != NULL)
-    {
-        rxSdmaHandle->eventSource = eventSourceRx;
-    }
+	if (rxSdmaHandle != NULL) {
+		rxSdmaHandle->eventSource = eventSourceRx;
+	}
 
-    if (txSdmaHandle != NULL)
-    {
-        txSdmaHandle->eventSource = eventSourceTx;
-    }
+	if (txSdmaHandle != NULL) {
+		txSdmaHandle->eventSource = eventSourceTx;
+	}
 
-    handle->rxSdmaHandle = rxSdmaHandle;
-    handle->txSdmaHandle = txSdmaHandle;
+	handle->rxSdmaHandle = rxSdmaHandle;
+	handle->txSdmaHandle = txSdmaHandle;
 
-    handle->callback = callback;
-    handle->userData = userData;
+	handle->callback = callback;
+	handle->userData = userData;
 
-    s_sdmaPrivateHandle[instance].base   = base;
-    s_sdmaPrivateHandle[instance].handle = handle;
+	s_sdmaPrivateHandle[instance].base   = base;
+	s_sdmaPrivateHandle[instance].handle = handle;
 
-    /* Configure TX. */
-    if (txSdmaHandle != NULL)
-    {
-        SDMA_SetCallback(handle->txSdmaHandle, UART_SendSDMACallback, &s_sdmaPrivateHandle[instance]);
-    }
+	/* Configure TX. */
+	if (txSdmaHandle != NULL) {
+		SDMA_SetCallback(handle->txSdmaHandle, UART_SendSDMACallback, &s_sdmaPrivateHandle[instance]);
+	}
 
-    /* Configure RX. */
-    if (rxSdmaHandle != NULL)
-    {
-        SDMA_SetCallback(handle->rxSdmaHandle, UART_ReceiveSDMACallback, &s_sdmaPrivateHandle[instance]);
-    }
+	/* Configure RX. */
+	if (rxSdmaHandle != NULL) {
+		SDMA_SetCallback(handle->rxSdmaHandle, UART_ReceiveSDMACallback, &s_sdmaPrivateHandle[instance]);
+	}
 }
 
 /*!
@@ -187,51 +176,47 @@ void UART_TransferCreateHandleSDMA(UART_Type *base,
  */
 status_t UART_SendSDMA(UART_Type *base, uart_sdma_handle_t *handle, uart_transfer_t *xfer)
 {
-    assert(handle != NULL);
-    assert(handle->txSdmaHandle != NULL);
-    assert(xfer != NULL);
-    assert(xfer->data != NULL);
-    assert(xfer->dataSize != 0U);
+	assert(handle != NULL);
+	assert(handle->txSdmaHandle != NULL);
+	assert(xfer != NULL);
+	assert(xfer->data != NULL);
+	assert(xfer->dataSize != 0U);
 
-    sdma_transfer_config_t xferConfig = {0U};
-    status_t status;
-    sdma_peripheral_t perType = kSDMA_PeripheralTypeUART;
+	sdma_transfer_config_t xferConfig = {0U};
+	status_t status;
+	sdma_peripheral_t perType = kSDMA_PeripheralTypeUART;
 
-    /* If previous TX not finished. */
-    if ((uint8_t)kUART_TxBusy == handle->txState)
-    {
-        status = kStatus_UART_TxBusy;
-    }
-    else
-    {
-        handle->txState       = (uint8_t)kUART_TxBusy;
-        handle->txDataSizeAll = xfer->dataSize;
+	/* If previous TX not finished. */
+	if ((uint8_t)kUART_TxBusy == handle->txState) {
+		status = kStatus_UART_TxBusy;
+	} else {
+		handle->txState       = (uint8_t)kUART_TxBusy;
+		handle->txDataSizeAll = xfer->dataSize;
 
 #if defined(FSL_FEATURE_SOC_SPBA_COUNT) && (FSL_FEATURE_SOC_SPBA_COUNT > 0)
-        bool isSpba = SDMA_IsPeripheralInSPBA((uint32_t)base);
-        /* Judge if the instance is located in SPBA */
-        if (isSpba)
-        {
-            perType = kSDMA_PeripheralTypeUART_SP;
-        }
+		bool isSpba = SDMA_IsPeripheralInSPBA((uint32_t)base);
+		/* Judge if the instance is located in SPBA */
+		if (isSpba) {
+			perType = kSDMA_PeripheralTypeUART_SP;
+		}
 #endif /* FSL_FEATURE_SOC_SPBA_COUNT */
 
-        /* Prepare transfer. */
-        SDMA_PrepareTransfer(&xferConfig, (uint32_t)xfer->data, (uint32_t) & (base->UTXD), sizeof(uint8_t),
-                             sizeof(uint8_t), sizeof(uint8_t), (uint32_t)xfer->dataSize,
-                             handle->txSdmaHandle->eventSource, perType, kSDMA_MemoryToPeripheral);
+		/* Prepare transfer. */
+		SDMA_PrepareTransfer(&xferConfig, (uint32_t)xfer->data, (uint32_t) & (base->UTXD), sizeof(uint8_t),
+		        sizeof(uint8_t), sizeof(uint8_t), (uint32_t)xfer->dataSize,
+		        handle->txSdmaHandle->eventSource, perType, kSDMA_MemoryToPeripheral);
 
-        /* Submit transfer. */
-        SDMA_SubmitTransfer(handle->txSdmaHandle, &xferConfig);
+		/* Submit transfer. */
+		SDMA_SubmitTransfer(handle->txSdmaHandle, &xferConfig);
 
-        SDMA_StartTransfer(handle->txSdmaHandle);
+		SDMA_StartTransfer(handle->txSdmaHandle);
 
-        /* Enable UART TX SDMA. */
-        UART_EnableTxDMA(base, true);
-        status = kStatus_Success;
-    }
+		/* Enable UART TX SDMA. */
+		UART_EnableTxDMA(base, true);
+		status = kStatus_Success;
+	}
 
-    return status;
+	return status;
 }
 
 /*!
@@ -249,52 +234,48 @@ status_t UART_SendSDMA(UART_Type *base, uart_sdma_handle_t *handle, uart_transfe
  */
 status_t UART_ReceiveSDMA(UART_Type *base, uart_sdma_handle_t *handle, uart_transfer_t *xfer)
 {
-    assert(handle != NULL);
-    assert(handle->rxSdmaHandle != NULL);
-    assert(xfer != NULL);
-    assert(xfer->data != NULL);
-    assert(xfer->dataSize != 0U);
+	assert(handle != NULL);
+	assert(handle->rxSdmaHandle != NULL);
+	assert(xfer != NULL);
+	assert(xfer->data != NULL);
+	assert(xfer->dataSize != 0U);
 
-    sdma_transfer_config_t xferConfig = {0U};
-    status_t status;
-    sdma_peripheral_t perType = kSDMA_PeripheralTypeUART;
+	sdma_transfer_config_t xferConfig = {0U};
+	status_t status;
+	sdma_peripheral_t perType = kSDMA_PeripheralTypeUART;
 
-    /* If previous RX not finished. */
-    if ((uint8_t)kUART_RxBusy == handle->rxState)
-    {
-        status = kStatus_UART_RxBusy;
-    }
-    else
-    {
-        handle->rxState       = (uint8_t)kUART_RxBusy;
-        handle->rxDataSizeAll = xfer->dataSize;
+	/* If previous RX not finished. */
+	if ((uint8_t)kUART_RxBusy == handle->rxState) {
+		status = kStatus_UART_RxBusy;
+	} else {
+		handle->rxState       = (uint8_t)kUART_RxBusy;
+		handle->rxDataSizeAll = xfer->dataSize;
 
 #if defined(FSL_FEATURE_SOC_SPBA_COUNT) && (FSL_FEATURE_SOC_SPBA_COUNT > 0)
-        bool isSpba = SDMA_IsPeripheralInSPBA((uint32_t)base);
-        /* Judge if the instance is located in SPBA */
-        if (isSpba)
-        {
-            perType = kSDMA_PeripheralTypeUART_SP;
-        }
+		bool isSpba = SDMA_IsPeripheralInSPBA((uint32_t)base);
+		/* Judge if the instance is located in SPBA */
+		if (isSpba) {
+			perType = kSDMA_PeripheralTypeUART_SP;
+		}
 #endif /* FSL_FEATURE_SOC_SPBA_COUNT */
 
-        /* Prepare transfer. */
-        SDMA_PrepareTransfer(&xferConfig, (uint32_t) & (base->URXD), (uint32_t)xfer->data, sizeof(uint8_t),
-                             sizeof(uint8_t), sizeof(uint8_t), (uint32_t)xfer->dataSize,
-                             handle->rxSdmaHandle->eventSource, perType, kSDMA_PeripheralToMemory);
+		/* Prepare transfer. */
+		SDMA_PrepareTransfer(&xferConfig, (uint32_t) & (base->URXD), (uint32_t)xfer->data, sizeof(uint8_t),
+		        sizeof(uint8_t), sizeof(uint8_t), (uint32_t)xfer->dataSize,
+		        handle->rxSdmaHandle->eventSource, perType, kSDMA_PeripheralToMemory);
 
-        /* Submit transfer. */
-        SDMA_SubmitTransfer(handle->rxSdmaHandle, &xferConfig);
+		/* Submit transfer. */
+		SDMA_SubmitTransfer(handle->rxSdmaHandle, &xferConfig);
 
-        SDMA_StartTransfer(handle->rxSdmaHandle);
+		SDMA_StartTransfer(handle->rxSdmaHandle);
 
-        /* Enable UART RX SDMA. */
-        UART_EnableRxDMA(base, true);
+		/* Enable UART RX SDMA. */
+		UART_EnableRxDMA(base, true);
 
-        status = kStatus_Success;
-    }
+		status = kStatus_Success;
+	}
 
-    return status;
+	return status;
 }
 
 /*!
@@ -307,16 +288,16 @@ status_t UART_ReceiveSDMA(UART_Type *base, uart_sdma_handle_t *handle, uart_tran
  */
 void UART_TransferAbortSendSDMA(UART_Type *base, uart_sdma_handle_t *handle)
 {
-    assert(handle != NULL);
-    assert(handle->txSdmaHandle != NULL);
+	assert(handle != NULL);
+	assert(handle->txSdmaHandle != NULL);
 
-    /* Disable UART TX SDMA. */
-    UART_EnableTxDMA(base, false);
+	/* Disable UART TX SDMA. */
+	UART_EnableTxDMA(base, false);
 
-    /* Stop transfer. */
-    SDMA_AbortTransfer(handle->txSdmaHandle);
+	/* Stop transfer. */
+	SDMA_AbortTransfer(handle->txSdmaHandle);
 
-    handle->txState = (uint8_t)kUART_TxIdle;
+	handle->txState = (uint8_t)kUART_TxIdle;
 }
 
 /*!
@@ -329,14 +310,14 @@ void UART_TransferAbortSendSDMA(UART_Type *base, uart_sdma_handle_t *handle)
  */
 void UART_TransferAbortReceiveSDMA(UART_Type *base, uart_sdma_handle_t *handle)
 {
-    assert(handle != NULL);
-    assert(handle->rxSdmaHandle != NULL);
+	assert(handle != NULL);
+	assert(handle->rxSdmaHandle != NULL);
 
-    /* Disable UART RX SDMA. */
-    UART_EnableRxDMA(base, false);
+	/* Disable UART RX SDMA. */
+	UART_EnableRxDMA(base, false);
 
-    /* Stop transfer. */
-    SDMA_AbortTransfer(handle->rxSdmaHandle);
+	/* Stop transfer. */
+	SDMA_AbortTransfer(handle->rxSdmaHandle);
 
-    handle->rxState = (uint8_t)kUART_RxIdle;
+	handle->rxState = (uint8_t)kUART_RxIdle;
 }

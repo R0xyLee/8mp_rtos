@@ -48,12 +48,11 @@
 
 #include <stdint.h>
 
-struct llist
-{
-    void *data;
-    uint32_t attr;
-    struct llist *next;
-    struct llist *prev;
+struct llist {
+	void *data;
+	uint32_t attr;
+	struct llist *next;
+	struct llist *prev;
 };
 
 void add_to_list(struct llist **head, struct llist *node);

@@ -23,19 +23,18 @@
 /**
  * @brief SRTM RPMsg endpoint channel configuration fields
  */
-typedef struct _srtm_rpmsg_endpoint_config
-{
-    struct rpmsg_lite_instance *rpmsgHandle; /*!< RPMsg handle initialized by app */
-    unsigned long localAddr;                 /*!< RPMsg local endpoint address */
-    unsigned long peerAddr;                  /*!< RPMsg peer endpoint address */
-    const char *epName;                      /*!< RPMsg endpoint name for name service announcement */
+typedef struct _srtm_rpmsg_endpoint_config {
+	struct rpmsg_lite_instance *rpmsgHandle; /*!< RPMsg handle initialized by app */
+	unsigned long localAddr;                 /*!< RPMsg local endpoint address */
+	unsigned long peerAddr;                  /*!< RPMsg peer endpoint address */
+	const char *epName;                      /*!< RPMsg endpoint name for name service announcement */
 } srtm_rpmsg_endpoint_config_t;
 
 /**
  * @brief SRTM RPMsg endpoint channel RX callback function type.
  */
 typedef int (*srtm_rpmsg_endpoint_rx_cb_t)(
-    srtm_channel_t channel, void *payload, int payloadLen, unsigned long src, void *param);
+        srtm_channel_t channel, void *payload, int payloadLen, unsigned long src, void *param);
 
 /*******************************************************************************
  * API
@@ -72,8 +71,8 @@ void SRTM_RPMsgEndpoint_Destroy(srtm_channel_t channel);
  * @return SRTM_Status_Success on success and others on failure.
  */
 srtm_status_t SRTM_RPMsgEndpoint_OverrideRxHandler(srtm_channel_t channel,
-                                                   srtm_rpmsg_endpoint_rx_cb_t callback,
-                                                   void *param);
+        srtm_rpmsg_endpoint_rx_cb_t callback,
+        void *param);
 
 #ifdef __cplusplus
 }

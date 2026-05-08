@@ -46,7 +46,7 @@ AT_NONCACHEABLE_SECTION_ALIGN(uart_transfer_t sendXfer, 4);
 AT_NONCACHEABLE_SECTION_ALIGN(uart_transfer_t receiveXfer, 4);
 
 AT_NONCACHEABLE_SECTION_ALIGN_INIT(uint8_t g_tipString[], 4) =
-    "Uart sdma transfer example\r\nBoard receives 8 characters then sends them out\r\nNow please input:\r\n";
+        "Uart sdma transfer example\r\nBoard receives 8 characters then sends them out\r\nNow please input:\r\n";
 
 AT_NONCACHEABLE_SECTION_ALIGN(uint8_t g_txBuffer[ECHO_BUFFER_LENGTH], 4);
 AT_NONCACHEABLE_SECTION_ALIGN(uint8_t g_rxBuffer[ECHO_BUFFER_LENGTH], 4);
@@ -62,19 +62,17 @@ volatile bool rxOnGoing     = false;
 /* UART user callback */
 void UART_UserCallback(UART_Type *base, uart_sdma_handle_t *handle, status_t status, void *userData)
 {
-    userData = userData;
+	userData = userData;
 
-    if (kStatus_UART_TxIdle == status)
-    {
-        txBufferFull = false;
-        txOnGoing    = false;
-    }
+	if (kStatus_UART_TxIdle == status) {
+		txBufferFull = false;
+		txOnGoing    = false;
+	}
 
-    if (kStatus_UART_RxIdle == status)
-    {
-        rxBufferEmpty = false;
-        rxOnGoing     = false;
-    }
+	if (kStatus_UART_RxIdle == status) {
+		rxBufferEmpty = false;
+		rxOnGoing     = false;
+	}
 }
 
 /*!e
@@ -82,98 +80,92 @@ void UART_UserCallback(UART_Type *base, uart_sdma_handle_t *handle, status_t sta
  */
 int main(void)
 {
-    status_t status;
-    uart_config_t config;
-    sdma_config_t sdmaConfig;
-    uart_transfer_t xfer;
+	status_t status;
+	uart_config_t config;
+	sdma_config_t sdmaConfig;
+	uart_transfer_t xfer;
 
-    /* M7 has its local cache and enabled by default,
-     * need to set smart subsystems (0x28000000 ~ 0x3FFFFFFF)
-     * non-cacheable before accessing this address region */
-    BOARD_InitMemory();
+	/* M7 has its local cache and enabled by default,
+	 * need to set smart subsystems (0x28000000 ~ 0x3FFFFFFF)
+	 * non-cacheable before accessing this address region */
+	BOARD_InitMemory();
 
-    /* Board specific RDC settings */
-    BOARD_RdcInit();
+	/* Board specific RDC settings */
+	BOARD_RdcInit();
 
-    BOARD_InitPins();
-    BOARD_BootClockRUN();
+	BOARD_InitPins();
+	BOARD_BootClockRUN();
 
-    /*set SDMA1 PERIPH to M7 Domain(DID=1),due to UART not be accessible by DID=0 by default*/
-    rdc_domain_assignment_t assignment = {0};
-    assignment.domainId                = BOARD_DOMAIN_ID;
-    RDC_SetMasterDomainAssignment(RDC, kRDC_Master_SDMA1_PERIPH, &assignment);
-    /*
-     * config.baudRate_Bps = 115200U;
-     * config.parityMode = kUART_ParityDisabled;
-     * config.dataBitsCount = kUART_EightDataBits;
-     * config.stopBitCount = kUART_OneStopBit;
-     * config.txFifoWatermark = 2;
-     * config.rxFifoWatermark = 1;
-     * config.enableTx = false;
-     * config.enableRx = false;
-     */
-    UART_GetDefaultConfig(&config);
-    config.baudRate_Bps    = BOARD_DEBUG_UART_BAUDRATE;
-    config.rxFifoWatermark = 1;
-    config.enableTx        = true;
-    config.enableRx        = true;
+	/*set SDMA1 PERIPH to M7 Domain(DID=1),due to UART not be accessible by DID=0 by default*/
+	rdc_domain_assignment_t assignment = {0};
+	assignment.domainId                = BOARD_DOMAIN_ID;
+	RDC_SetMasterDomainAssignment(RDC, kRDC_Master_SDMA1_PERIPH, &assignment);
+	/*
+	 * config.baudRate_Bps = 115200U;
+	 * config.parityMode = kUART_ParityDisabled;
+	 * config.dataBitsCount = kUART_EightDataBits;
+	 * config.stopBitCount = kUART_OneStopBit;
+	 * config.txFifoWatermark = 2;
+	 * config.rxFifoWatermark = 1;
+	 * config.enableTx = false;
+	 * config.enableRx = false;
+	 */
+	UART_GetDefaultConfig(&config);
+	config.baudRate_Bps    = BOARD_DEBUG_UART_BAUDRATE;
+	config.rxFifoWatermark = 1;
+	config.enableTx        = true;
+	config.enableRx        = true;
 
-    status = UART_Init(DEMO_UART, &config, DEMO_UART_CLK_FREQ);
-    if (kStatus_Success != status)
-    {
-        return kStatus_Fail;
-    }
+	status = UART_Init(DEMO_UART, &config, DEMO_UART_CLK_FREQ);
+	if (kStatus_Success != status) {
+		return kStatus_Fail;
+	}
 
-    /* Init the SDMA module */
-    SDMA_GetDefaultConfig(&sdmaConfig);
-    SDMA_Init(EXAMPLE_UART_DMA_BASEADDR, &sdmaConfig);
-    SDMA_CreateHandle(&g_uartTxSdmaHandle, EXAMPLE_UART_DMA_BASEADDR, UART_TX_DMA_CHANNEL, &context_Tx);
-    SDMA_CreateHandle(&g_uartRxSdmaHandle, EXAMPLE_UART_DMA_BASEADDR, UART_RX_DMA_CHANNEL, &context_Rx);
-    SDMA_SetChannelPriority(EXAMPLE_UART_DMA_BASEADDR, UART_TX_DMA_CHANNEL, 3U);
-    SDMA_SetChannelPriority(EXAMPLE_UART_DMA_BASEADDR, UART_RX_DMA_CHANNEL, 4U);
+	/* Init the SDMA module */
+	SDMA_GetDefaultConfig(&sdmaConfig);
+	SDMA_Init(EXAMPLE_UART_DMA_BASEADDR, &sdmaConfig);
+	SDMA_CreateHandle(&g_uartTxSdmaHandle, EXAMPLE_UART_DMA_BASEADDR, UART_TX_DMA_CHANNEL, &context_Tx);
+	SDMA_CreateHandle(&g_uartRxSdmaHandle, EXAMPLE_UART_DMA_BASEADDR, UART_RX_DMA_CHANNEL, &context_Rx);
+	SDMA_SetChannelPriority(EXAMPLE_UART_DMA_BASEADDR, UART_TX_DMA_CHANNEL, 3U);
+	SDMA_SetChannelPriority(EXAMPLE_UART_DMA_BASEADDR, UART_RX_DMA_CHANNEL, 4U);
 
-    /* Create UART DMA handle. */
-    UART_TransferCreateHandleSDMA(DEMO_UART, &g_uartSdmaHandle, UART_UserCallback, NULL, &g_uartTxSdmaHandle,
-                                  &g_uartRxSdmaHandle, UART_TX_DMA_REQUEST, UART_RX_DMA_REQUEST);
+	/* Create UART DMA handle. */
+	UART_TransferCreateHandleSDMA(DEMO_UART, &g_uartSdmaHandle, UART_UserCallback, NULL, &g_uartTxSdmaHandle,
+	        &g_uartRxSdmaHandle, UART_TX_DMA_REQUEST, UART_RX_DMA_REQUEST);
 
-    /* Send g_tipString out. */
-    xfer.data     = g_tipString;
-    xfer.dataSize = sizeof(g_tipString) - 1;
-    txOnGoing     = true;
-    UART_SendSDMA(DEMO_UART, &g_uartSdmaHandle, &xfer);
+	/* Send g_tipString out. */
+	xfer.data     = g_tipString;
+	xfer.dataSize = sizeof(g_tipString) - 1;
+	txOnGoing     = true;
+	UART_SendSDMA(DEMO_UART, &g_uartSdmaHandle, &xfer);
 
-    /* Wait send finished */
-    while (txOnGoing)
-    {
-    }
+	/* Wait send finished */
+	while (txOnGoing) {
+	}
 
-    /* Start to echo. */
-    sendXfer.data        = g_txBuffer;
-    sendXfer.dataSize    = ECHO_BUFFER_LENGTH;
-    receiveXfer.data     = g_rxBuffer;
-    receiveXfer.dataSize = ECHO_BUFFER_LENGTH;
+	/* Start to echo. */
+	sendXfer.data        = g_txBuffer;
+	sendXfer.dataSize    = ECHO_BUFFER_LENGTH;
+	receiveXfer.data     = g_rxBuffer;
+	receiveXfer.dataSize = ECHO_BUFFER_LENGTH;
 
-    while (1)
-    {
-        /* If RX is idle and g_rxBuffer is empty, start to read data to g_rxBuffer. */
-        if ((!rxOnGoing) && rxBufferEmpty)
-        {
-            rxOnGoing = true;
-            UART_ReceiveSDMA(DEMO_UART, &g_uartSdmaHandle, &receiveXfer);
-        }
-        /* If TX is idle and g_txBuffer is full, start to send data. */
-        if ((!txOnGoing) && txBufferFull)
-        {
-            txOnGoing = true;
-            UART_SendSDMA(DEMO_UART, &g_uartSdmaHandle, &sendXfer);
-        }
+	while (1) {
+		/* If RX is idle and g_rxBuffer is empty, start to read data to g_rxBuffer. */
+		if ((!rxOnGoing) && rxBufferEmpty) {
+			rxOnGoing = true;
+			UART_ReceiveSDMA(DEMO_UART, &g_uartSdmaHandle, &receiveXfer);
+		}
+		/* If TX is idle and g_txBuffer is full, start to send data. */
+		if ((!txOnGoing) && txBufferFull) {
+			txOnGoing = true;
+			UART_SendSDMA(DEMO_UART, &g_uartSdmaHandle, &sendXfer);
+		}
 
-        /* If g_txBuffer is empty and g_rxBuffer is full, copy g_rxBuffer to g_txBuffer. */
-        if ((!rxBufferEmpty) && (!txBufferFull))
-        {
-            memcpy(g_txBuffer, g_rxBuffer, ECHO_BUFFER_LENGTH);
-            rxBufferEmpty = true;
-            txBufferFull  = true;
-        }
-    }
+		/* If g_txBuffer is empty and g_rxBuffer is full, copy g_rxBuffer to g_txBuffer. */
+		if ((!rxBufferEmpty) && (!txBufferFull)) {
+			memcpy(g_txBuffer, g_rxBuffer, ECHO_BUFFER_LENGTH);
+			rxBufferEmpty = true;
+			txBufferFull  = true;
+		}
+	}
 }

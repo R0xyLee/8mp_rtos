@@ -87,13 +87,13 @@ extern "C"
 \brief I2C Status
 */
 typedef volatile struct _ARM_I2C_STATUS {
-  uint32_t busy             : 1;        ///< Busy flag
-  uint32_t mode             : 1;        ///< Mode: 0=Slave, 1=Master
-  uint32_t direction        : 1;        ///< Direction: 0=Transmitter, 1=Receiver
-  uint32_t general_call     : 1;        ///< General Call indication (cleared on start of next Slave operation)
-  uint32_t arbitration_lost : 1;        ///< Master lost arbitration (cleared on start of next Master operation)
-  uint32_t bus_error        : 1;        ///< Bus error detected (cleared on start of next Master/Slave operation)
-  uint32_t reserved         : 26;
+	uint32_t busy             : 1;        ///< Busy flag
+	uint32_t mode             : 1;        ///< Mode: 0=Slave, 1=Master
+	uint32_t direction        : 1;        ///< Direction: 0=Transmitter, 1=Receiver
+	uint32_t general_call     : 1;        ///< General Call indication (cleared on start of next Slave operation)
+	uint32_t arbitration_lost : 1;        ///< Master lost arbitration (cleared on start of next Master operation)
+	uint32_t bus_error        : 1;        ///< Bus error detected (cleared on start of next Master/Slave operation)
+	uint32_t reserved         : 26;
 } ARM_I2C_STATUS;
 
 
@@ -180,15 +180,15 @@ typedef volatile struct _ARM_I2C_STATUS {
   \param[in]   event  \ref I2C_events notification mask
 */
 
-typedef void (*ARM_I2C_SignalEvent_t) (uint32_t event);  ///< Pointer to \ref ARM_I2C_SignalEvent : Signal I2C Event.
+typedef void (*ARM_I2C_SignalEvent_t)(uint32_t event);   ///< Pointer to \ref ARM_I2C_SignalEvent : Signal I2C Event.
 
 
 /**
 \brief I2C Driver Capabilities.
 */
 typedef struct _ARM_I2C_CAPABILITIES {
-  uint32_t address_10_bit : 1;          ///< supports 10-bit addressing
-  uint32_t reserved       : 31;         ///< Reserved (must be zero)
+	uint32_t address_10_bit : 1;          ///< supports 10-bit addressing
+	uint32_t reserved       : 31;         ///< Reserved (must be zero)
 } ARM_I2C_CAPABILITIES;
 
 
@@ -196,18 +196,30 @@ typedef struct _ARM_I2C_CAPABILITIES {
 \brief Access structure of the I2C Driver.
 */
 typedef struct _ARM_DRIVER_I2C {
-  ARM_DRIVER_VERSION   (*GetVersion)     (void);                                                                ///< Pointer to \ref ARM_I2C_GetVersion : Get driver version.
-  ARM_I2C_CAPABILITIES (*GetCapabilities)(void);                                                                ///< Pointer to \ref ARM_I2C_GetCapabilities : Get driver capabilities.
-  int32_t              (*Initialize)     (ARM_I2C_SignalEvent_t cb_event);                                      ///< Pointer to \ref ARM_I2C_Initialize : Initialize I2C Interface.
-  int32_t              (*Uninitialize)   (void);                                                                ///< Pointer to \ref ARM_I2C_Uninitialize : De-initialize I2C Interface.
-  int32_t              (*PowerControl)   (ARM_POWER_STATE state);                                               ///< Pointer to \ref ARM_I2C_PowerControl : Control I2C Interface Power.
-  int32_t              (*MasterTransmit) (uint32_t addr, const uint8_t *data, uint32_t num, bool xfer_pending); ///< Pointer to \ref ARM_I2C_MasterTransmit : Start transmitting data as I2C Master.
-  int32_t              (*MasterReceive)  (uint32_t addr,       uint8_t *data, uint32_t num, bool xfer_pending); ///< Pointer to \ref ARM_I2C_MasterReceive : Start receiving data as I2C Master.
-  int32_t              (*SlaveTransmit)  (               const uint8_t *data, uint32_t num);                    ///< Pointer to \ref ARM_I2C_SlaveTransmit : Start transmitting data as I2C Slave.
-  int32_t              (*SlaveReceive)   (                     uint8_t *data, uint32_t num);                    ///< Pointer to \ref ARM_I2C_SlaveReceive : Start receiving data as I2C Slave.
-  int32_t              (*GetDataCount)   (void);                                                                ///< Pointer to \ref ARM_I2C_GetDataCount : Get transferred data count.
-  int32_t              (*Control)        (uint32_t control, uint32_t arg);                                      ///< Pointer to \ref ARM_I2C_Control : Control I2C Interface.
-  ARM_I2C_STATUS       (*GetStatus)      (void);                                                                ///< Pointer to \ref ARM_I2C_GetStatus : Get I2C status.
+	ARM_DRIVER_VERSION(*GetVersion)(
+	        void);                                                                        ///< Pointer to \ref ARM_I2C_GetVersion : Get driver version.
+	ARM_I2C_CAPABILITIES(*GetCapabilities)(
+	        void);                                                                 ///< Pointer to \ref ARM_I2C_GetCapabilities : Get driver capabilities.
+	int32_t (*Initialize)(ARM_I2C_SignalEvent_t
+	        cb_event);                                                        ///< Pointer to \ref ARM_I2C_Initialize : Initialize I2C Interface.
+	int32_t (*Uninitialize)(
+	        void);                                                                                ///< Pointer to \ref ARM_I2C_Uninitialize : De-initialize I2C Interface.
+	int32_t (*PowerControl)(ARM_POWER_STATE
+	        state);                                                               ///< Pointer to \ref ARM_I2C_PowerControl : Control I2C Interface Power.
+	int32_t (*MasterTransmit)(uint32_t addr, const uint8_t *data, uint32_t num,
+	        bool xfer_pending);               ///< Pointer to \ref ARM_I2C_MasterTransmit : Start transmitting data as I2C Master.
+	int32_t (*MasterReceive)(uint32_t addr,       uint8_t *data, uint32_t num,
+	        bool xfer_pending);                ///< Pointer to \ref ARM_I2C_MasterReceive : Start receiving data as I2C Master.
+	int32_t (*SlaveTransmit)(const uint8_t *data,
+	        uint32_t num);                                                  ///< Pointer to \ref ARM_I2C_SlaveTransmit : Start transmitting data as I2C Slave.
+	int32_t (*SlaveReceive)(uint8_t *data,
+	        uint32_t num);                                                         ///< Pointer to \ref ARM_I2C_SlaveReceive : Start receiving data as I2C Slave.
+	int32_t (*GetDataCount)(
+	        void);                                                                                ///< Pointer to \ref ARM_I2C_GetDataCount : Get transferred data count.
+	int32_t (*Control)(uint32_t control,
+	        uint32_t arg);                                                           ///< Pointer to \ref ARM_I2C_Control : Control I2C Interface.
+	ARM_I2C_STATUS(*GetStatus)(
+	        void);                                                                             ///< Pointer to \ref ARM_I2C_GetStatus : Get I2C status.
 } const ARM_DRIVER_I2C;
 
 #ifdef  __cplusplus

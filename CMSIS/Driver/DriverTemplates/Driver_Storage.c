@@ -23,15 +23,15 @@
 
 /* Driver Version */
 static const ARM_DRIVER_VERSION DriverVersion = {
-    ARM_STORAGE_API_VERSION,
-    ARM_STORAGE_DRV_VERSION
+	ARM_STORAGE_API_VERSION,
+	ARM_STORAGE_DRV_VERSION
 };
 
 /* Driver Capabilities */
 static const ARM_STORAGE_CAPABILITIES DriverCapabilities = {
-    1,  /* Asynchronous Mode */
-    1,  /* Supports EraseAll operation */
-    0   /* Reserved */
+	1,  /* Asynchronous Mode */
+	1,  /* Supports EraseAll operation */
+	0   /* Reserved */
 };
 
 
@@ -39,77 +39,89 @@ static const ARM_STORAGE_CAPABILITIES DriverCapabilities = {
 // Functions
 //
 
-ARM_DRIVER_VERSION ARM_Storage_GetVersion (void)  {
-}
-
-ARM_STORAGE_CAPABILITIES ARM_Storage_GetCapabilities (void)  {
-}
-
-int32_t ARM_Storage_Initialize (ARM_Storage_Callback_t callback)  {
-}
-
-int32_t ARM_Storage_Uninitialize (void)  {
-}
-
-int32_t ARM_Storage_PowerControl (ARM_POWER_STATE state)
+ARM_DRIVER_VERSION ARM_Storage_GetVersion(void)
 {
-    switch (state)
-    {
-    case ARM_POWER_OFF:
-        break;
-
-    case ARM_POWER_LOW:
-        break;
-
-    case ARM_POWER_FULL:
-        break;
-
-    default:
-        return ARM_DRIVER_ERROR_UNSUPPORTED;
-    }
 }
 
-int32_t ARM_Storage_ReadData (uint64_t addr, void *data, uint32_t size)  {
+ARM_STORAGE_CAPABILITIES ARM_Storage_GetCapabilities(void)
+{
 }
 
-int32_t ARM_Storage_ProgramData (uint64_t addr, const void *data, uint32_t size)  {
+int32_t ARM_Storage_Initialize(ARM_Storage_Callback_t callback)
+{
 }
 
-int32_t ARM_Storage_Erase (uint64_t addr, uint32_t size)  {
+int32_t ARM_Storage_Uninitialize(void)
+{
 }
 
-int32_t ARM_Storage_EraseAll (void)  {
+int32_t ARM_Storage_PowerControl(ARM_POWER_STATE state)
+{
+	switch (state) {
+	case ARM_POWER_OFF:
+		break;
+
+	case ARM_POWER_LOW:
+		break;
+
+	case ARM_POWER_FULL:
+		break;
+
+	default:
+		return ARM_DRIVER_ERROR_UNSUPPORTED;
+	}
 }
 
-ARM_STORAGE_STATUS ARM_Storage_GetStatus (void)  {
+int32_t ARM_Storage_ReadData(uint64_t addr, void *data, uint32_t size)
+{
 }
 
-int32_t ARM_Storage_GetInfo (ARM_STORAGE_INFO *info)  {
+int32_t ARM_Storage_ProgramData(uint64_t addr, const void *data, uint32_t size)
+{
 }
 
-uint32_t ARM_Storage_ResolveAddress(uint64_t addr) {
+int32_t ARM_Storage_Erase(uint64_t addr, uint32_t size)
+{
 }
 
-int32_t ARM_Storage_GetNextBlock(const ARM_STORAGE_BLOCK* prev_block, ARM_STORAGE_BLOCK *next_block) {
+int32_t ARM_Storage_EraseAll(void)
+{
 }
 
-int32_t ARM_Storage_GetBlock(uint64_t addr, ARM_STORAGE_BLOCK *block) {
+ARM_STORAGE_STATUS ARM_Storage_GetStatus(void)
+{
+}
+
+int32_t ARM_Storage_GetInfo(ARM_STORAGE_INFO *info)
+{
+}
+
+uint32_t ARM_Storage_ResolveAddress(uint64_t addr)
+{
+}
+
+int32_t ARM_Storage_GetNextBlock(const ARM_STORAGE_BLOCK *prev_block, ARM_STORAGE_BLOCK *next_block)
+{
+}
+
+int32_t ARM_Storage_GetBlock(uint64_t addr, ARM_STORAGE_BLOCK *block)
+{
 }
 // End Storage Interface
 
 ARM_DRIVER_STORAGE Driver_STORAGE = {
-    ARM_Storage_GetVersion,
-    ARM_Storage_GetCapabilities,
-    ARM_Storage_Initialize,
-    ARM_Storage_Uninitialize,
-    ARM_Storage_PowerControl,
-    ARM_Storage_ReadData,
-    ARM_Storage_ProgramData,
-    ARM_Storage_Erase,
-    ARM_Storage_EraseAll,
-    ARM_Storage_GetStatus,
-    ARM_Storage_GetInfo,
-    ARM_Storage_ResolveAddress,
-    ARM_Storage_GetNextBlock,
-    ARM_Storage_GetBlock
+	ARM_Storage_GetVersion,
+	ARM_Storage_GetCapabilities,
+	ARM_Storage_Initialize,
+	ARM_Storage_Uninitialize,
+	ARM_Storage_PowerControl,
+	ARM_Storage_ReadData,
+	ARM_Storage_ProgramData,
+	ARM_Storage_Erase,
+	ARM_Storage_EraseAll,
+	ARM_Storage_GetStatus,
+	ARM_Storage_GetInfo,
+	ARM_Storage_ResolveAddress,
+	ARM_Storage_GetNextBlock,
+	ARM_Storage_GetBlock
 };

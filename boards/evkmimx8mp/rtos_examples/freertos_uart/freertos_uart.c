@@ -48,11 +48,11 @@ uart_rtos_handle_t handle;
 struct _uart_handle t_handle;
 
 uart_rtos_config_t uart_config = {
-    .baudrate    = 115200,
-    .parity      = kUART_ParityDisabled,
-    .stopbits    = kUART_OneStopBit,
-    .buffer      = background_buffer,
-    .buffer_size = sizeof(background_buffer),
+	.baudrate    = 115200,
+	.parity      = kUART_ParityDisabled,
+	.stopbits    = kUART_OneStopBit,
+	.buffer      = background_buffer,
+	.buffer_size = sizeof(background_buffer),
 };
 
 /*******************************************************************************
@@ -63,28 +63,27 @@ uart_rtos_config_t uart_config = {
  */
 int main(void)
 {
-    /* Init board hardware. */
-    /* M7 has its local cache and enabled by default,
-     * need to set smart subsystems (0x28000000 ~ 0x3FFFFFFF)
-     * non-cacheable before accessing this address region */
-    BOARD_InitMemory();
+	/* Init board hardware. */
+	/* M7 has its local cache and enabled by default,
+	 * need to set smart subsystems (0x28000000 ~ 0x3FFFFFFF)
+	 * non-cacheable before accessing this address region */
+	BOARD_InitMemory();
 
-    /* Board specific RDC settings */
-    BOARD_RdcInit();
+	/* Board specific RDC settings */
+	BOARD_RdcInit();
 
-    BOARD_InitPins();
-    BOARD_BootClockRUN();
-    BOARD_InitDebugConsole();
-    NVIC_SetPriority(DEMO_IRQn, 3);
-    if (xTaskCreate(uart_task, "Uart_task", configMINIMAL_STACK_SIZE + 100, NULL, uart_task_PRIORITY, NULL) != pdPASS)
-    {
-        PRINTF("Task creation failed!.\r\n");
-        while (1)
-            ;
-    }
-    vTaskStartScheduler();
-    for (;;)
-        ;
+	BOARD_InitPins();
+	BOARD_BootClockRUN();
+	BOARD_InitDebugConsole();
+	NVIC_SetPriority(DEMO_IRQn, 3);
+	if (xTaskCreate(uart_task, "Uart_task", configMINIMAL_STACK_SIZE + 100, NULL, uart_task_PRIORITY, NULL) != pdPASS) {
+		PRINTF("Task creation failed!.\r\n");
+		while (1)
+			;
+	}
+	vTaskStartScheduler();
+	for (;;)
+		;
 }
 
 /*!
@@ -92,51 +91,43 @@ int main(void)
  */
 static void uart_task(void *pvParameters)
 {
-    int error;
-    size_t n = 0;
+	int error;
+	size_t n = 0;
 
-    uart_config.srcclk = DEMO_UART_CLK_FREQ;
-    uart_config.base   = DEMO_UART;
+	uart_config.srcclk = DEMO_UART_CLK_FREQ;
+	uart_config.base   = DEMO_UART;
 
-    if (kStatus_Success != UART_RTOS_Init(&handle, &t_handle, &uart_config))
-    {
-        vTaskSuspend(NULL);
-    }
+	if (kStatus_Success != UART_RTOS_Init(&handle, &t_handle, &uart_config)) {
+		vTaskSuspend(NULL);
+	}
 
-    /* Send introduction message. */
-    if (kStatus_Success != UART_RTOS_Send(&handle, (uint8_t *)to_send, strlen(to_send)))
-    {
-        vTaskSuspend(NULL);
-    }
+	/* Send introduction message. */
+	if (kStatus_Success != UART_RTOS_Send(&handle, (uint8_t *)to_send, strlen(to_send))) {
+		vTaskSuspend(NULL);
+	}
 
-    /* Receive user input and send it back to terminal. */
-    do
-    {
-        error = UART_RTOS_Receive(&handle, recv_buffer, sizeof(recv_buffer), &n);
-        if (error == kStatus_UART_RxHardwareOverrun)
-        {
-            /* Notify about hardware buffer overrun */
-            if (kStatus_Success !=
-                UART_RTOS_Send(&handle, (uint8_t *)send_hardware_overrun, strlen(send_hardware_overrun)))
-            {
-                vTaskSuspend(NULL);
-            }
-        }
-        if (error == kStatus_UART_RxRingBufferOverrun)
-        {
-            /* Notify about ring buffer overrun */
-            if (kStatus_Success != UART_RTOS_Send(&handle, (uint8_t *)send_ring_overrun, strlen(send_ring_overrun)))
-            {
-                vTaskSuspend(NULL);
-            }
-        }
-        if (n > 0)
-        {
-            /* send back the received data */
-            UART_RTOS_Send(&handle, recv_buffer, n);
-        }
-    } while (kStatus_Success == error);
+	/* Receive user input and send it back to terminal. */
+	do {
+		error = UART_RTOS_Receive(&handle, recv_buffer, sizeof(recv_buffer), &n);
+		if (error == kStatus_UART_RxHardwareOverrun) {
+			/* Notify about hardware buffer overrun */
+			if (kStatus_Success !=
+			        UART_RTOS_Send(&handle, (uint8_t *)send_hardware_overrun, strlen(send_hardware_overrun))) {
+				vTaskSuspend(NULL);
+			}
+		}
+		if (error == kStatus_UART_RxRingBufferOverrun) {
+			/* Notify about ring buffer overrun */
+			if (kStatus_Success != UART_RTOS_Send(&handle, (uint8_t *)send_ring_overrun, strlen(send_ring_overrun))) {
+				vTaskSuspend(NULL);
+			}
+		}
+		if (n > 0) {
+			/* send back the received data */
+			UART_RTOS_Send(&handle, recv_buffer, n);
+		}
+	} while (kStatus_Success == error);
 
-    UART_RTOS_Deinit(&handle);
-    vTaskSuspend(NULL);
+	UART_RTOS_Deinit(&handle);
+	vTaskSuspend(NULL);
 }

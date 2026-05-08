@@ -51,7 +51,7 @@
   <pre>
       {b10, b11, b12, a11, a12, b20, b21, b22, a21, a22, ...}
   </pre>
-                   
+
   @par
                    where <code>b1x</code> and <code>a1x</code> are the coefficients for the first stage,
                    <code>b2x</code> and <code>a2x</code> are the coefficients for the second stage,
@@ -87,123 +87,120 @@
                    The state variables are updated after each block of data is processed; the coefficients are untouched.
  */
 
-#if defined(ARM_MATH_NEON) 
+#if defined(ARM_MATH_NEON)
 /*
 
 Must be called after initializing the biquad instance.
 pCoeffs has size 5 * nbCascade
-Whereas the pCoeffs for the init has size (4*4 + 4*4)* nbCascade 
+Whereas the pCoeffs for the init has size (4*4 + 4*4)* nbCascade
 
 So this pCoeffs is the one which would be used for the not Neon version.
 The pCoeffs passed in init is bigger than the one for the not Neon version.
 
 */
 void arm_biquad_cascade_df2T_compute_coefs_f32(
-  arm_biquad_cascade_df2T_instance_f32 * S,
-  uint8_t numStages,
-  float32_t * pCoeffs)
+        arm_biquad_cascade_df2T_instance_f32 *S,
+        uint8_t numStages,
+        float32_t *pCoeffs)
 {
-   uint8_t cnt;
-   float32_t *pDstCoeffs;
-   float32_t b0[4],b1[4],b2[4],a1[4],a2[4];
+	uint8_t cnt;
+	float32_t *pDstCoeffs;
+	float32_t b0[4], b1[4], b2[4], a1[4], a2[4];
 
-   pDstCoeffs = S->pCoeffs;
+	pDstCoeffs = S->pCoeffs;
 
-   cnt = numStages >> 2; 
-   while(cnt > 0)
-   {
-      for(int i=0;i<4;i++)
-      {
-        b0[i] = pCoeffs[0];
-        b1[i] = pCoeffs[1];
-        b2[i] = pCoeffs[2];
-        a1[i] = pCoeffs[3];
-        a2[i] = pCoeffs[4];
-        pCoeffs += 5;
-      }
+	cnt = numStages >> 2;
+	while (cnt > 0) {
+		for (int i = 0; i < 4; i++) {
+			b0[i] = pCoeffs[0];
+			b1[i] = pCoeffs[1];
+			b2[i] = pCoeffs[2];
+			a1[i] = pCoeffs[3];
+			a2[i] = pCoeffs[4];
+			pCoeffs += 5;
+		}
 
-      /* Vec 1 */
-      *pDstCoeffs++ = 0;
-      *pDstCoeffs++ = b0[1];
-      *pDstCoeffs++ = b0[2];
-      *pDstCoeffs++ = b0[3];
+		/* Vec 1 */
+		*pDstCoeffs++ = 0;
+		*pDstCoeffs++ = b0[1];
+		*pDstCoeffs++ = b0[2];
+		*pDstCoeffs++ = b0[3];
 
-      /* Vec 2 */
-      *pDstCoeffs++ = 0;
-      *pDstCoeffs++ = 0;
-      *pDstCoeffs++ = b0[1] * b0[2];
-      *pDstCoeffs++ = b0[2] * b0[3];
+		/* Vec 2 */
+		*pDstCoeffs++ = 0;
+		*pDstCoeffs++ = 0;
+		*pDstCoeffs++ = b0[1] * b0[2];
+		*pDstCoeffs++ = b0[2] * b0[3];
 
-      /* Vec 3 */
-      *pDstCoeffs++ = 0;
-      *pDstCoeffs++ = 0;
-      *pDstCoeffs++ = 0;
-      *pDstCoeffs++ = b0[1] * b0[2] * b0[3];
-      
-      /* Vec 4 */
-      *pDstCoeffs++ = b0[0];
-      *pDstCoeffs++ = b0[0] * b0[1];
-      *pDstCoeffs++ = b0[0] * b0[1] * b0[2];
-      *pDstCoeffs++ = b0[0] * b0[1] * b0[2] * b0[3];
+		/* Vec 3 */
+		*pDstCoeffs++ = 0;
+		*pDstCoeffs++ = 0;
+		*pDstCoeffs++ = 0;
+		*pDstCoeffs++ = b0[1] * b0[2] * b0[3];
 
-      /* Vec 5 */
-      *pDstCoeffs++ = b1[0];
-      *pDstCoeffs++ = b1[1];
-      *pDstCoeffs++ = b1[2];
-      *pDstCoeffs++ = b1[3];
+		/* Vec 4 */
+		*pDstCoeffs++ = b0[0];
+		*pDstCoeffs++ = b0[0] * b0[1];
+		*pDstCoeffs++ = b0[0] * b0[1] * b0[2];
+		*pDstCoeffs++ = b0[0] * b0[1] * b0[2] * b0[3];
 
-      /* Vec 6 */
-      *pDstCoeffs++ = b2[0];
-      *pDstCoeffs++ = b2[1];
-      *pDstCoeffs++ = b2[2];
-      *pDstCoeffs++ = b2[3];
+		/* Vec 5 */
+		*pDstCoeffs++ = b1[0];
+		*pDstCoeffs++ = b1[1];
+		*pDstCoeffs++ = b1[2];
+		*pDstCoeffs++ = b1[3];
 
-      /* Vec 7 */
-      *pDstCoeffs++ = a1[0];
-      *pDstCoeffs++ = a1[1];
-      *pDstCoeffs++ = a1[2];
-      *pDstCoeffs++ = a1[3];
+		/* Vec 6 */
+		*pDstCoeffs++ = b2[0];
+		*pDstCoeffs++ = b2[1];
+		*pDstCoeffs++ = b2[2];
+		*pDstCoeffs++ = b2[3];
 
-      /* Vec 8 */
-      *pDstCoeffs++ = a2[0];
-      *pDstCoeffs++ = a2[1];
-      *pDstCoeffs++ = a2[2];
-      *pDstCoeffs++ = a2[3];
+		/* Vec 7 */
+		*pDstCoeffs++ = a1[0];
+		*pDstCoeffs++ = a1[1];
+		*pDstCoeffs++ = a1[2];
+		*pDstCoeffs++ = a1[3];
 
-      cnt--;
-   }
+		/* Vec 8 */
+		*pDstCoeffs++ = a2[0];
+		*pDstCoeffs++ = a2[1];
+		*pDstCoeffs++ = a2[2];
+		*pDstCoeffs++ = a2[3];
 
-   cnt = numStages & 0x3;
-   while(cnt > 0)
-   {
-      *pDstCoeffs++ = *pCoeffs++;
-      *pDstCoeffs++ = *pCoeffs++;
-      *pDstCoeffs++ = *pCoeffs++;
-      *pDstCoeffs++ = *pCoeffs++;
-      *pDstCoeffs++ = *pCoeffs++;
-      cnt--;
-   }
+		cnt--;
+	}
+
+	cnt = numStages & 0x3;
+	while (cnt > 0) {
+		*pDstCoeffs++ = *pCoeffs++;
+		*pDstCoeffs++ = *pCoeffs++;
+		*pDstCoeffs++ = *pCoeffs++;
+		*pDstCoeffs++ = *pCoeffs++;
+		*pDstCoeffs++ = *pCoeffs++;
+		cnt--;
+	}
 
 }
-#endif 
+#endif
 
 void arm_biquad_cascade_df2T_init_f32(
-        arm_biquad_cascade_df2T_instance_f32 * S,
+        arm_biquad_cascade_df2T_instance_f32 *S,
         uint8_t numStages,
-  const float32_t * pCoeffs,
-        float32_t * pState)
+        const float32_t *pCoeffs,
+        float32_t *pState)
 {
-  /* Assign filter stages */
-  S->numStages = numStages;
+	/* Assign filter stages */
+	S->numStages = numStages;
 
-  /* Assign coefficient pointer */
-  S->pCoeffs = pCoeffs;
+	/* Assign coefficient pointer */
+	S->pCoeffs = pCoeffs;
 
-  /* Clear state buffer and size is always 2 * numStages */
-  memset(pState, 0, (2U * (uint32_t) numStages) * sizeof(float32_t));
+	/* Clear state buffer and size is always 2 * numStages */
+	memset(pState, 0, (2U * (uint32_t) numStages) * sizeof(float32_t));
 
-  /* Assign state pointer */
-  S->pState = pState;
+	/* Assign state pointer */
+	S->pState = pState;
 }
 
 /**

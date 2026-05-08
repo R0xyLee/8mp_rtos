@@ -25,8 +25,8 @@ product: Clocks v4.0
  */
 void BOARD_InitBootClocks(void)
 {
-    /* The user initialization should be placed here */
+	/* The user initialization should be placed here */
 
-    /* Read core clock setting. */
-    SystemCoreClockUpdate();
+	/* Read core clock setting. */
+	SystemCoreClockUpdate();
 }

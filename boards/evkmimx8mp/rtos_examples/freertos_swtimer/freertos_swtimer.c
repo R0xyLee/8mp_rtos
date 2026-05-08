@@ -43,33 +43,33 @@ static void SwTimerCallback(TimerHandle_t xTimer);
  */
 int main(void)
 {
-    TimerHandle_t SwTimerHandle = NULL;
+	TimerHandle_t SwTimerHandle = NULL;
 
-    /* Init board hardware. */
-    /* M7 has its local cache and enabled by default,
-     * need to set smart subsystems (0x28000000 ~ 0x3FFFFFFF)
-     * non-cacheable before accessing this address region */
-    BOARD_InitMemory();
+	/* Init board hardware. */
+	/* M7 has its local cache and enabled by default,
+	 * need to set smart subsystems (0x28000000 ~ 0x3FFFFFFF)
+	 * non-cacheable before accessing this address region */
+	BOARD_InitMemory();
 
-    /* Board specific RDC settings */
-    BOARD_RdcInit();
+	/* Board specific RDC settings */
+	BOARD_RdcInit();
 
-    BOARD_InitPins();
-    BOARD_BootClockRUN();
-    BOARD_InitDebugConsole();
-    SystemCoreClockUpdate();
-    /* Create the software timer. */
-    SwTimerHandle = xTimerCreate("SwTimer",          /* Text name. */
-                                 SW_TIMER_PERIOD_MS, /* Timer period. */
-                                 pdTRUE,             /* Enable auto reload. */
-                                 0,                  /* ID is not used. */
-                                 SwTimerCallback);   /* The callback function. */
-    /* Start timer. */
-    xTimerStart(SwTimerHandle, 0);
-    /* Start scheduling. */
-    vTaskStartScheduler();
-    for (;;)
-        ;
+	BOARD_InitPins();
+	BOARD_BootClockRUN();
+	BOARD_InitDebugConsole();
+	SystemCoreClockUpdate();
+	/* Create the software timer. */
+	SwTimerHandle = xTimerCreate("SwTimer",          /* Text name. */
+	                SW_TIMER_PERIOD_MS, /* Timer period. */
+	                pdTRUE,             /* Enable auto reload. */
+	                0,                  /* ID is not used. */
+	                SwTimerCallback);   /* The callback function. */
+	/* Start timer. */
+	xTimerStart(SwTimerHandle, 0);
+	/* Start scheduling. */
+	vTaskStartScheduler();
+	for (;;)
+		;
 }
 
 /*!
@@ -77,5 +77,5 @@ int main(void)
  */
 static void SwTimerCallback(TimerHandle_t xTimer)
 {
-    PRINTF("Tick.\r\n");
+	PRINTF("Tick.\r\n");
 }

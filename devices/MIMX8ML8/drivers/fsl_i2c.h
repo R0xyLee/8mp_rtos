@@ -31,14 +31,13 @@
 #endif
 
 /*! @brief  I2C status return codes. */
-enum
-{
-    kStatus_I2C_Busy            = MAKE_STATUS(kStatusGroup_I2C, 0), /*!< I2C is busy with current transfer. */
-    kStatus_I2C_Idle            = MAKE_STATUS(kStatusGroup_I2C, 1), /*!< Bus is Idle. */
-    kStatus_I2C_Nak             = MAKE_STATUS(kStatusGroup_I2C, 2), /*!< NAK received during transfer. */
-    kStatus_I2C_ArbitrationLost = MAKE_STATUS(kStatusGroup_I2C, 3), /*!< Arbitration lost during transfer. */
-    kStatus_I2C_Timeout         = MAKE_STATUS(kStatusGroup_I2C, 4), /*!< Timeout polling status flags. */
-    kStatus_I2C_Addr_Nak        = MAKE_STATUS(kStatusGroup_I2C, 5), /*!< NAK received during the address probe. */
+enum {
+	kStatus_I2C_Busy            = MAKE_STATUS(kStatusGroup_I2C, 0), /*!< I2C is busy with current transfer. */
+	kStatus_I2C_Idle            = MAKE_STATUS(kStatusGroup_I2C, 1), /*!< Bus is Idle. */
+	kStatus_I2C_Nak             = MAKE_STATUS(kStatusGroup_I2C, 2), /*!< NAK received during transfer. */
+	kStatus_I2C_ArbitrationLost = MAKE_STATUS(kStatusGroup_I2C, 3), /*!< Arbitration lost during transfer. */
+	kStatus_I2C_Timeout         = MAKE_STATUS(kStatusGroup_I2C, 4), /*!< Timeout polling status flags. */
+	kStatus_I2C_Addr_Nak        = MAKE_STATUS(kStatusGroup_I2C, 5), /*!< NAK received during the address probe. */
 };
 
 /*!
@@ -51,46 +50,41 @@ enum
  * @note These enumerations are meant to be OR'd together to form a bit mask.
  *
  */
-enum _i2c_flags
-{
-    kI2C_ReceiveNakFlag        = I2C_I2SR_RXAK_MASK, /*!< I2C receive NAK flag. */
-    kI2C_IntPendingFlag        = I2C_I2SR_IIF_MASK,  /*!< I2C interrupt pending flag. */
-    kI2C_TransferDirectionFlag = I2C_I2SR_SRW_MASK,  /*!< I2C transfer direction flag. */
-    kI2C_ArbitrationLostFlag   = I2C_I2SR_IAL_MASK,  /*!< I2C arbitration lost flag. */
-    kI2C_BusBusyFlag           = I2C_I2SR_IBB_MASK,  /*!< I2C bus busy flag. */
-    kI2C_AddressMatchFlag      = I2C_I2SR_IAAS_MASK, /*!< I2C address match flag. */
-    kI2C_TransferCompleteFlag  = I2C_I2SR_ICF_MASK,
-    /*!< I2C transfer complete flag. */
+enum _i2c_flags {
+	kI2C_ReceiveNakFlag        = I2C_I2SR_RXAK_MASK, /*!< I2C receive NAK flag. */
+	kI2C_IntPendingFlag        = I2C_I2SR_IIF_MASK,  /*!< I2C interrupt pending flag. */
+	kI2C_TransferDirectionFlag = I2C_I2SR_SRW_MASK,  /*!< I2C transfer direction flag. */
+	kI2C_ArbitrationLostFlag   = I2C_I2SR_IAL_MASK,  /*!< I2C arbitration lost flag. */
+	kI2C_BusBusyFlag           = I2C_I2SR_IBB_MASK,  /*!< I2C bus busy flag. */
+	kI2C_AddressMatchFlag      = I2C_I2SR_IAAS_MASK, /*!< I2C address match flag. */
+	kI2C_TransferCompleteFlag  = I2C_I2SR_ICF_MASK,
+	/*!< I2C transfer complete flag. */
 };
 
 /*! @brief I2C feature interrupt source. */
-enum _i2c_interrupt_enable
-{
-    kI2C_GlobalInterruptEnable = I2C_I2CR_IIEN_MASK, /*!< I2C global interrupt. */
+enum _i2c_interrupt_enable {
+	kI2C_GlobalInterruptEnable = I2C_I2CR_IIEN_MASK, /*!< I2C global interrupt. */
 };
 
 /*! @brief The direction of master and slave transfers. */
-typedef enum _i2c_direction
-{
-    kI2C_Write = 0x0U, /*!< Master transmits to the slave. */
-    kI2C_Read  = 0x1U, /*!< Master receives from the slave. */
+typedef enum _i2c_direction {
+	kI2C_Write = 0x0U, /*!< Master transmits to the slave. */
+	kI2C_Read  = 0x1U, /*!< Master receives from the slave. */
 } i2c_direction_t;
 
 /*! @brief I2C transfer control flag. */
-enum _i2c_master_transfer_flags
-{
-    kI2C_TransferDefaultFlag = 0x0U,       /*!< A transfer starts with a start signal, stops with a stop signal. */
-    kI2C_TransferNoStartFlag = 0x1U,       /*!< A transfer starts without a start signal, only support write only or
+enum _i2c_master_transfer_flags {
+	kI2C_TransferDefaultFlag = 0x0U,       /*!< A transfer starts with a start signal, stops with a stop signal. */
+	kI2C_TransferNoStartFlag = 0x1U,       /*!< A transfer starts without a start signal, only support write only or
                                         write+read with no start flag, do not support read only with no start flag. */
-    kI2C_TransferRepeatedStartFlag = 0x2U, /*!< A transfer starts with a repeated start signal. */
-    kI2C_TransferNoStopFlag        = 0x4U, /*!< A transfer ends without a stop signal. */
+	kI2C_TransferRepeatedStartFlag = 0x2U, /*!< A transfer starts with a repeated start signal. */
+	kI2C_TransferNoStopFlag        = 0x4U, /*!< A transfer ends without a stop signal. */
 };
 
 /*! @brief I2C master user configuration. */
-typedef struct _i2c_master_config
-{
-    bool enableMaster;     /*!< Enables the I2C peripheral at initialization time. */
-    uint32_t baudRate_Bps; /*!< Baud rate configuration of I2C peripheral. */
+typedef struct _i2c_master_config {
+	bool enableMaster;     /*!< Enables the I2C peripheral at initialization time. */
+	uint32_t baudRate_Bps; /*!< Baud rate configuration of I2C peripheral. */
 } i2c_master_config_t;
 
 /*! @brief I2C master handle typedef. */
@@ -98,30 +92,28 @@ typedef struct _i2c_master_handle i2c_master_handle_t;
 
 /*! @brief I2C master transfer callback typedef. */
 typedef void (*i2c_master_transfer_callback_t)(I2C_Type *base,
-                                               i2c_master_handle_t *handle,
-                                               status_t status,
-                                               void *userData);
+        i2c_master_handle_t *handle,
+        status_t status,
+        void *userData);
 
 /*! @brief I2C master transfer structure. */
-typedef struct _i2c_master_transfer
-{
-    uint32_t flags;            /*!< A transfer flag which controls the transfer. */
-    uint8_t slaveAddress;      /*!< 7-bit slave address. */
-    i2c_direction_t direction; /*!< A transfer direction, read or write. */
-    uint32_t subaddress;       /*!< A sub address. Transferred MSB first. */
-    uint8_t subaddressSize;    /*!< A size of the command buffer. */
-    uint8_t *volatile data;    /*!< A transfer buffer. */
-    volatile size_t dataSize;  /*!< A transfer size. */
+typedef struct _i2c_master_transfer {
+	uint32_t flags;            /*!< A transfer flag which controls the transfer. */
+	uint8_t slaveAddress;      /*!< 7-bit slave address. */
+	i2c_direction_t direction; /*!< A transfer direction, read or write. */
+	uint32_t subaddress;       /*!< A sub address. Transferred MSB first. */
+	uint8_t subaddressSize;    /*!< A size of the command buffer. */
+	uint8_t *volatile data;    /*!< A transfer buffer. */
+	volatile size_t dataSize;  /*!< A transfer size. */
 } i2c_master_transfer_t;
 
 /*! @brief I2C master handle structure. */
-struct _i2c_master_handle
-{
-    i2c_master_transfer_t transfer;                    /*!< I2C master transfer copy. */
-    size_t transferSize;                               /*!< Total bytes to be transferred. */
-    uint8_t state;                                     /*!< A transfer state maintained during transfer. */
-    i2c_master_transfer_callback_t completionCallback; /*!< A callback function called when the transfer is finished. */
-    void *userData;                                    /*!< A callback parameter passed to the callback function. */
+struct _i2c_master_handle {
+	i2c_master_transfer_t transfer;                    /*!< I2C master transfer copy. */
+	size_t transferSize;                               /*!< Total bytes to be transferred. */
+	uint8_t state;                                     /*!< A transfer state maintained during transfer. */
+	i2c_master_transfer_callback_t completionCallback; /*!< A callback function called when the transfer is finished. */
+	void *userData;                                    /*!< A callback parameter passed to the callback function. */
 };
 
 /*!
@@ -134,39 +126,36 @@ struct _i2c_master_handle
  *
  * @note These enumerations are meant to be OR'd together to form a bit mask of events.
  */
-typedef enum _i2c_slave_transfer_event
-{
-    kI2C_SlaveAddressMatchEvent = 0x01U, /*!< Received the slave address after a start or repeated start. */
-    kI2C_SlaveTransmitEvent     = 0x02U, /*!< A callback is requested to provide data to transmit
+typedef enum _i2c_slave_transfer_event {
+	kI2C_SlaveAddressMatchEvent = 0x01U, /*!< Received the slave address after a start or repeated start. */
+	kI2C_SlaveTransmitEvent     = 0x02U, /*!< A callback is requested to provide data to transmit
                                                 (slave-transmitter role). */
-    kI2C_SlaveReceiveEvent = 0x04U,      /*!< A callback is requested to provide a buffer in which to place received
+	kI2C_SlaveReceiveEvent = 0x04U,      /*!< A callback is requested to provide a buffer in which to place received
                                                  data (slave-receiver role). */
-    kI2C_SlaveTransmitAckEvent = 0x08U,  /*!< A callback needs to either transmit an ACK or NACK. */
-    kI2C_SlaveCompletionEvent  = 0x20U,  /*!< A stop was detected or finished transfer, completing the transfer. */
-    /*! A bit mask of all available events. */
-    kI2C_SlaveAllEvents =
-        kI2C_SlaveAddressMatchEvent | kI2C_SlaveTransmitEvent | kI2C_SlaveReceiveEvent | kI2C_SlaveCompletionEvent,
+	kI2C_SlaveTransmitAckEvent = 0x08U,  /*!< A callback needs to either transmit an ACK or NACK. */
+	kI2C_SlaveCompletionEvent  = 0x20U,  /*!< A stop was detected or finished transfer, completing the transfer. */
+	/*! A bit mask of all available events. */
+	kI2C_SlaveAllEvents =
+	        kI2C_SlaveAddressMatchEvent | kI2C_SlaveTransmitEvent | kI2C_SlaveReceiveEvent | kI2C_SlaveCompletionEvent,
 } i2c_slave_transfer_event_t;
 
 /*! @brief I2C slave handle typedef. */
 typedef struct _i2c_slave_handle i2c_slave_handle_t;
 
 /*! @brief I2C slave user configuration. */
-typedef struct _i2c_slave_config
-{
-    bool enableSlave;      /*!< Enables the I2C peripheral at initialization time. */
-    uint16_t slaveAddress; /*!< A slave address configuration. */
+typedef struct _i2c_slave_config {
+	bool enableSlave;      /*!< Enables the I2C peripheral at initialization time. */
+	uint16_t slaveAddress; /*!< A slave address configuration. */
 } i2c_slave_config_t;
 
 /*! @brief I2C slave transfer structure. */
-typedef struct _i2c_slave_transfer
-{
-    i2c_slave_transfer_event_t event; /*!< A reason that the callback is invoked. */
-    uint8_t *volatile data;           /*!< A transfer buffer. */
-    volatile size_t dataSize;         /*!< A transfer size. */
-    status_t completionStatus;        /*!< Success or error code describing how the transfer completed. Only applies for
+typedef struct _i2c_slave_transfer {
+	i2c_slave_transfer_event_t event; /*!< A reason that the callback is invoked. */
+	uint8_t *volatile data;           /*!< A transfer buffer. */
+	volatile size_t dataSize;         /*!< A transfer size. */
+	status_t completionStatus;        /*!< Success or error code describing how the transfer completed. Only applies for
                                          #kI2C_SlaveCompletionEvent. */
-    size_t transferredCount; /*!< A number of bytes actually transferred since the start or since the last repeated
+	size_t transferredCount; /*!< A number of bytes actually transferred since the start or since the last repeated
                                 start. */
 } i2c_slave_transfer_t;
 
@@ -174,13 +163,12 @@ typedef struct _i2c_slave_transfer
 typedef void (*i2c_slave_transfer_callback_t)(I2C_Type *base, i2c_slave_transfer_t *xfer, void *userData);
 
 /*! @brief I2C slave handle structure. */
-struct _i2c_slave_handle
-{
-    volatile uint8_t state;                 /*!< A transfer state maintained during transfer. */
-    i2c_slave_transfer_t transfer;          /*!< I2C slave transfer copy. */
-    uint32_t eventMask;                     /*!< A mask of enabled events. */
-    i2c_slave_transfer_callback_t callback; /*!< A callback function called at the transfer event. */
-    void *userData;                         /*!< A callback parameter passed to the callback. */
+struct _i2c_slave_handle {
+	volatile uint8_t state;                 /*!< A transfer state maintained during transfer. */
+	i2c_slave_transfer_t transfer;          /*!< I2C slave transfer copy. */
+	uint32_t eventMask;                     /*!< A mask of enabled events. */
+	i2c_slave_transfer_callback_t callback; /*!< A callback function called at the transfer event. */
+	void *userData;                         /*!< A callback parameter passed to the callback. */
 };
 
 /*******************************************************************************
@@ -293,14 +281,11 @@ void I2C_SlaveGetDefaultConfig(i2c_slave_config_t *slaveConfig);
  */
 static inline void I2C_Enable(I2C_Type *base, bool enable)
 {
-    if (enable)
-    {
-        base->I2CR |= I2C_I2CR_IEN_MASK;
-    }
-    else
-    {
-        base->I2CR &= ~(uint16_t)I2C_I2CR_IEN_MASK;
-    }
+	if (enable) {
+		base->I2CR |= I2C_I2CR_IEN_MASK;
+	} else {
+		base->I2CR &= ~(uint16_t)I2C_I2CR_IEN_MASK;
+	}
 }
 
 /* @} */
@@ -318,7 +303,7 @@ static inline void I2C_Enable(I2C_Type *base, bool enable)
  */
 static inline uint32_t I2C_MasterGetStatusFlags(I2C_Type *base)
 {
-    return base->I2SR;
+	return base->I2SR;
 }
 
 /*!
@@ -334,7 +319,7 @@ static inline uint32_t I2C_MasterGetStatusFlags(I2C_Type *base)
  */
 static inline void I2C_MasterClearStatusFlags(I2C_Type *base, uint32_t statusMask)
 {
-    base->I2SR &= (~(uint16_t)statusMask);
+	base->I2SR &= (~(uint16_t)statusMask);
 }
 
 /*!
@@ -345,7 +330,7 @@ static inline void I2C_MasterClearStatusFlags(I2C_Type *base, uint32_t statusMas
  */
 static inline uint32_t I2C_SlaveGetStatusFlags(I2C_Type *base)
 {
-    return I2C_MasterGetStatusFlags(base);
+	return I2C_MasterGetStatusFlags(base);
 }
 
 /*!
@@ -360,7 +345,7 @@ static inline uint32_t I2C_SlaveGetStatusFlags(I2C_Type *base)
  */
 static inline void I2C_SlaveClearStatusFlags(I2C_Type *base, uint32_t statusMask)
 {
-    I2C_MasterClearStatusFlags(base, statusMask);
+	I2C_MasterClearStatusFlags(base, statusMask);
 }
 
 /* @} */
@@ -526,9 +511,9 @@ status_t I2C_MasterTransferBlocking(I2C_Type *base, i2c_master_transfer_t *xfer)
  * @param userData user parameter passed to the callback function.
  */
 void I2C_MasterTransferCreateHandle(I2C_Type *base,
-                                    i2c_master_handle_t *handle,
-                                    i2c_master_transfer_callback_t callback,
-                                    void *userData);
+        i2c_master_handle_t *handle,
+        i2c_master_transfer_callback_t callback,
+        void *userData);
 
 /*!
  * @brief Performs a master interrupt non-blocking transfer on the I2C bus.
@@ -588,9 +573,9 @@ void I2C_MasterTransferHandleIRQ(I2C_Type *base, void *i2cHandle);
  * @param userData user parameter passed to the callback function.
  */
 void I2C_SlaveTransferCreateHandle(I2C_Type *base,
-                                   i2c_slave_handle_t *handle,
-                                   i2c_slave_transfer_callback_t callback,
-                                   void *userData);
+        i2c_slave_handle_t *handle,
+        i2c_slave_transfer_callback_t callback,
+        void *userData);
 
 /*!
  * @brief Starts accepting slave transfers.

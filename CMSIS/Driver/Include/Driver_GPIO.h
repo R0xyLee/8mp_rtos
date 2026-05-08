@@ -34,43 +34,43 @@ extern "C"
 #define ARM_GPIO_INTERRUPT_DISABLE                (0x00U)
 #define ARM_GPIO_INTERRUPT_ENABLE                 (0x01U)
 
-typedef void (*ARM_GPIO_SignalEvent_t) (uint32_t pin);  ///< Pointer to \ref ARM_GPIO_SignalEvent : Signal GPIO Event.
+typedef void (*ARM_GPIO_SignalEvent_t)(uint32_t pin);   ///< Pointer to \ref ARM_GPIO_SignalEvent : Signal GPIO Event.
 
 /**
 \brief GPIO Driver Capabilities.
 */
 typedef struct _ARM_GPIO_CAPABILITIES {
-  uint32_t irq            :  1;         ///< supports IRQ
-  uint32_t reserved       : 31;         ///< Reserved (must be zero)
+	uint32_t irq            :  1;         ///< supports IRQ
+	uint32_t reserved       : 31;         ///< Reserved (must be zero)
 } ARM_GPIO_CAPABILITIES;
 
 /**
 \brief Access structure of the GPIO Driver.
 */
 typedef struct _ARM_DRIVER_GPIO {
-  ARM_DRIVER_VERSION    (*GetVersion)     (void);
-  ARM_GPIO_CAPABILITIES (*GetCapabilities)(void);
-  int32_t               (*Initialize)     (void);
-  int32_t               (*Uninitialize)   (void);
-  int32_t               (*PowerControl)   (ARM_POWER_STATE state);
-  /// Init Pin As Output
-  int32_t               (*InitPinAsOutput)(uint32_t pin, uint32_t output_logic);
-  /// Init Pin as Input with or without interrupt enabled , with or without callback if interrupt is requested
-  int32_t               (*InitPinAsInput)(uint32_t pin, uint32_t irq_type, ARM_GPIO_SignalEvent_t cb_event);
-  /// Write pin with ARM_GPIO_LOGIC_[ONE|ZERO]
-  int32_t               (*PinWrite) (uint32_t pin, uint32_t logic_value);
-  /// Toggle specified Pin
-  int32_t               (*PinToggle) (uint32_t pin);
-  /// Read Logic value from pin. false stands for logic zero, true stands for logic one.
-  bool                  (*PinRead) (uint32_t pin);
-  /// Write selected pins with logic one or zero.  Example, pin0 and pin 4,  ored_pins = (0x01U << 0U) | (0x01 << 4U)
-  int32_t               (*PortWrite) (uint32_t ored_pins, uint32_t logic_value);
-  /// Toggle selected pins. Example, pin0 and pin 4,  ored_pins = (0x01U << 0U) | (0x01 << 4U)
-  int32_t               (*PortToggle) (uint32_t ored_pins);
-  /// Read all pins status for this GPIO interface.  use (read_value & (0x01U << 4)) to decide whether pin4 is logic one or logic zero
-  uint32_t              (*PortRead)(void);
-  /// Configuare the pin with field ARM_GPIO_CONTROL_[INTERRUPT] with value filled into arg.  values are defined following the ARM_GPIO_CONTROL_XXX.
-  int32_t               (*Control)(uint32_t pin, uint32_t control, uint32_t arg);
+	ARM_DRIVER_VERSION(*GetVersion)(void);
+	ARM_GPIO_CAPABILITIES(*GetCapabilities)(void);
+	int32_t (*Initialize)(void);
+	int32_t (*Uninitialize)(void);
+	int32_t (*PowerControl)(ARM_POWER_STATE state);
+	/// Init Pin As Output
+	int32_t (*InitPinAsOutput)(uint32_t pin, uint32_t output_logic);
+	/// Init Pin as Input with or without interrupt enabled , with or without callback if interrupt is requested
+	int32_t (*InitPinAsInput)(uint32_t pin, uint32_t irq_type, ARM_GPIO_SignalEvent_t cb_event);
+	/// Write pin with ARM_GPIO_LOGIC_[ONE|ZERO]
+	int32_t (*PinWrite)(uint32_t pin, uint32_t logic_value);
+	/// Toggle specified Pin
+	int32_t (*PinToggle)(uint32_t pin);
+	/// Read Logic value from pin. false stands for logic zero, true stands for logic one.
+	bool (*PinRead)(uint32_t pin);
+	/// Write selected pins with logic one or zero.  Example, pin0 and pin 4,  ored_pins = (0x01U << 0U) | (0x01 << 4U)
+	int32_t (*PortWrite)(uint32_t ored_pins, uint32_t logic_value);
+	/// Toggle selected pins. Example, pin0 and pin 4,  ored_pins = (0x01U << 0U) | (0x01 << 4U)
+	int32_t (*PortToggle)(uint32_t ored_pins);
+	/// Read all pins status for this GPIO interface.  use (read_value & (0x01U << 4)) to decide whether pin4 is logic one or logic zero
+	uint32_t (*PortRead)(void);
+	/// Configuare the pin with field ARM_GPIO_CONTROL_[INTERRUPT] with value filled into arg.  values are defined following the ARM_GPIO_CONTROL_XXX.
+	int32_t (*Control)(uint32_t pin, uint32_t control, uint32_t arg);
 } const ARM_DRIVER_GPIO;
 
 

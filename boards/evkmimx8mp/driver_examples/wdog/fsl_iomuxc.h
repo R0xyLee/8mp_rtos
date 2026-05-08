@@ -865,19 +865,18 @@ extern "C" {
  * @param inputOnfield       The pad->module input inversion_
  */
 static inline void IOMUXC_SetPinMux(uint32_t muxRegister,
-                                    uint32_t muxMode,
-                                    uint32_t inputRegister,
-                                    uint32_t inputDaisy,
-                                    uint32_t configRegister,
-                                    uint32_t inputOnfield)
+        uint32_t muxMode,
+        uint32_t inputRegister,
+        uint32_t inputDaisy,
+        uint32_t configRegister,
+        uint32_t inputOnfield)
 {
-    *((volatile uint32_t *)muxRegister) =
-        IOMUXC_SW_MUX_CTL_PAD_MUX_MODE(muxMode) | IOMUXC_SW_MUX_CTL_PAD_SION(inputOnfield);
+	*((volatile uint32_t *)muxRegister) =
+	        IOMUXC_SW_MUX_CTL_PAD_MUX_MODE(muxMode) | IOMUXC_SW_MUX_CTL_PAD_SION(inputOnfield);
 
-    if (inputRegister)
-    {
-        *((volatile uint32_t *)inputRegister) = IOMUXC_SELECT_INPUT_DAISY(inputDaisy);
-    }
+	if (inputRegister) {
+		*((volatile uint32_t *)inputRegister) = IOMUXC_SELECT_INPUT_DAISY(inputDaisy);
+	}
 }
 /*!
  * @brief Sets the IOMUXC pin configuration.
@@ -896,16 +895,15 @@ static inline void IOMUXC_SetPinMux(uint32_t muxRegister,
  * @param configValue    The pin config value_
  */
 static inline void IOMUXC_SetPinConfig(uint32_t muxRegister,
-                                       uint32_t muxMode,
-                                       uint32_t inputRegister,
-                                       uint32_t inputDaisy,
-                                       uint32_t configRegister,
-                                       uint32_t configValue)
+        uint32_t muxMode,
+        uint32_t inputRegister,
+        uint32_t inputDaisy,
+        uint32_t configRegister,
+        uint32_t configValue)
 {
-    if (configRegister)
-    {
-        *((volatile uint32_t *)configRegister) = configValue;
-    }
+	if (configRegister) {
+		*((volatile uint32_t *)configRegister) = configValue;
+	}
 }
 /*@}*/
 

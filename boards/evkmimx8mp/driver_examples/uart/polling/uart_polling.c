@@ -36,47 +36,45 @@ uint8_t rxbuff[20] = {0};
  */
 int main(void)
 {
-    uint8_t ch;
-    status_t status;
-    uart_config_t config;
+	uint8_t ch;
+	status_t status;
+	uart_config_t config;
 
-    /* M7 has its local cache and enabled by default,
-     * need to set smart subsystems (0x28000000 ~ 0x3FFFFFFF)
-     * non-cacheable before accessing this address region */
-    BOARD_InitMemory();
+	/* M7 has its local cache and enabled by default,
+	 * need to set smart subsystems (0x28000000 ~ 0x3FFFFFFF)
+	 * non-cacheable before accessing this address region */
+	BOARD_InitMemory();
 
-    /* Board specific RDC settings */
-    BOARD_RdcInit();
+	/* Board specific RDC settings */
+	BOARD_RdcInit();
 
-    BOARD_InitPins();
-    BOARD_BootClockRUN();
+	BOARD_InitPins();
+	BOARD_BootClockRUN();
 
-    /*
-     * config.baudRate_Bps = 115200U;
-     * config.parityMode = kUART_ParityDisabled;
-     * config.dataBitsCount = kUART_EightDataBits;
-     * config.stopBitCount = kUART_OneStopBit;
-     * config.txFifoWatermark = 2;
-     * config.rxFifoWatermark = 1;
-     * config.enableTx = false;
-     * config.enableRx = false;
-     */
-    UART_GetDefaultConfig(&config);
-    config.baudRate_Bps = DEMO_UART_BAUDRATE;
-    config.enableTx     = true;
-    config.enableRx     = true;
+	/*
+	 * config.baudRate_Bps = 115200U;
+	 * config.parityMode = kUART_ParityDisabled;
+	 * config.dataBitsCount = kUART_EightDataBits;
+	 * config.stopBitCount = kUART_OneStopBit;
+	 * config.txFifoWatermark = 2;
+	 * config.rxFifoWatermark = 1;
+	 * config.enableTx = false;
+	 * config.enableRx = false;
+	 */
+	UART_GetDefaultConfig(&config);
+	config.baudRate_Bps = DEMO_UART_BAUDRATE;
+	config.enableTx     = true;
+	config.enableRx     = true;
 
-    status = UART_Init(DEMO_UART, &config, DEMO_UART_CLK_FREQ);
-    if (kStatus_Success != status)
-    {
-        return kStatus_Fail;
-    }
+	status = UART_Init(DEMO_UART, &config, DEMO_UART_CLK_FREQ);
+	if (kStatus_Success != status) {
+		return kStatus_Fail;
+	}
 
-    UART_WriteBlocking(DEMO_UART, txbuff, sizeof(txbuff) - 1);
+	UART_WriteBlocking(DEMO_UART, txbuff, sizeof(txbuff) - 1);
 
-    while (1)
-    {
-        UART_ReadBlocking(DEMO_UART, &ch, 1);
-        UART_WriteBlocking(DEMO_UART, &ch, 1);
-    }
+	while (1) {
+		UART_ReadBlocking(DEMO_UART, &ch, 1);
+		UART_WriteBlocking(DEMO_UART, &ch, 1);
+	}
 }

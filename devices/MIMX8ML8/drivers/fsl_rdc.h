@@ -25,64 +25,58 @@
 /*!
  * @brief RDC hardware configuration.
  */
-typedef struct _rdc_hardware_config
-{
-    uint32_t domainNumber : 4; /*!< Number of domains.        */
-    uint32_t masterNumber : 8; /*!< Number of bus masters.    */
-    uint32_t periphNumber : 8; /*!< Number of peripherals.    */
-    uint32_t memNumber : 8;    /*!< Number of memory regions. */
-    uint32_t : 4;
+typedef struct _rdc_hardware_config {
+	uint32_t domainNumber : 4; /*!< Number of domains.        */
+	uint32_t masterNumber : 8; /*!< Number of bus masters.    */
+	uint32_t periphNumber : 8; /*!< Number of peripherals.    */
+	uint32_t memNumber : 8;    /*!< Number of memory regions. */
+	uint32_t : 4;
 } rdc_hardware_config_t;
 
 /*!
  * @brief RDC interrupts
  */
-enum _rdc_interrupts
-{
-    kRDC_RestoreCompleteInterrupt = RDC_INTCTRL_RCI_EN_MASK,
-    /*!< Interrupt generated when the RDC has completed restoring state to a recently re-powered memory regions. */
+enum _rdc_interrupts {
+	kRDC_RestoreCompleteInterrupt = RDC_INTCTRL_RCI_EN_MASK,
+	/*!< Interrupt generated when the RDC has completed restoring state to a recently re-powered memory regions. */
 };
 
 /*!
  * @brief RDC status
  */
-enum _rdc_flags
-{
-    kRDC_PowerDownDomainOn = RDC_STAT_PDS_MASK, /*!< Power down domain is ON. */
+enum _rdc_flags {
+	kRDC_PowerDownDomainOn = RDC_STAT_PDS_MASK, /*!< Power down domain is ON. */
 };
 
 /*!
  * @brief Master domain assignment.
  */
-typedef struct _rdc_domain_assignment
-{
-    uint32_t domainId : 2U; /*!< Domain ID.                  */
-    uint32_t : 29U;         /*!< Reserved.                   */
-    uint32_t lock : 1U;     /*!< Lock the domain assignment. */
+typedef struct _rdc_domain_assignment {
+	uint32_t domainId : 2U; /*!< Domain ID.                  */
+	uint32_t : 29U;         /*!< Reserved.                   */
+	uint32_t lock : 1U;     /*!< Lock the domain assignment. */
 } rdc_domain_assignment_t;
 
 /*!
  * @brief Access permission policy.
  */
-enum _rdc_access_policy
-{
-    kRDC_NoAccess  = 0, /*!< Could not read or write. */
-    kRDC_WriteOnly = 1, /*!< Write only. */
-    kRDC_ReadOnly  = 2, /*!< Read only. */
-    kRDC_ReadWrite = 3, /*!< Read and write. */
+enum _rdc_access_policy {
+	kRDC_NoAccess  = 0, /*!< Could not read or write. */
+	kRDC_WriteOnly = 1, /*!< Write only. */
+	kRDC_ReadOnly  = 2, /*!< Read only. */
+	kRDC_ReadWrite = 3, /*!< Read and write. */
 };
 
 /*!
  * @brief Peripheral domain access permission configuration.
  */
-typedef struct _rdc_periph_access_config
-{
-    rdc_periph_t periph; /*!< Peripheral name.                 */
-    bool lock;           /*!< Lock the permission until reset. */
-    bool enableSema;     /*!< Enable semaphore or not, when enabled, master should
+typedef struct _rdc_periph_access_config {
+	rdc_periph_t periph; /*!< Peripheral name.                 */
+	bool lock;           /*!< Lock the permission until reset. */
+	bool enableSema;     /*!< Enable semaphore or not, when enabled, master should
                               call @ref RDC_SEMA42_Lock to lock the semaphore gate
                               accordingly before access the peripheral. */
-    uint16_t policy;     /*!< Access policy.                   */
+	uint16_t policy;     /*!< Access policy.                   */
 } rdc_periph_access_config_t;
 
 /*!
@@ -92,24 +86,22 @@ typedef struct _rdc_periph_access_config
  * should be aligned to the region resolution, see rdc_mem_t
  * definitions.
  */
-typedef struct _rdc_mem_access_config
-{
-    rdc_mem_t mem; /*!< Memory region descriptor name. */
+typedef struct _rdc_mem_access_config {
+	rdc_mem_t mem; /*!< Memory region descriptor name. */
 
-    bool lock;            /*!< Lock the configuration. */
-    uint64_t baseAddress; /*!< Start address of the memory region. */
-    uint64_t endAddress;  /*!< End address of the memory region.   */
-    uint16_t policy;      /*!< Access policy.                      */
+	bool lock;            /*!< Lock the configuration. */
+	uint64_t baseAddress; /*!< Start address of the memory region. */
+	uint64_t endAddress;  /*!< End address of the memory region.   */
+	uint16_t policy;      /*!< Access policy.                      */
 } rdc_mem_access_config_t;
 
 /*!
  * @brief Memory region access violation status.
  */
-typedef struct _rdc_mem_status
-{
-    bool hasViolation; /*!< Violating happens or not. */
-    uint8_t domainID;  /*!< Violating Domain ID. */
-    uint64_t address;  /*!< Violating Address. */
+typedef struct _rdc_mem_status {
+	bool hasViolation; /*!< Violating happens or not. */
+	uint8_t domainID;  /*!< Violating Domain ID. */
+	uint64_t address;  /*!< Violating Address. */
 } rdc_mem_status_t;
 
 /*******************************************************************************
@@ -157,7 +149,7 @@ void RDC_GetHardwareConfig(RDC_Type *base, rdc_hardware_config_t *config);
  */
 static inline void RDC_EnableInterrupts(RDC_Type *base, uint32_t mask)
 {
-    base->INTCTRL |= mask;
+	base->INTCTRL |= mask;
 }
 
 /*!
@@ -168,7 +160,7 @@ static inline void RDC_EnableInterrupts(RDC_Type *base, uint32_t mask)
  */
 static inline void RDC_DisableInterrupts(RDC_Type *base, uint32_t mask)
 {
-    base->INTCTRL &= ~mask;
+	base->INTCTRL &= ~mask;
 }
 
 /*!
@@ -179,7 +171,7 @@ static inline void RDC_DisableInterrupts(RDC_Type *base, uint32_t mask)
  */
 static inline uint32_t RDC_GetInterruptStatus(RDC_Type *base)
 {
-    return base->INTSTAT;
+	return base->INTSTAT;
 }
 
 /*!
@@ -190,7 +182,7 @@ static inline uint32_t RDC_GetInterruptStatus(RDC_Type *base)
  */
 static inline void RDC_ClearInterruptStatus(RDC_Type *base, uint32_t mask)
 {
-    base->INTSTAT = mask;
+	base->INTSTAT = mask;
 }
 
 /*!
@@ -201,7 +193,7 @@ static inline void RDC_ClearInterruptStatus(RDC_Type *base, uint32_t mask)
  */
 static inline uint32_t RDC_GetStatus(RDC_Type *base)
 {
-    return base->STAT;
+	return base->STAT;
 }
 
 /*!
@@ -212,7 +204,7 @@ static inline uint32_t RDC_GetStatus(RDC_Type *base)
  */
 static inline void RDC_ClearStatus(RDC_Type *base, uint32_t mask)
 {
-    base->STAT = mask;
+	base->STAT = mask;
 }
 
 /*!
@@ -223,8 +215,8 @@ static inline void RDC_ClearStatus(RDC_Type *base, uint32_t mask)
  * @param domainAssignment Pointer to the assignment.
  */
 void RDC_SetMasterDomainAssignment(RDC_Type *base,
-                                   rdc_master_t master,
-                                   const rdc_domain_assignment_t *domainAssignment);
+        rdc_master_t master,
+        const rdc_domain_assignment_t *domainAssignment);
 
 /*!
  * @brief Get default master domain assignment
@@ -249,10 +241,10 @@ void RDC_GetDefaultMasterDomainAssignment(rdc_domain_assignment_t *domainAssignm
  */
 static inline void RDC_LockMasterDomainAssignment(RDC_Type *base, rdc_master_t master)
 {
-    assert((uint32_t)master < RDC_MDA_COUNT);
+	assert((uint32_t)master < RDC_MDA_COUNT);
 
-    base->MDA[master] |= RDC_MDA_LCK_MASK;
-    __DSB();
+	base->MDA[master] |= RDC_MDA_LCK_MASK;
+	__DSB();
 }
 
 /*!
@@ -290,10 +282,10 @@ void RDC_GetDefaultPeriphAccessConfig(rdc_periph_access_config_t *config);
  */
 static inline void RDC_LockPeriphAccessConfig(RDC_Type *base, rdc_periph_t periph)
 {
-    assert((uint32_t)periph < RDC_PDAP_COUNT);
+	assert((uint32_t)periph < RDC_PDAP_COUNT);
 
-    base->PDAP[periph] |= RDC_PDAP_LCK_MASK;
-    __DSB();
+	base->PDAP[periph] |= RDC_PDAP_LCK_MASK;
+	__DSB();
 }
 
 /*!
@@ -338,10 +330,10 @@ void RDC_GetDefaultMemAccessConfig(rdc_mem_access_config_t *config);
  */
 static inline void RDC_LockMemAccessConfig(RDC_Type *base, rdc_mem_t mem)
 {
-    assert((uint32_t)mem < RDC_MRC_COUNT);
+	assert((uint32_t)mem < RDC_MRC_COUNT);
 
-    base->MR[mem].MRC |= RDC_MRC_LCK_MASK;
-    __DSB();
+	base->MR[mem].MRC |= RDC_MRC_LCK_MASK;
+	__DSB();
 }
 
 /*!
@@ -353,17 +345,14 @@ static inline void RDC_LockMemAccessConfig(RDC_Type *base, rdc_mem_t mem)
  */
 static inline void RDC_SetMemAccessValid(RDC_Type *base, rdc_mem_t mem, bool valid)
 {
-    assert((uint32_t)mem < RDC_MRC_COUNT);
+	assert((uint32_t)mem < RDC_MRC_COUNT);
 
-    if (valid)
-    {
-        base->MR[mem].MRC |= RDC_MRC_ENA_MASK;
-    }
-    else
-    {
-        base->MR[mem].MRC &= ~RDC_MRC_ENA_MASK;
-    }
-    __DSB();
+	if (valid) {
+		base->MR[mem].MRC |= RDC_MRC_ENA_MASK;
+	} else {
+		base->MR[mem].MRC &= ~RDC_MRC_ENA_MASK;
+	}
+	__DSB();
 }
 
 /*!
@@ -388,9 +377,9 @@ void RDC_GetMemViolationStatus(RDC_Type *base, rdc_mem_t mem, rdc_mem_status_t *
  */
 static inline void RDC_ClearMemViolationFlag(RDC_Type *base, rdc_mem_t mem)
 {
-    assert((uint32_t)mem < RDC_MRC_COUNT);
+	assert((uint32_t)mem < RDC_MRC_COUNT);
 
-    base->MR[mem].MRVS = RDC_MRVS_AD_MASK;
+	base->MR[mem].MRVS = RDC_MRVS_AD_MASK;
 }
 
 /*!
@@ -403,7 +392,7 @@ static inline void RDC_ClearMemViolationFlag(RDC_Type *base, rdc_mem_t mem)
  */
 static inline uint8_t RDC_GetCurrentMasterDomainId(RDC_Type *base)
 {
-    return (uint8_t)((base->STAT & RDC_STAT_DID_MASK) >> RDC_STAT_DID_SHIFT);
+	return (uint8_t)((base->STAT & RDC_STAT_DID_MASK) >> RDC_STAT_DID_SHIFT);
 }
 
 #if defined(__cplusplus)

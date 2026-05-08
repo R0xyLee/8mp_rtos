@@ -40,14 +40,14 @@ volatile bool gptIsrFlag = false;
  ******************************************************************************/
 void EXAMPLE_GPT_CAPTURE_IRQHandler(void)
 {
-    /* Clear interrupt flag.*/
-    GPT_ClearStatusFlags(DEMO_GPT_BASE, BOARD_GPT_CHANNEL_FLAG);
+	/* Clear interrupt flag.*/
+	GPT_ClearStatusFlags(DEMO_GPT_BASE, BOARD_GPT_CHANNEL_FLAG);
 
-    gptIsrFlag = true;
-    /* Add for ARM errata 838869, affects Cortex-M4, Cortex-M4F, Cortex-M7, Cortex-M7F Store immediate overlapping
-      exception return operation might vector to incorrect interrupt */
+	gptIsrFlag = true;
+	/* Add for ARM errata 838869, affects Cortex-M4, Cortex-M4F, Cortex-M7, Cortex-M7F Store immediate overlapping
+	  exception return operation might vector to incorrect interrupt */
 #if defined __CORTEX_M && (__CORTEX_M == 4U || __CORTEX_M == 7U)
-    __DSB();
+	__DSB();
 #endif
 }
 
@@ -56,55 +56,51 @@ void EXAMPLE_GPT_CAPTURE_IRQHandler(void)
  */
 int main(void)
 {
-    uint32_t captureVal = 0;
-    gpt_config_t gptConfig;
+	uint32_t captureVal = 0;
+	gpt_config_t gptConfig;
 
-    /* Board pin, clock, debug console init */
-    /* M7 has its local cache and enabled by default,
-     * need to set smart subsystems (0x28000000 ~ 0x3FFFFFFF)
-     * non-cacheable before accessing this address region */
-    BOARD_InitMemory();
+	/* Board pin, clock, debug console init */
+	/* M7 has its local cache and enabled by default,
+	 * need to set smart subsystems (0x28000000 ~ 0x3FFFFFFF)
+	 * non-cacheable before accessing this address region */
+	BOARD_InitMemory();
 
-    /* Board specific RDC settings */
-    BOARD_RdcInit();
+	/* Board specific RDC settings */
+	BOARD_RdcInit();
 
-    BOARD_InitPins();
-    BOARD_BootClockRUN();
-    BOARD_InitDebugConsole();
+	BOARD_InitPins();
+	BOARD_BootClockRUN();
+	BOARD_InitDebugConsole();
 
-    /* Print a note to terminal */
-    PRINTF("\r\nGPT input capture example\r\n");
-    PRINTF("\r\nOnce the input signal is received the input capture value is printed\r\n");
+	/* Print a note to terminal */
+	PRINTF("\r\nGPT input capture example\r\n");
+	PRINTF("\r\nOnce the input signal is received the input capture value is printed\r\n");
 
-    GPT_GetDefaultConfig(&gptConfig);
+	GPT_GetDefaultConfig(&gptConfig);
 
-    /* Initialize GPT module */
-    GPT_Init(DEMO_GPT_BASE, &gptConfig);
+	/* Initialize GPT module */
+	GPT_Init(DEMO_GPT_BASE, &gptConfig);
 
-    /* Setup input capture on a gpt channel */
-    GPT_SetInputOperationMode(DEMO_GPT_BASE, BOARD_GPT_INPUT_CAPTURE_CHANNEL, kGPT_InputOperation_RiseEdge);
+	/* Setup input capture on a gpt channel */
+	GPT_SetInputOperationMode(DEMO_GPT_BASE, BOARD_GPT_INPUT_CAPTURE_CHANNEL, kGPT_InputOperation_RiseEdge);
 
-    /* Enable GPT Input Capture1 interrupt */
-    GPT_EnableInterrupts(DEMO_GPT_BASE, BOARD_GPT_CHANNEL_INTERRUPT_ENABLE);
+	/* Enable GPT Input Capture1 interrupt */
+	GPT_EnableInterrupts(DEMO_GPT_BASE, BOARD_GPT_CHANNEL_INTERRUPT_ENABLE);
 
-    /* Enable at the Interrupt */
-    EnableIRQ(DEMO_GPT_IRQn);
+	/* Enable at the Interrupt */
+	EnableIRQ(DEMO_GPT_IRQn);
 
-    /* Start Timer */
-    GPT_StartTimer(DEMO_GPT_BASE);
+	/* Start Timer */
+	GPT_StartTimer(DEMO_GPT_BASE);
 
-    while (true)
-    {
-        /* Check whether occur interupt */
-        if (true == gptIsrFlag)
-        {
-            captureVal = GPT_GetInputCaptureValue(DEMO_GPT_BASE, BOARD_GPT_INPUT_CAPTURE_CHANNEL);
-            PRINTF("\r\n Capture value =%x\r\n", captureVal);
-            gptIsrFlag = false;
-        }
-        else
-        {
-            __WFI();
-        }
-    }
+	while (true) {
+		/* Check whether occur interupt */
+		if (true == gptIsrFlag) {
+			captureVal = GPT_GetInputCaptureValue(DEMO_GPT_BASE, BOARD_GPT_INPUT_CAPTURE_CHANNEL);
+			PRINTF("\r\n Capture value =%x\r\n", captureVal);
+			gptIsrFlag = false;
+		} else {
+			__WFI();
+		}
+	}
 }

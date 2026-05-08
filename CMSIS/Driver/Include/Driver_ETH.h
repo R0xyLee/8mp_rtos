@@ -62,24 +62,24 @@
 \brief Ethernet link state
 */
 typedef enum _ARM_ETH_LINK_STATE {
-  ARM_ETH_LINK_DOWN,                    ///< Link is down
-  ARM_ETH_LINK_UP                       ///< Link is up
+	ARM_ETH_LINK_DOWN,                    ///< Link is down
+	ARM_ETH_LINK_UP                       ///< Link is up
 } ARM_ETH_LINK_STATE;
 
 /**
 \brief Ethernet link information
 */
 typedef volatile struct _ARM_ETH_LINK_INFO {
-  uint32_t speed    : 2;                ///< Link speed: 0= 10 MBit, 1= 100 MBit, 2= 1 GBit
-  uint32_t duplex   : 1;                ///< Duplex mode: 0= Half, 1= Full
-  uint32_t reserved : 29;
+	uint32_t speed    : 2;                ///< Link speed: 0= 10 MBit, 1= 100 MBit, 2= 1 GBit
+	uint32_t duplex   : 1;                ///< Duplex mode: 0= Half, 1= Full
+	uint32_t reserved : 29;
 } ARM_ETH_LINK_INFO;
 
 /**
 \brief Ethernet MAC Address
 */
 typedef struct _ARM_ETH_MAC_ADDR {
-  uint8_t b[6];                         ///< MAC Address (6 bytes), MSB first
+	uint8_t b[6];                         ///< MAC Address (6 bytes), MSB first
 } ARM_ETH_MAC_ADDR;
 
 #endif /* DRIVER_ETH_H_ */

@@ -23,10 +23,9 @@
 #define SRTM_SAI_SDMA_MAX_LOCAL_PERIOD_ALIGNMENT      (4U)
 #define SRTM_SAI_SDMA_MAX_LOCAL_PERIOD_ALIGNMENT_MASK (SRTM_SAI_SDMA_MAX_LOCAL_PERIOD_ALIGNMENT - 1U)
 /*!< @brief select the mclk based of sai  */
-typedef enum _sai_mclk_type
-{
-    SRTM_CLK22M = 0U, /*!< configure the mclk to 22.5792Mhz or its multiple */
-    SRTM_CLK24M = 1U, /*!< configure the mclk to 24.5760Mhz or its multiple */
+typedef enum _sai_mclk_type {
+	SRTM_CLK22M = 0U, /*!< configure the mclk to 22.5792Mhz or its multiple */
+	SRTM_CLK24M = 1U, /*!< configure the mclk to 24.5760Mhz or its multiple */
 } mclk_type_t;
 /*!< reconfig sai for DSD mode */
 typedef void (*dsd_saiSetting)(void);
@@ -39,39 +38,36 @@ typedef void (*clockEnable)(bool isEnable);
 /*!< init audio devices  */
 typedef void (*initDev)(bool enable);
 
-typedef struct _audio_misc_set
-{
-    dsd_saiSetting dsdSaiSetting;
-    pcm_saiSetting pcmSaiSetting;
-    sai_clkSetting clkSetting; /* Set the MCLK of SAI per the requirement of different sample rate music stream. */
-    clockEnable clkGate;
-    initDev audioDevInit;
+typedef struct _audio_misc_set {
+	dsd_saiSetting dsdSaiSetting;
+	pcm_saiSetting pcmSaiSetting;
+	sai_clkSetting clkSetting; /* Set the MCLK of SAI per the requirement of different sample rate music stream. */
+	clockEnable clkGate;
+	initDev audioDevInit;
 } audio_misc_set_t;
-typedef struct _srtm_sai_sdma_config
-{
-    sai_transceiver_t config;
-    sai_master_clock_t mclkConfig;
-    uint8_t dataLine1; /* SAI data line1 number for transaction, use the dataLine1 by default for PCM music stream. */
-    uint8_t dataLine2; /* SAI data line2 number for transaction, use the dataLine2 as the another channel of DSD music
+typedef struct _srtm_sai_sdma_config {
+	sai_transceiver_t config;
+	sai_master_clock_t mclkConfig;
+	uint8_t dataLine1; /* SAI data line1 number for transaction, use the dataLine1 by default for PCM music stream. */
+	uint8_t dataLine2; /* SAI data line2 number for transaction, use the dataLine2 as the another channel of DSD music
                           stream. */
-    uint32_t dmaChannel;
-    uint8_t ChannelPriority;
-    bool stopOnSuspend;
-    uint32_t eventSource;
-    uint32_t guardTime; /* guardTime (unit:ms): M core needs to make sure there is enough time for A core wake up from
+	uint32_t dmaChannel;
+	uint8_t ChannelPriority;
+	bool stopOnSuspend;
+	uint32_t eventSource;
+	uint32_t guardTime; /* guardTime (unit:ms): M core needs to make sure there is enough time for A core wake up from
                            suspend and fill the DDR buffer again. The time should not less than the guardTime */
-    uint32_t threshold; /* threshold: under which will trigger periodDone notification. */
-    sdma_context_data_t txcontext;
-    sdma_context_data_t rxcontext;
-    audio_misc_set_t extendConfig;
+	uint32_t threshold; /* threshold: under which will trigger periodDone notification. */
+	sdma_context_data_t txcontext;
+	sdma_context_data_t rxcontext;
+	audio_misc_set_t extendConfig;
 } srtm_sai_sdma_config_t;
 
-typedef struct _srtm_sai_sdma_local_buf
-{
-    uint8_t *buf;
-    uint32_t bufSize;   /* bytes of the whole local buffer */
-    uint32_t periods;   /* periods in local buffer */
-    uint32_t threshold; /* Threshold period number: under which will trigger copy from share buf to local buf
+typedef struct _srtm_sai_sdma_local_buf {
+	uint8_t *buf;
+	uint32_t bufSize;   /* bytes of the whole local buffer */
+	uint32_t periods;   /* periods in local buffer */
+	uint32_t threshold; /* Threshold period number: under which will trigger copy from share buf to local buf
                            in playback case. */
 } srtm_sai_sdma_local_buf_t;
 
@@ -92,9 +88,9 @@ extern "C" {
  * @return SRTM SAI SDMA adapter on success or NULL on failure.
  */
 srtm_sai_adapter_t SRTM_SaiSdmaAdapter_Create(I2S_Type *sai,
-                                              SDMAARM_Type *dma,
-                                              srtm_sai_sdma_config_t *txConfig,
-                                              srtm_sai_sdma_config_t *rxConfig);
+        SDMAARM_Type *dma,
+        srtm_sai_sdma_config_t *txConfig,
+        srtm_sai_sdma_config_t *rxConfig);
 
 /*!
  * @brief Destroy SAI SDMA adapter.
@@ -120,8 +116,8 @@ void SRTM_SaiSdmaAdapter_SetTxLocalBuf(srtm_sai_adapter_t adapter, srtm_sai_sdma
  * @param Receiver status pointer.
  */
 void SRTM_SaiSdmaAdapter_GetAudioServiceState(srtm_sai_adapter_t adapter,
-                                              srtm_audio_state_t *pTxState,
-                                              srtm_audio_state_t *pRxState);
+        srtm_audio_state_t *pTxState,
+        srtm_audio_state_t *pRxState);
 /*******************************************************************************
  * Definitions from other files
  ******************************************************************************/

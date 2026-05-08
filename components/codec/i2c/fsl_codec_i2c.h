@@ -21,25 +21,22 @@
 #endif
 
 /*! @brief CODEC device register address type. */
-typedef enum _codec_reg_addr
-{
-    kCODEC_RegAddr8Bit  = 1U, /*!< 8-bit register address.  */
-    kCODEC_RegAddr16Bit = 2U, /*!< 16-bit register address. */
+typedef enum _codec_reg_addr {
+	kCODEC_RegAddr8Bit  = 1U, /*!< 8-bit register address.  */
+	kCODEC_RegAddr16Bit = 2U, /*!< 16-bit register address. */
 } codec_reg_addr_t;
 
 /*! @brief CODEC device register width. */
-typedef enum _codec_reg_width
-{
-    kCODEC_RegWidth8Bit  = 1U, /*!< 8-bit register width.  */
-    kCODEC_RegWidth16Bit = 2U, /*!< 16-bit register width. */
-    kCODEC_RegWidth32Bit = 4U, /*!< 32-bit register width. */
+typedef enum _codec_reg_width {
+	kCODEC_RegWidth8Bit  = 1U, /*!< 8-bit register width.  */
+	kCODEC_RegWidth16Bit = 2U, /*!< 16-bit register width. */
+	kCODEC_RegWidth32Bit = 4U, /*!< 32-bit register width. */
 } codec_reg_width_t;
 
 /*! @brief CODEC I2C configurations structure */
-typedef struct _codec_i2c_config
-{
-    uint32_t codecI2CInstance;    /*!< i2c bus instance */
-    uint32_t codecI2CSourceClock; /*!< i2c bus source clock frequency */
+typedef struct _codec_i2c_config {
+	uint32_t codecI2CInstance;    /*!< i2c bus instance */
+	uint32_t codecI2CSourceClock; /*!< i2c bus source clock frequency */
 } codec_i2c_config_t;
 
 /*******************************************************************************
@@ -80,11 +77,11 @@ status_t CODEC_I2C_Deinit(void *handle);
  * @return kStatus_HAL_I2cSuccess is success, else send failed.
  */
 status_t CODEC_I2C_Send(void *handle,
-                        uint8_t deviceAddress,
-                        uint32_t subAddress,
-                        uint8_t subaddressSize,
-                        uint8_t *txBuff,
-                        uint8_t txBuffSize);
+        uint8_t deviceAddress,
+        uint32_t subAddress,
+        uint8_t subaddressSize,
+        uint8_t *txBuff,
+        uint8_t txBuffSize);
 
 /*!
  * @brief codec i2c receive function.
@@ -98,11 +95,11 @@ status_t CODEC_I2C_Send(void *handle,
  * @return kStatus_HAL_I2cSuccess is success, else receive failed.
  */
 status_t CODEC_I2C_Receive(void *handle,
-                           uint8_t deviceAddress,
-                           uint32_t subAddress,
-                           uint8_t subaddressSize,
-                           uint8_t *rxBuff,
-                           uint8_t rxBuffSize);
+        uint8_t deviceAddress,
+        uint32_t subAddress,
+        uint8_t subaddressSize,
+        uint8_t *rxBuff,
+        uint8_t rxBuffSize);
 
 #if defined(__cplusplus)
 }

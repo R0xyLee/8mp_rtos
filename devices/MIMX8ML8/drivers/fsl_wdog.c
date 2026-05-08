@@ -29,20 +29,18 @@ static const IRQn_Type s_wdogIRQ[] = WDOG_IRQS;
  ******************************************************************************/
 static uint32_t WDOG_GetInstance(WDOG_Type *base)
 {
-    uint32_t instance;
+	uint32_t instance;
 
-    /* Find the instance index from base address mappings. */
-    for (instance = 0; instance < ARRAY_SIZE(s_wdogBases); instance++)
-    {
-        if (s_wdogBases[instance] == base)
-        {
-            break;
-        }
-    }
+	/* Find the instance index from base address mappings. */
+	for (instance = 0; instance < ARRAY_SIZE(s_wdogBases); instance++) {
+		if (s_wdogBases[instance] == base) {
+			break;
+		}
+	}
 
-    assert(instance < ARRAY_SIZE(s_wdogBases));
+	assert(instance < ARRAY_SIZE(s_wdogBases));
 
-    return instance;
+	return instance;
 }
 
 /*!
@@ -67,21 +65,21 @@ static uint32_t WDOG_GetInstance(WDOG_Type *base)
  */
 void WDOG_GetDefaultConfig(wdog_config_t *config)
 {
-    assert(NULL != config);
+	assert(NULL != config);
 
-    /* Initializes the configure structure to zero. */
-    (void)memset(config, 0, sizeof(*config));
+	/* Initializes the configure structure to zero. */
+	(void)memset(config, 0, sizeof(*config));
 
-    config->enableWdog             = true;
-    config->workMode.enableWait    = false;
-    config->workMode.enableStop    = false;
-    config->workMode.enableDebug   = false;
-    config->enableInterrupt        = false;
-    config->softwareResetExtension = false;
-    config->enablePowerDown        = false;
-    config->timeoutValue           = 0xffu;
-    config->interruptTimeValue     = 0x04u;
-    config->enableTimeOutAssert    = false;
+	config->enableWdog             = true;
+	config->workMode.enableWait    = false;
+	config->workMode.enableStop    = false;
+	config->workMode.enableDebug   = false;
+	config->enableInterrupt        = false;
+	config->softwareResetExtension = false;
+	config->enablePowerDown        = false;
+	config->timeoutValue           = 0xffu;
+	config->interruptTimeValue     = 0x04u;
+	config->enableTimeOutAssert    = false;
 }
 
 /*!
@@ -103,30 +101,29 @@ void WDOG_GetDefaultConfig(wdog_config_t *config)
  */
 void WDOG_Init(WDOG_Type *base, const wdog_config_t *config)
 {
-    assert(NULL != config);
+	assert(NULL != config);
 
-    uint16_t value        = 0u;
-    uint32_t primaskValue = 0U;
+	uint16_t value        = 0u;
+	uint32_t primaskValue = 0U;
 
-    value = WDOG_WCR_WDE(config->enableWdog) | WDOG_WCR_WDW(config->workMode.enableWait) |
-            WDOG_WCR_WDZST(config->workMode.enableStop) | WDOG_WCR_WDBG(config->workMode.enableDebug) |
-            WDOG_WCR_SRE(config->softwareResetExtension) | WDOG_WCR_WT(config->timeoutValue) |
-            WDOG_WCR_WDT(config->enableTimeOutAssert) | WDOG_WCR_SRS_MASK | WDOG_WCR_WDA_MASK;
+	value = WDOG_WCR_WDE(config->enableWdog) | WDOG_WCR_WDW(config->workMode.enableWait) |
+	        WDOG_WCR_WDZST(config->workMode.enableStop) | WDOG_WCR_WDBG(config->workMode.enableDebug) |
+	        WDOG_WCR_SRE(config->softwareResetExtension) | WDOG_WCR_WT(config->timeoutValue) |
+	        WDOG_WCR_WDT(config->enableTimeOutAssert) | WDOG_WCR_SRS_MASK | WDOG_WCR_WDA_MASK;
 
 #if !(defined(FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL) && FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL)
-    /* Set configuration */
-    CLOCK_EnableClock(s_wdogClock[WDOG_GetInstance(base)]);
+	/* Set configuration */
+	CLOCK_EnableClock(s_wdogClock[WDOG_GetInstance(base)]);
 #endif
 
-    primaskValue = DisableGlobalIRQ();
-    base->WICR   = WDOG_WICR_WICT(config->interruptTimeValue) | WDOG_WICR_WIE(config->enableInterrupt);
-    base->WMCR   = WDOG_WMCR_PDE(config->enablePowerDown);
-    base->WCR    = value;
-    EnableGlobalIRQ(primaskValue);
-    if (config->enableInterrupt)
-    {
-        (void)EnableIRQ(s_wdogIRQ[WDOG_GetInstance(base)]);
-    }
+	primaskValue = DisableGlobalIRQ();
+	base->WICR   = WDOG_WICR_WICT(config->interruptTimeValue) | WDOG_WICR_WIE(config->enableInterrupt);
+	base->WMCR   = WDOG_WMCR_PDE(config->enablePowerDown);
+	base->WCR    = value;
+	EnableGlobalIRQ(primaskValue);
+	if (config->enableInterrupt) {
+		(void)EnableIRQ(s_wdogIRQ[WDOG_GetInstance(base)]);
+	}
 }
 
 /*!
@@ -139,10 +136,9 @@ void WDOG_Init(WDOG_Type *base, const wdog_config_t *config)
  */
 void WDOG_Deinit(WDOG_Type *base)
 {
-    if (0U != (base->WCR & WDOG_WCR_WDBG_MASK))
-    {
-        WDOG_Disable(base);
-    }
+	if (0U != (base->WCR & WDOG_WCR_WDBG_MASK)) {
+		WDOG_Disable(base);
+	}
 }
 
 /*!
@@ -161,15 +157,15 @@ void WDOG_Deinit(WDOG_Type *base)
  */
 uint16_t WDOG_GetStatusFlags(WDOG_Type *base)
 {
-    uint16_t status_flag = 0U;
+	uint16_t status_flag = 0U;
 
-    status_flag |= (base->WCR & WDOG_WCR_WDE_MASK);
-    status_flag |= (base->WRSR & WDOG_WRSR_POR_MASK);
-    status_flag |= (base->WRSR & WDOG_WRSR_TOUT_MASK);
-    status_flag |= (base->WRSR & WDOG_WRSR_SFTW_MASK);
-    status_flag |= (base->WICR & WDOG_WICR_WTIS_MASK);
+	status_flag |= (base->WCR & WDOG_WCR_WDE_MASK);
+	status_flag |= (base->WRSR & WDOG_WRSR_POR_MASK);
+	status_flag |= (base->WRSR & WDOG_WRSR_TOUT_MASK);
+	status_flag |= (base->WRSR & WDOG_WRSR_SFTW_MASK);
+	status_flag |= (base->WICR & WDOG_WICR_WTIS_MASK);
 
-    return status_flag;
+	return status_flag;
 }
 
 /*!
@@ -188,10 +184,9 @@ uint16_t WDOG_GetStatusFlags(WDOG_Type *base)
  */
 void WDOG_ClearInterruptStatus(WDOG_Type *base, uint16_t mask)
 {
-    if (0U != (mask & (uint16_t)kWDOG_InterruptFlag))
-    {
-        base->WICR |= WDOG_WICR_WTIS_MASK;
-    }
+	if (0U != (mask & (uint16_t)kWDOG_InterruptFlag)) {
+		base->WICR |= WDOG_WICR_WTIS_MASK;
+	}
 }
 
 /*!
@@ -204,11 +199,11 @@ void WDOG_ClearInterruptStatus(WDOG_Type *base, uint16_t mask)
  */
 void WDOG_Refresh(WDOG_Type *base)
 {
-    uint32_t primaskValue = 0U;
+	uint32_t primaskValue = 0U;
 
-    /* Disable the global interrupt to protect refresh sequence */
-    primaskValue = DisableGlobalIRQ();
-    base->WSR    = WDOG_REFRESH_KEY & 0xFFFFU;
-    base->WSR    = (WDOG_REFRESH_KEY >> 16U) & 0xFFFFU;
-    EnableGlobalIRQ(primaskValue);
+	/* Disable the global interrupt to protect refresh sequence */
+	primaskValue = DisableGlobalIRQ();
+	base->WSR    = WDOG_REFRESH_KEY & 0xFFFFU;
+	base->WSR    = (WDOG_REFRESH_KEY >> 16U) & 0xFFFFU;
+	EnableGlobalIRQ(primaskValue);
 }

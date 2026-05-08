@@ -15,11 +15,11 @@
 
 static void ECSPI_RTOS_Callback(ECSPI_Type *base, ecspi_master_handle_t *drv_handle, status_t status, void *userData)
 {
-    ecspi_rtos_handle_t *handle = (ecspi_rtos_handle_t *)userData;
-    BaseType_t reschedule;
-    handle->async_status = status;
-    (void)xSemaphoreGiveFromISR(handle->event, &reschedule);
-    portYIELD_FROM_ISR(reschedule);
+	ecspi_rtos_handle_t *handle = (ecspi_rtos_handle_t *)userData;
+	BaseType_t reschedule;
+	handle->async_status = status;
+	(void)xSemaphoreGiveFromISR(handle->event, &reschedule);
+	portYIELD_FROM_ISR(reschedule);
 }
 
 /*!
@@ -34,48 +34,44 @@ static void ECSPI_RTOS_Callback(ECSPI_Type *base, ecspi_master_handle_t *drv_han
  * return status of the operation.
  */
 status_t ECSPI_RTOS_Init(ecspi_rtos_handle_t *handle,
-                         ECSPI_Type *base,
-                         const ecspi_master_config_t *masterConfig,
-                         uint32_t srcClock_Hz)
+        ECSPI_Type *base,
+        const ecspi_master_config_t *masterConfig,
+        uint32_t srcClock_Hz)
 {
-    if (handle == NULL)
-    {
-        return kStatus_InvalidArgument;
-    }
+	if (handle == NULL) {
+		return kStatus_InvalidArgument;
+	}
 
-    if (base == NULL)
-    {
-        return kStatus_InvalidArgument;
-    }
+	if (base == NULL) {
+		return kStatus_InvalidArgument;
+	}
 
-    (void)memset(handle, 0, sizeof(ecspi_rtos_handle_t));
+	(void)memset(handle, 0, sizeof(ecspi_rtos_handle_t));
 #if (configSUPPORT_STATIC_ALLOCATION == 1)
-    handle->mutex = xSemaphoreCreateMutexStatic(&handle->mutexBuffer);
+	handle->mutex = xSemaphoreCreateMutexStatic(&handle->mutexBuffer);
 #else
-    handle->mutex = xSemaphoreCreateMutex();
+	handle->mutex = xSemaphoreCreateMutex();
 #endif
-    if (handle->mutex == NULL)
-    {
-        return kStatus_Fail;
-    }
+	if (handle->mutex == NULL) {
+		return kStatus_Fail;
+	}
 
 #if (configSUPPORT_STATIC_ALLOCATION == 1)
-    handle->event = xSemaphoreCreateBinaryStatic(&handle->semaphoreBuffer);
+	handle->event = xSemaphoreCreateBinaryStatic(&handle->semaphoreBuffer);
 #else
-    handle->event = xSemaphoreCreateBinary();
+	handle->event = xSemaphoreCreateBinary();
 #endif
-    if (handle->event == NULL)
-    {
-        vSemaphoreDelete(handle->mutex);
-        return kStatus_Fail;
-    }
+	if (handle->event == NULL) {
+		vSemaphoreDelete(handle->mutex);
+		return kStatus_Fail;
+	}
 
-    handle->base = base;
+	handle->base = base;
 
-    ECSPI_MasterInit(handle->base, masterConfig, srcClock_Hz);
-    ECSPI_MasterTransferCreateHandle(handle->base, &handle->drv_handle, ECSPI_RTOS_Callback, (void *)handle);
+	ECSPI_MasterInit(handle->base, masterConfig, srcClock_Hz);
+	ECSPI_MasterTransferCreateHandle(handle->base, &handle->drv_handle, ECSPI_RTOS_Callback, (void *)handle);
 
-    return kStatus_Success;
+	return kStatus_Success;
 }
 
 /*!
@@ -87,11 +83,11 @@ status_t ECSPI_RTOS_Init(ecspi_rtos_handle_t *handle,
  */
 status_t ECSPI_RTOS_Deinit(ecspi_rtos_handle_t *handle)
 {
-    ECSPI_Deinit(handle->base);
-    vSemaphoreDelete(handle->event);
-    vSemaphoreDelete(handle->mutex);
+	ECSPI_Deinit(handle->base);
+	vSemaphoreDelete(handle->event);
+	vSemaphoreDelete(handle->mutex);
 
-    return kStatus_Success;
+	return kStatus_Success;
 }
 
 /*!
@@ -105,30 +101,27 @@ status_t ECSPI_RTOS_Deinit(ecspi_rtos_handle_t *handle)
  */
 status_t ECSPI_RTOS_Transfer(ecspi_rtos_handle_t *handle, ecspi_transfer_t *transfer)
 {
-    status_t status;
+	status_t status;
 
-    /* Lock resource mutex */
-    if (xSemaphoreTake(handle->mutex, portMAX_DELAY) != pdTRUE)
-    {
-        return kStatus_ECSPI_Busy;
-    }
+	/* Lock resource mutex */
+	if (xSemaphoreTake(handle->mutex, portMAX_DELAY) != pdTRUE) {
+		return kStatus_ECSPI_Busy;
+	}
 
-    status = ECSPI_MasterTransferNonBlocking(handle->base, &handle->drv_handle, transfer);
-    if (status != kStatus_Success)
-    {
-        (void)xSemaphoreGive(handle->mutex);
-        return status;
-    }
+	status = ECSPI_MasterTransferNonBlocking(handle->base, &handle->drv_handle, transfer);
+	if (status != kStatus_Success) {
+		(void)xSemaphoreGive(handle->mutex);
+		return status;
+	}
 
-    /* Wait for transfer to finish */
-    if (xSemaphoreTake(handle->event, portMAX_DELAY) != pdTRUE)
-    {
-        return kStatus_ECSPI_Error;
-    }
+	/* Wait for transfer to finish */
+	if (xSemaphoreTake(handle->event, portMAX_DELAY) != pdTRUE) {
+		return kStatus_ECSPI_Error;
+	}
 
-    /* Unlock resource mutex */
-    (void)xSemaphoreGive(handle->mutex);
+	/* Unlock resource mutex */
+	(void)xSemaphoreGive(handle->mutex);
 
-    /* Return status captured by callback function */
-    return handle->async_status;
+	/* Return status captured by callback function */
+	return handle->async_status;
 }

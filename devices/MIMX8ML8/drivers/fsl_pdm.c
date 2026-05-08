@@ -29,9 +29,9 @@ typedef void (*pdm_isr_t)(PDM_Type *base, pdm_handle_t *pdmHandle);
  * @param regdiv   register divider.
  */
 static status_t PDM_ValidateSrcClockRate(uint32_t channelMask,
-                                         pdm_df_quality_mode_t qualityMode,
-                                         uint8_t osr,
-                                         uint32_t regDiv);
+        pdm_df_quality_mode_t qualityMode,
+        uint8_t osr,
+        uint32_t regDiv);
 
 /*******************************************************************************
  * Variables
@@ -59,20 +59,18 @@ static pdm_isr_t s_pdmIsr;
  ******************************************************************************/
 uint32_t PDM_GetInstance(PDM_Type *base)
 {
-    uint32_t instance;
+	uint32_t instance;
 
-    /* Find the instance index from base address mappings. */
-    for (instance = 0; instance < ARRAY_SIZE(s_pdmBases); instance++)
-    {
-        if (s_pdmBases[instance] == base)
-        {
-            break;
-        }
-    }
+	/* Find the instance index from base address mappings. */
+	for (instance = 0; instance < ARRAY_SIZE(s_pdmBases); instance++) {
+		if (s_pdmBases[instance] == base) {
+			break;
+		}
+	}
 
-    assert(instance < ARRAY_SIZE(s_pdmBases));
+	assert(instance < ARRAY_SIZE(s_pdmBases));
 
-    return instance;
+	return instance;
 }
 
 /*!
@@ -87,24 +85,22 @@ uint32_t PDM_GetInstance(PDM_Type *base)
  * param dataWidth sample width.
  */
 void PDM_ReadFifo(
-    PDM_Type *base, uint32_t startChannel, uint32_t channelNums, void *buffer, size_t size, uint32_t dataWidth)
+        PDM_Type *base, uint32_t startChannel, uint32_t channelNums, void *buffer, size_t size, uint32_t dataWidth)
 {
-    uint32_t i = 0, j = 0U;
-    uint32_t *dataAddr = (uint32_t *)buffer;
+	uint32_t i = 0, j = 0U;
+	uint32_t *dataAddr = (uint32_t *)buffer;
 
-    for (i = 0U; i < size; i++)
-    {
-        for (j = 0; j < channelNums; j++)
-        {
+	for (i = 0U; i < size; i++) {
+		for (j = 0; j < channelNums; j++) {
 #if defined(FSL_FEATURE_PDM_FIFO_WIDTH) && (FSL_FEATURE_PDM_FIFO_WIDTH != 2U)
-            *dataAddr = base->DATACH[startChannel + j] >> (dataWidth == 4U ? 0U : 8U);
-            dataAddr  = (uint32_t *)((uint32_t)dataAddr + dataWidth);
+			*dataAddr = base->DATACH[startChannel + j] >> (dataWidth == 4U ? 0U : 8U);
+			dataAddr  = (uint32_t *)((uint32_t)dataAddr + dataWidth);
 #else
-            *dataAddr = base->DATACH[startChannel + j];
-            dataAddr  = (uint32_t *)((uint32_t)dataAddr + 2U);
+			*dataAddr = base->DATACH[startChannel + j];
+			dataAddr  = (uint32_t *)((uint32_t)dataAddr + 2U);
 #endif
-        }
-    }
+		}
+	}
 }
 
 #if defined(FSL_FEATURE_PDM_FIFO_WIDTH) && (FSL_FEATURE_PDM_FIFO_WIDTH == 2U)
@@ -119,48 +115,40 @@ void PDM_ReadFifo(
  */
 void PDM_ReadNonBlocking(PDM_Type *base, uint32_t startChannel, uint32_t channelNums, int16_t *buffer, size_t size)
 {
-    uint32_t i = 0, j = 0U;
+	uint32_t i = 0, j = 0U;
 
-    for (i = 0U; i < size; i++)
-    {
-        for (j = 0; j < channelNums; j++)
-        {
-            *buffer++ = (int16_t)base->DATACH[startChannel + j];
-        }
-    }
+	for (i = 0U; i < size; i++) {
+		for (j = 0; j < channelNums; j++) {
+			*buffer++ = (int16_t)base->DATACH[startChannel + j];
+		}
+	}
 }
 #endif
 
 static status_t PDM_ValidateSrcClockRate(uint32_t channelMask,
-                                         pdm_df_quality_mode_t qualityMode,
-                                         uint8_t osr,
-                                         uint32_t regDiv)
+        pdm_df_quality_mode_t qualityMode,
+        uint8_t osr,
+        uint32_t regDiv)
 {
-    uint32_t enabledChannel = 0U, i = 0U, factor = 0U;
+	uint32_t enabledChannel = 0U, i = 0U, factor = 0U;
 
-    for (i = 0U; i < (uint32_t)FSL_FEATURE_PDM_CHANNEL_NUM; i++)
-    {
-        if (channelMask >> i != 0U)
-        {
-            enabledChannel++;
-        }
-    }
+	for (i = 0U; i < (uint32_t)FSL_FEATURE_PDM_CHANNEL_NUM; i++) {
+		if (channelMask >> i != 0U) {
+			enabledChannel++;
+		}
+	}
 
-    if (qualityMode <= kPDM_QualityModeLow)
-    {
-        factor = 125U;
-    }
-    else
-    {
-        factor = 19U;
-    }
+	if (qualityMode <= kPDM_QualityModeLow) {
+		factor = 125U;
+	} else {
+		factor = 19U;
+	}
 
-    if (regDiv < ((10U + factor * enabledChannel) / (8U * osr)))
-    {
-        return kStatus_Fail;
-    }
+	if (regDiv < ((10U + factor * enabledChannel) / (8U * osr))) {
+		return kStatus_Fail;
+	}
 
-    return kStatus_Success;
+	return kStatus_Success;
 }
 
 /*!
@@ -178,64 +166,61 @@ static status_t PDM_ValidateSrcClockRate(uint32_t channelMask,
  */
 status_t PDM_SetSampleRateConfig(PDM_Type *base, uint32_t sourceClock_HZ, uint32_t sampleRate_HZ)
 {
-    uint32_t osr = (base->CTRL_2 & PDM_CTRL_2_CICOSR_MASK) >> PDM_CTRL_2_CICOSR_SHIFT;
-    pdm_df_quality_mode_t qualityMode =
-        (pdm_df_quality_mode_t)(uint32_t)((base->CTRL_2 & PDM_CTRL_2_QSEL_MASK) >> PDM_CTRL_2_QSEL_SHIFT);
+	uint32_t osr = (base->CTRL_2 & PDM_CTRL_2_CICOSR_MASK) >> PDM_CTRL_2_CICOSR_SHIFT;
+	pdm_df_quality_mode_t qualityMode =
+	        (pdm_df_quality_mode_t)(uint32_t)((base->CTRL_2 & PDM_CTRL_2_QSEL_MASK) >> PDM_CTRL_2_QSEL_SHIFT);
 
-    uint32_t pdmClockRate       = 0U;
-    uint32_t enabledChannelMask = base->CTRL_1 & (uint32_t)kPDM_EnableChannelAll, regDiv = 0U;
+	uint32_t pdmClockRate       = 0U;
+	uint32_t enabledChannelMask = base->CTRL_1 & (uint32_t)kPDM_EnableChannelAll, regDiv = 0U;
 
-    switch (qualityMode)
-    {
-        case kPDM_QualityModeHigh:
-            osr          = 16U - osr;
-            pdmClockRate = sampleRate_HZ * osr * 8U;
-            break;
+	switch (qualityMode) {
+	case kPDM_QualityModeHigh:
+		osr          = 16U - osr;
+		pdmClockRate = sampleRate_HZ * osr * 8U;
+		break;
 
-        case kPDM_QualityModeMedium:
-            osr          = 16U - osr;
-            pdmClockRate = sampleRate_HZ * osr * 4U;
-            break;
+	case kPDM_QualityModeMedium:
+		osr          = 16U - osr;
+		pdmClockRate = sampleRate_HZ * osr * 4U;
+		break;
 
-        case kPDM_QualityModeLow:
-            osr          = 16U - osr;
-            pdmClockRate = sampleRate_HZ * osr * 2U;
-            break;
+	case kPDM_QualityModeLow:
+		osr          = 16U - osr;
+		pdmClockRate = sampleRate_HZ * osr * 2U;
+		break;
 
-        case kPDM_QualityModeVeryLow0:
-            osr          = 16U - osr;
-            pdmClockRate = sampleRate_HZ * osr * 4U;
-            break;
+	case kPDM_QualityModeVeryLow0:
+		osr          = 16U - osr;
+		pdmClockRate = sampleRate_HZ * osr * 4U;
+		break;
 
-        case kPDM_QualityModeVeryLow1:
-            osr          = 16U - osr;
-            pdmClockRate = sampleRate_HZ * osr * 2U;
-            break;
-        case kPDM_QualityModeVeryLow2:
-            osr          = 16U - osr;
-            pdmClockRate = sampleRate_HZ * osr;
-            break;
-        default:
-            assert(false);
-            break;
-    }
+	case kPDM_QualityModeVeryLow1:
+		osr          = 16U - osr;
+		pdmClockRate = sampleRate_HZ * osr * 2U;
+		break;
+	case kPDM_QualityModeVeryLow2:
+		osr          = 16U - osr;
+		pdmClockRate = sampleRate_HZ * osr;
+		break;
+	default:
+		assert(false);
+		break;
+	}
 
-    /* get divider */
-    regDiv = sourceClock_HZ / pdmClockRate;
+	/* get divider */
+	regDiv = sourceClock_HZ / pdmClockRate;
 
-    if (regDiv > PDM_CTRL_2_CLKDIV_MASK)
-    {
-        return kStatus_Fail;
-    }
+	if (regDiv > PDM_CTRL_2_CLKDIV_MASK) {
+		return kStatus_Fail;
+	}
 
-    if (PDM_ValidateSrcClockRate(enabledChannelMask, qualityMode, (uint8_t)osr, regDiv) == kStatus_Fail)
-    {
-        return kStatus_Fail;
-    }
+	if (PDM_ValidateSrcClockRate(enabledChannelMask, qualityMode, (uint8_t)osr, regDiv) == kStatus_Fail) {
+		return kStatus_Fail;
+	}
 
-    base->CTRL_2 = (base->CTRL_2 & (~PDM_CTRL_2_CLKDIV_MASK)) | PDM_CTRL_2_CLKDIV(regDiv);
+	base->CTRL_2 = (base->CTRL_2 & (~PDM_CTRL_2_CLKDIV_MASK)) | PDM_CTRL_2_CLKDIV(regDiv);
 
-    return kStatus_Success;
+	return kStatus_Success;
 }
 
 /*!
@@ -249,37 +234,35 @@ status_t PDM_SetSampleRateConfig(PDM_Type *base, uint32_t sourceClock_HZ, uint32
  * param clkDiv clock divider
  */
 status_t PDM_SetSampleRate(
-    PDM_Type *base, uint32_t enableChannelMask, pdm_df_quality_mode_t qualityMode, uint8_t osr, uint32_t clkDiv)
+        PDM_Type *base, uint32_t enableChannelMask, pdm_df_quality_mode_t qualityMode, uint8_t osr, uint32_t clkDiv)
 {
-    uint8_t realOsr = 16U - (osr & (PDM_CTRL_2_CICOSR_MASK >> PDM_CTRL_2_CICOSR_SHIFT));
-    uint32_t regDiv = clkDiv >> 1U;
+	uint8_t realOsr = 16U - (osr & (PDM_CTRL_2_CICOSR_MASK >> PDM_CTRL_2_CICOSR_SHIFT));
+	uint32_t regDiv = clkDiv >> 1U;
 
-    switch (qualityMode)
-    {
-        case kPDM_QualityModeHigh:
-            regDiv <<= 1U;
-            break;
-        case kPDM_QualityModeLow:
-        case kPDM_QualityModeVeryLow1:
-            regDiv >>= 1U;
-            break;
-        case kPDM_QualityModeVeryLow2:
-            regDiv >>= 2U;
-            break;
-        default:
-            assert(false);
-            break;
-    }
+	switch (qualityMode) {
+	case kPDM_QualityModeHigh:
+		regDiv <<= 1U;
+		break;
+	case kPDM_QualityModeLow:
+	case kPDM_QualityModeVeryLow1:
+		regDiv >>= 1U;
+		break;
+	case kPDM_QualityModeVeryLow2:
+		regDiv >>= 2U;
+		break;
+	default:
+		assert(false);
+		break;
+	}
 
-    if (PDM_ValidateSrcClockRate(enableChannelMask, qualityMode, realOsr, regDiv) == kStatus_Fail)
-    {
-        return kStatus_Fail;
-    }
+	if (PDM_ValidateSrcClockRate(enableChannelMask, qualityMode, realOsr, regDiv) == kStatus_Fail) {
+		return kStatus_Fail;
+	}
 
-    assert(regDiv <= PDM_CTRL_2_CLKDIV_MASK);
-    base->CTRL_2 = (base->CTRL_2 & (~PDM_CTRL_2_CLKDIV_MASK)) | PDM_CTRL_2_CLKDIV(regDiv);
+	assert(regDiv <= PDM_CTRL_2_CLKDIV_MASK);
+	base->CTRL_2 = (base->CTRL_2 & (~PDM_CTRL_2_CLKDIV_MASK)) | PDM_CTRL_2_CLKDIV(regDiv);
 
-    return kStatus_Success;
+	return kStatus_Success;
 }
 
 /*!
@@ -298,37 +281,36 @@ status_t PDM_SetSampleRate(
  */
 void PDM_Init(PDM_Type *base, const pdm_config_t *config)
 {
-    assert(config != NULL);
-    assert(config->fifoWatermark <= PDM_FIFO_CTRL_FIFOWMK_MASK);
+	assert(config != NULL);
+	assert(config->fifoWatermark <= PDM_FIFO_CTRL_FIFOWMK_MASK);
 
 #if !(defined(FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL) && FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL)
-    /* Enable the PDM clock */
-    CLOCK_EnableClock(s_pdmClock[PDM_GetInstance(base)]);
+	/* Enable the PDM clock */
+	CLOCK_EnableClock(s_pdmClock[PDM_GetInstance(base)]);
 #if defined(FSL_PDM_HAS_FILTER_CLOCK_GATE) && FSL_PDM_HAS_FILTER_CLOCK_GATE
-    CLOCK_EnableClock(s_pdmFilterClock[PDM_GetInstance(base)]);
+	CLOCK_EnableClock(s_pdmFilterClock[PDM_GetInstance(base)]);
 #endif
 #endif /* FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL */
 
-    /* Enable the module and disable the interface/all channel */
-    base->CTRL_1 &=
-        ~(PDM_CTRL_1_MDIS_MASK | PDM_CTRL_1_PDMIEN_MASK | PDM_CTRL_1_ERREN_MASK | (uint32_t)kPDM_EnableChannelAll);
+	/* Enable the module and disable the interface/all channel */
+	base->CTRL_1 &=
+	        ~(PDM_CTRL_1_MDIS_MASK | PDM_CTRL_1_PDMIEN_MASK | PDM_CTRL_1_ERREN_MASK | (uint32_t)kPDM_EnableChannelAll);
 
-    /* wait all filter stopped */
-    while ((base->STAT & PDM_STAT_BSY_FIL_MASK) != 0U)
-    {
-    }
+	/* wait all filter stopped */
+	while ((base->STAT & PDM_STAT_BSY_FIL_MASK) != 0U) {
+	}
 
-    /* software reset */
-    base->CTRL_1 |= PDM_CTRL_1_SRES_MASK;
+	/* software reset */
+	base->CTRL_1 |= PDM_CTRL_1_SRES_MASK;
 
-    /* Set the configure settings */
-    base->CTRL_1 = (base->CTRL_1 & (~PDM_CTRL_1_DOZEN_MASK)) | PDM_CTRL_1_DOZEN(config->enableDoze);
+	/* Set the configure settings */
+	base->CTRL_1 = (base->CTRL_1 & (~PDM_CTRL_1_DOZEN_MASK)) | PDM_CTRL_1_DOZEN(config->enableDoze);
 
-    base->CTRL_2 = (base->CTRL_2 & (~(PDM_CTRL_2_CICOSR_MASK | PDM_CTRL_2_QSEL_MASK))) |
-                   PDM_CTRL_2_CICOSR(config->cicOverSampleRate) | PDM_CTRL_2_QSEL(config->qualityMode);
+	base->CTRL_2 = (base->CTRL_2 & (~(PDM_CTRL_2_CICOSR_MASK | PDM_CTRL_2_QSEL_MASK))) |
+	        PDM_CTRL_2_CICOSR(config->cicOverSampleRate) | PDM_CTRL_2_QSEL(config->qualityMode);
 
-    /* Set the watermark */
-    base->FIFO_CTRL = PDM_FIFO_CTRL_FIFOWMK(config->fifoWatermark);
+	/* Set the watermark */
+	base->FIFO_CTRL = PDM_FIFO_CTRL_FIFOWMK(config->fifoWatermark);
 }
 
 /*!
@@ -341,13 +323,13 @@ void PDM_Init(PDM_Type *base, const pdm_config_t *config)
  */
 void PDM_Deinit(PDM_Type *base)
 {
-    /* disable PDM interface */
-    PDM_Enable(base, false);
+	/* disable PDM interface */
+	PDM_Enable(base, false);
 
 #if !(defined(FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL) && FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL)
-    CLOCK_DisableClock(s_pdmClock[PDM_GetInstance(base)]);
+	CLOCK_DisableClock(s_pdmClock[PDM_GetInstance(base)]);
 #if defined(FSL_PDM_HAS_FILTER_CLOCK_GATE) && FSL_PDM_HAS_FILTER_CLOCK_GATE
-    CLOCK_DisableClock(s_pdmFilterClock[PDM_GetInstance(base)]);
+	CLOCK_DisableClock(s_pdmFilterClock[PDM_GetInstance(base)]);
 #endif
 #endif /* FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL */
 }
@@ -363,14 +345,12 @@ void PDM_Deinit(PDM_Type *base)
  */
 void PDM_EnableInterrupts(PDM_Type *base, uint32_t mask)
 {
-    if ((mask & (uint32_t)kPDM_FIFOInterruptEnable) != 0U)
-    {
-        base->CTRL_1 = (base->CTRL_1 & (~PDM_CTRL_1_DISEL_MASK)) | (uint32_t)kPDM_FIFOInterruptEnable;
-    }
-    if ((mask & (uint32_t)kPDM_ErrorInterruptEnable) != 0U)
-    {
-        base->CTRL_1 = (base->CTRL_1 & (~PDM_CTRL_1_ERREN_MASK)) | (uint32_t)kPDM_ErrorInterruptEnable;
-    }
+	if ((mask & (uint32_t)kPDM_FIFOInterruptEnable) != 0U) {
+		base->CTRL_1 = (base->CTRL_1 & (~PDM_CTRL_1_DISEL_MASK)) | (uint32_t)kPDM_FIFOInterruptEnable;
+	}
+	if ((mask & (uint32_t)kPDM_ErrorInterruptEnable) != 0U) {
+		base->CTRL_1 = (base->CTRL_1 & (~PDM_CTRL_1_ERREN_MASK)) | (uint32_t)kPDM_ErrorInterruptEnable;
+	}
 }
 
 /*!
@@ -383,38 +363,38 @@ void PDM_EnableInterrupts(PDM_Type *base, uint32_t mask)
  */
 void PDM_SetChannelConfig(PDM_Type *base, uint32_t channel, const pdm_channel_config_t *config)
 {
-    assert(config != NULL);
-    assert(channel <= (uint32_t)FSL_FEATURE_PDM_CHANNEL_NUM);
+	assert(config != NULL);
+	assert(channel <= (uint32_t)FSL_FEATURE_PDM_CHANNEL_NUM);
 
-    uint32_t dcCtrl = base->DC_CTRL;
-
-#if defined(FSL_FEATURE_PDM_HAS_RANGE_CTRL) && FSL_FEATURE_PDM_HAS_RANGE_CTRL
-    uint32_t outCtrl = base->RANGE_CTRL;
-#else
-    uint32_t outCtrl = base->OUT_CTRL;
-#endif
-
-    /* configure gain and cut off freq */
-    dcCtrl &= ~((uint32_t)PDM_DC_CTRL_DCCONFIG0_MASK << (channel << 1U));
-    dcCtrl |= (uint32_t)config->cutOffFreq << (channel << 1U);
+	uint32_t dcCtrl = base->DC_CTRL;
 
 #if defined(FSL_FEATURE_PDM_HAS_RANGE_CTRL) && FSL_FEATURE_PDM_HAS_RANGE_CTRL
-    outCtrl &= ~((uint32_t)PDM_RANGE_CTRL_RANGEADJ0_MASK << (channel << 2U));
+	uint32_t outCtrl = base->RANGE_CTRL;
 #else
-    outCtrl &= ~((uint32_t)PDM_OUT_CTRL_OUTGAIN0_MASK << (channel << 2U));
+	uint32_t outCtrl = base->OUT_CTRL;
 #endif
 
-    outCtrl |= (uint32_t)config->gain << (channel << 2U);
-
-    base->DC_CTRL = dcCtrl;
+	/* configure gain and cut off freq */
+	dcCtrl &= ~((uint32_t)PDM_DC_CTRL_DCCONFIG0_MASK << (channel << 1U));
+	dcCtrl |= (uint32_t)config->cutOffFreq << (channel << 1U);
 
 #if defined(FSL_FEATURE_PDM_HAS_RANGE_CTRL) && FSL_FEATURE_PDM_HAS_RANGE_CTRL
-    base->RANGE_CTRL = outCtrl;
+	outCtrl &= ~((uint32_t)PDM_RANGE_CTRL_RANGEADJ0_MASK << (channel << 2U));
 #else
-    base->OUT_CTRL = outCtrl;
+	outCtrl &= ~((uint32_t)PDM_OUT_CTRL_OUTGAIN0_MASK << (channel << 2U));
 #endif
-    /* enable channel */
-    base->CTRL_1 |= 1UL << channel;
+
+	outCtrl |= (uint32_t)config->gain << (channel << 2U);
+
+	base->DC_CTRL = dcCtrl;
+
+#if defined(FSL_FEATURE_PDM_HAS_RANGE_CTRL) && FSL_FEATURE_PDM_HAS_RANGE_CTRL
+	base->RANGE_CTRL = outCtrl;
+#else
+	base->OUT_CTRL = outCtrl;
+#endif
+	/* enable channel */
+	base->CTRL_1 |= 1UL << channel;
 }
 
 /*!
@@ -427,27 +407,25 @@ void PDM_SetChannelConfig(PDM_Type *base, uint32_t channel, const pdm_channel_co
  * param format data format.
  */
 status_t PDM_TransferSetChannelConfig(
-    PDM_Type *base, pdm_handle_t *handle, uint32_t channel, const pdm_channel_config_t *config, uint32_t format)
+        PDM_Type *base, pdm_handle_t *handle, uint32_t channel, const pdm_channel_config_t *config, uint32_t format)
 {
-    assert(handle != NULL);
+	assert(handle != NULL);
 
-    PDM_SetChannelConfig(base, channel, config);
+	PDM_SetChannelConfig(base, channel, config);
 
-    handle->format = format;
+	handle->format = format;
 
-    if (handle->channelNums == 0U)
-    {
-        handle->startChannel = (uint8_t)channel;
-    }
+	if (handle->channelNums == 0U) {
+		handle->startChannel = (uint8_t)channel;
+	}
 
-    handle->channelNums++;
+	handle->channelNums++;
 
-    if (handle->channelNums > (uint8_t)FSL_FEATURE_PDM_CHANNEL_NUM)
-    {
-        return kStatus_PDM_ChannelConfig_Failed;
-    }
+	if (handle->channelNums > (uint8_t)FSL_FEATURE_PDM_CHANNEL_NUM) {
+		return kStatus_PDM_ChannelConfig_Failed;
+	}
 
-    return kStatus_Success;
+	return kStatus_Success;
 }
 
 /*!
@@ -463,25 +441,25 @@ status_t PDM_TransferSetChannelConfig(
  */
 void PDM_TransferCreateHandle(PDM_Type *base, pdm_handle_t *handle, pdm_transfer_callback_t callback, void *userData)
 {
-    assert(handle != NULL);
+	assert(handle != NULL);
 
-    /* Zero the handle */
-    (void)memset(handle, 0, sizeof(*handle));
+	/* Zero the handle */
+	(void)memset(handle, 0, sizeof(*handle));
 
-    s_pdmHandle[PDM_GetInstance(base)] = handle;
+	s_pdmHandle[PDM_GetInstance(base)] = handle;
 
-    handle->callback  = callback;
-    handle->userData  = userData;
-    handle->watermark = (uint8_t)(base->FIFO_CTRL & PDM_FIFO_CTRL_FIFOWMK_MASK);
+	handle->callback  = callback;
+	handle->userData  = userData;
+	handle->watermark = (uint8_t)(base->FIFO_CTRL & PDM_FIFO_CTRL_FIFOWMK_MASK);
 
-    /* Set the isr pointer */
-    s_pdmIsr = PDM_TransferHandleIRQ;
+	/* Set the isr pointer */
+	s_pdmIsr = PDM_TransferHandleIRQ;
 
-    /* Enable RX event IRQ */
-    (void)EnableIRQ(PDM_EVENT_IRQn);
+	/* Enable RX event IRQ */
+	(void)EnableIRQ(PDM_EVENT_IRQn);
 #if !(defined FSL_FEATURE_PDM_HAS_NO_INDEPENDENT_ERROR_IRQ && FSL_FEATURE_PDM_HAS_NO_INDEPENDENT_ERROR_IRQ)
-    /* Enable FIFO error IRQ */
-    (void)EnableIRQ(PDM_ERROR_IRQn);
+	/* Enable FIFO error IRQ */
+	(void)EnableIRQ(PDM_ERROR_IRQn);
 #endif
 }
 
@@ -501,29 +479,28 @@ void PDM_TransferCreateHandle(PDM_Type *base, pdm_handle_t *handle, pdm_transfer
  */
 status_t PDM_TransferReceiveNonBlocking(PDM_Type *base, pdm_handle_t *handle, pdm_transfer_t *xfer)
 {
-    assert(handle != NULL);
+	assert(handle != NULL);
 
-    /* Check if the queue is full */
-    if (handle->pdmQueue[handle->queueUser].data != NULL)
-    {
-        return kStatus_PDM_QueueFull;
-    }
+	/* Check if the queue is full */
+	if (handle->pdmQueue[handle->queueUser].data != NULL) {
+		return kStatus_PDM_QueueFull;
+	}
 
-    /* Add into queue */
-    handle->transferSize[handle->queueUser]      = xfer->dataSize;
-    handle->pdmQueue[handle->queueUser].data     = xfer->data;
-    handle->pdmQueue[handle->queueUser].dataSize = xfer->dataSize;
-    handle->queueUser                            = (handle->queueUser + 1U) % PDM_XFER_QUEUE_SIZE;
+	/* Add into queue */
+	handle->transferSize[handle->queueUser]      = xfer->dataSize;
+	handle->pdmQueue[handle->queueUser].data     = xfer->data;
+	handle->pdmQueue[handle->queueUser].dataSize = xfer->dataSize;
+	handle->queueUser                            = (handle->queueUser + 1U) % PDM_XFER_QUEUE_SIZE;
 
-    /* Set state to busy */
-    handle->state = kStatus_PDM_Busy;
+	/* Set state to busy */
+	handle->state = kStatus_PDM_Busy;
 
-    /* Enable interrupt */
-    PDM_EnableInterrupts(base, (uint32_t)kPDM_FIFOInterruptEnable);
+	/* Enable interrupt */
+	PDM_EnableInterrupts(base, (uint32_t)kPDM_FIFOInterruptEnable);
 
-    PDM_Enable(base, true);
+	PDM_Enable(base, true);
 
-    return kStatus_Success;
+	return kStatus_Success;
 }
 
 /*!
@@ -537,16 +514,16 @@ status_t PDM_TransferReceiveNonBlocking(PDM_Type *base, pdm_handle_t *handle, pd
  */
 void PDM_TransferAbortReceive(PDM_Type *base, pdm_handle_t *handle)
 {
-    assert(handle != NULL);
+	assert(handle != NULL);
 
-    /* Use FIFO request interrupt and fifo error */
-    PDM_DisableInterrupts(base, (uint32_t)kPDM_FIFOInterruptEnable | (uint32_t)kPDM_ErrorInterruptEnable);
-    PDM_Enable(base, false);
-    handle->state = kStatus_PDM_Idle;
-    /* Clear the queue */
-    (void)memset(handle->pdmQueue, 0, sizeof(pdm_transfer_t) * PDM_XFER_QUEUE_SIZE);
-    handle->queueDriver = 0;
-    handle->queueUser   = 0;
+	/* Use FIFO request interrupt and fifo error */
+	PDM_DisableInterrupts(base, (uint32_t)kPDM_FIFOInterruptEnable | (uint32_t)kPDM_ErrorInterruptEnable);
+	PDM_Enable(base, false);
+	handle->state = kStatus_PDM_Idle;
+	/* Clear the queue */
+	(void)memset(handle->pdmQueue, 0, sizeof(pdm_transfer_t) * PDM_XFER_QUEUE_SIZE);
+	handle->queueDriver = 0;
+	handle->queueUser   = 0;
 }
 
 /*!
@@ -557,75 +534,65 @@ void PDM_TransferAbortReceive(PDM_Type *base, pdm_handle_t *handle)
  */
 void PDM_TransferHandleIRQ(PDM_Type *base, pdm_handle_t *handle)
 {
-    assert(handle != NULL);
+	assert(handle != NULL);
 
 #if (defined FSL_FEATURE_PDM_HAS_NO_INDEPENDENT_ERROR_IRQ && FSL_FEATURE_PDM_HAS_NO_INDEPENDENT_ERROR_IRQ)
-    uint32_t status = 0U;
-    if (PDM_GetStatus(base) & PDM_STAT_LOWFREQF_MASK)
-    {
-        PDM_ClearStatus(base, PDM_STAT_LOWFREQF_MASK);
-        if (handle->callback != NULL)
-        {
-            (handle->callback)(base, handle, kStatus_PDM_CLK_LOW, handle->userData);
-        }
-    }
+	uint32_t status = 0U;
+	if (PDM_GetStatus(base) & PDM_STAT_LOWFREQF_MASK) {
+		PDM_ClearStatus(base, PDM_STAT_LOWFREQF_MASK);
+		if (handle->callback != NULL) {
+			(handle->callback)(base, handle, kStatus_PDM_CLK_LOW, handle->userData);
+		}
+	}
 
-    status = PDM_GetFifoStatus(base);
-    if (status != 0U)
-    {
-        PDM_ClearFIFOStatus(base, status);
-        if (handle->callback != NULL)
-        {
-            (handle->callback)(base, handle, kStatus_PDM_FIFO_ERROR, handle->userData);
-        }
-    }
+	status = PDM_GetFifoStatus(base);
+	if (status != 0U) {
+		PDM_ClearFIFOStatus(base, status);
+		if (handle->callback != NULL) {
+			(handle->callback)(base, handle, kStatus_PDM_FIFO_ERROR, handle->userData);
+		}
+	}
 
-    status = PDM_GetOutputStatus(base);
-    if (status != 0U)
-    {
-        PDM_ClearOutputStatus(base, status);
-        if (handle->callback != NULL)
-        {
-            (handle->callback)(base, handle, kStatus_PDM_Output_ERROR, handle->userData);
-        }
-    }
+	status = PDM_GetOutputStatus(base);
+	if (status != 0U) {
+		PDM_ClearOutputStatus(base, status);
+		if (handle->callback != NULL) {
+			(handle->callback)(base, handle, kStatus_PDM_Output_ERROR, handle->userData);
+		}
+	}
 
 #endif
 
-    /* Handle transfer */
-    if (((base->STAT & 0xFFU) != 0U) && (handle->channelNums != 0U) &&
-        ((base->CTRL_1 & PDM_CTRL_1_DISEL_MASK) == (0x2UL << PDM_CTRL_1_DISEL_SHIFT)))
-    {
-        PDM_ClearStatus(base, 0xFFU);
-        /* Judge if the data need to transmit is less than space */
-        uint8_t size = (uint8_t)MIN((handle->pdmQueue[handle->queueDriver].dataSize),
-                                    ((uint32_t)handle->watermark * handle->channelNums * handle->format));
+	/* Handle transfer */
+	if (((base->STAT & 0xFFU) != 0U) && (handle->channelNums != 0U) &&
+	        ((base->CTRL_1 & PDM_CTRL_1_DISEL_MASK) == (0x2UL << PDM_CTRL_1_DISEL_SHIFT))) {
+		PDM_ClearStatus(base, 0xFFU);
+		/* Judge if the data need to transmit is less than space */
+		uint8_t size = (uint8_t)MIN((handle->pdmQueue[handle->queueDriver].dataSize),
+		                ((uint32_t)handle->watermark * handle->channelNums * handle->format));
 
-        PDM_ReadFifo(base, handle->startChannel, handle->channelNums,
-                     (uint8_t *)(uint32_t)handle->pdmQueue[handle->queueDriver].data,
-                     ((size_t)size / handle->channelNums / handle->format), handle->format);
+		PDM_ReadFifo(base, handle->startChannel, handle->channelNums,
+		        (uint8_t *)(uint32_t)handle->pdmQueue[handle->queueDriver].data,
+		        ((size_t)size / handle->channelNums / handle->format), handle->format);
 
-        /* Update the internal counter */
-        handle->pdmQueue[handle->queueDriver].dataSize -= size;
-        handle->pdmQueue[handle->queueDriver].data = &(handle->pdmQueue[handle->queueDriver].data[size]);
-    }
+		/* Update the internal counter */
+		handle->pdmQueue[handle->queueDriver].dataSize -= size;
+		handle->pdmQueue[handle->queueDriver].data = &(handle->pdmQueue[handle->queueDriver].data[size]);
+	}
 
-    /* If finished a block, call the callback function */
-    if (handle->pdmQueue[handle->queueDriver].dataSize == 0U)
-    {
-        handle->pdmQueue[handle->queueDriver].data = NULL;
-        handle->queueDriver                        = (handle->queueDriver + 1U) % PDM_XFER_QUEUE_SIZE;
-        if (handle->callback != NULL)
-        {
-            (handle->callback)(base, handle, kStatus_PDM_Idle, handle->userData);
-        }
-    }
+	/* If finished a block, call the callback function */
+	if (handle->pdmQueue[handle->queueDriver].dataSize == 0U) {
+		handle->pdmQueue[handle->queueDriver].data = NULL;
+		handle->queueDriver                        = (handle->queueDriver + 1U) % PDM_XFER_QUEUE_SIZE;
+		if (handle->callback != NULL) {
+			(handle->callback)(base, handle, kStatus_PDM_Idle, handle->userData);
+		}
+	}
 
-    /* If all data finished, just stop the transfer */
-    if (handle->pdmQueue[handle->queueDriver].data == NULL)
-    {
-        PDM_TransferAbortReceive(base, handle);
-    }
+	/* If all data finished, just stop the transfer */
+	if (handle->pdmQueue[handle->queueDriver].data == NULL) {
+		PDM_TransferAbortReceive(base, handle);
+	}
 }
 
 /*!
@@ -659,39 +626,36 @@ void PDM_TransferHandleIRQ(PDM_Type *base, pdm_handle_t *handle)
  * param signalGain signal gain value.
  */
 void PDM_SetHwvadInEnvelopeBasedMode(PDM_Type *base,
-                                     const pdm_hwvad_config_t *hwvadConfig,
-                                     const pdm_hwvad_noise_filter_t *noiseConfig,
-                                     const pdm_hwvad_zero_cross_detector_t *zcdConfig,
-                                     uint32_t signalGain)
+        const pdm_hwvad_config_t *hwvadConfig,
+        const pdm_hwvad_noise_filter_t *noiseConfig,
+        const pdm_hwvad_zero_cross_detector_t *zcdConfig,
+        uint32_t signalGain)
 {
-    assert(hwvadConfig != NULL);
-    assert(noiseConfig != NULL);
+	assert(hwvadConfig != NULL);
+	assert(noiseConfig != NULL);
 
-    uint32_t i = 0U;
+	uint32_t i = 0U;
 
-    PDM_SetHwvadConfig(base, hwvadConfig);
-    PDM_SetHwvadSignalFilterConfig(base, true, signalGain);
-    PDM_SetHwvadNoiseFilterConfig(base, noiseConfig);
-    PDM_EnableHwvad(base, true);
+	PDM_SetHwvadConfig(base, hwvadConfig);
+	PDM_SetHwvadSignalFilterConfig(base, true, signalGain);
+	PDM_SetHwvadNoiseFilterConfig(base, noiseConfig);
+	PDM_EnableHwvad(base, true);
 
-    if (NULL != zcdConfig)
-    {
-        PDM_SetHwvadZeroCrossDetectorConfig(base, zcdConfig);
-    }
+	if (NULL != zcdConfig) {
+		PDM_SetHwvadZeroCrossDetectorConfig(base, zcdConfig);
+	}
 
-    PDM_Enable(base, true);
+	PDM_Enable(base, true);
 
-    while (PDM_GetHwvadInitialFlag(base) != 0U)
-    {
-    }
+	while (PDM_GetHwvadInitialFlag(base) != 0U) {
+	}
 
-    for (i = 0; i < 3U; i++)
-    {
-        /* set HWVAD interal filter stauts initial */
-        PDM_SetHwvadInternalFilterStatus(base, kPDM_HwvadInternalFilterInitial);
-    }
+	for (i = 0; i < 3U; i++) {
+		/* set HWVAD interal filter stauts initial */
+		PDM_SetHwvadInternalFilterStatus(base, kPDM_HwvadInternalFilterInitial);
+	}
 
-    PDM_SetHwvadInternalFilterStatus(base, kPDM_HwvadInternalFilterNormalOperation);
+	PDM_SetHwvadInternalFilterStatus(base, kPDM_HwvadInternalFilterNormalOperation);
 }
 
 /*!
@@ -725,26 +689,25 @@ void PDM_SetHwvadInEnvelopeBasedMode(PDM_Type *base,
  * param signalGain signal gain value, signal gain value should be properly according to application.
  */
 void PDM_SetHwvadInEnergyBasedMode(PDM_Type *base,
-                                   const pdm_hwvad_config_t *hwvadConfig,
-                                   const pdm_hwvad_noise_filter_t *noiseConfig,
-                                   const pdm_hwvad_zero_cross_detector_t *zcdConfig,
-                                   uint32_t signalGain)
+        const pdm_hwvad_config_t *hwvadConfig,
+        const pdm_hwvad_noise_filter_t *noiseConfig,
+        const pdm_hwvad_zero_cross_detector_t *zcdConfig,
+        uint32_t signalGain)
 {
-    assert(hwvadConfig != NULL);
-    assert(noiseConfig != NULL);
+	assert(hwvadConfig != NULL);
+	assert(noiseConfig != NULL);
 
-    PDM_SetHwvadConfig(base, hwvadConfig);
-    /* signal filter need to disable, but signal gain value should be set */
-    base->VAD0_SCONFIG = PDM_VAD0_SCONFIG_VADSGAIN(signalGain);
-    PDM_SetHwvadNoiseFilterConfig(base, noiseConfig);
-    PDM_EnableHwvad(base, true);
+	PDM_SetHwvadConfig(base, hwvadConfig);
+	/* signal filter need to disable, but signal gain value should be set */
+	base->VAD0_SCONFIG = PDM_VAD0_SCONFIG_VADSGAIN(signalGain);
+	PDM_SetHwvadNoiseFilterConfig(base, noiseConfig);
+	PDM_EnableHwvad(base, true);
 
-    if (NULL != zcdConfig)
-    {
-        PDM_SetHwvadZeroCrossDetectorConfig(base, zcdConfig);
-    }
+	if (NULL != zcdConfig) {
+		PDM_SetHwvadZeroCrossDetectorConfig(base, zcdConfig);
+	}
 
-    PDM_Enable(base, true);
+	PDM_Enable(base, true);
 }
 
 /*!
@@ -755,21 +718,21 @@ void PDM_SetHwvadInEnergyBasedMode(PDM_Type *base,
  */
 void PDM_SetHwvadConfig(PDM_Type *base, const pdm_hwvad_config_t *config)
 {
-    assert(config != NULL);
+	assert(config != NULL);
 
-    uint32_t ctrl1 = base->VAD0_CTRL_1;
+	uint32_t ctrl1 = base->VAD0_CTRL_1;
 
-    /* Configure VAD0_CTRL_1 register */
-    ctrl1 &= ~(PDM_VAD0_CTRL_1_VADCHSEL_MASK | PDM_VAD0_CTRL_1_VADCICOSR_MASK | PDM_VAD0_CTRL_1_VADINITT_MASK);
-    ctrl1 |= (PDM_VAD0_CTRL_1_VADCHSEL(config->channel) | PDM_VAD0_CTRL_1_VADCICOSR(config->cicOverSampleRate) |
-              PDM_VAD0_CTRL_1_VADINITT(config->initializeTime));
-    base->VAD0_CTRL_1 = ctrl1;
+	/* Configure VAD0_CTRL_1 register */
+	ctrl1 &= ~(PDM_VAD0_CTRL_1_VADCHSEL_MASK | PDM_VAD0_CTRL_1_VADCICOSR_MASK | PDM_VAD0_CTRL_1_VADINITT_MASK);
+	ctrl1 |= (PDM_VAD0_CTRL_1_VADCHSEL(config->channel) | PDM_VAD0_CTRL_1_VADCICOSR(config->cicOverSampleRate) |
+	                PDM_VAD0_CTRL_1_VADINITT(config->initializeTime));
+	base->VAD0_CTRL_1 = ctrl1;
 
-    /* Configure VAD0_CTRL_2 register */
-    base->VAD0_CTRL_2 =
-        (PDM_VAD0_CTRL_2_VADFRENDIS((config->enableFrameEnergy == true) ? 0U : 1U) |
-         PDM_VAD0_CTRL_2_VADPREFEN(config->enablePreFilter) | PDM_VAD0_CTRL_2_VADFRAMET(config->frameTime) |
-         PDM_VAD0_CTRL_2_VADINPGAIN(config->inputGain) | PDM_VAD0_CTRL_2_VADHPF(config->cutOffFreq));
+	/* Configure VAD0_CTRL_2 register */
+	base->VAD0_CTRL_2 =
+	        (PDM_VAD0_CTRL_2_VADFRENDIS((config->enableFrameEnergy == true) ? 0U : 1U) |
+	                PDM_VAD0_CTRL_2_VADPREFEN(config->enablePreFilter) | PDM_VAD0_CTRL_2_VADFRAMET(config->frameTime) |
+	                PDM_VAD0_CTRL_2_VADINPGAIN(config->inputGain) | PDM_VAD0_CTRL_2_VADHPF(config->cutOffFreq));
 }
 
 /*!
@@ -781,12 +744,12 @@ void PDM_SetHwvadConfig(PDM_Type *base, const pdm_hwvad_config_t *config)
  */
 void PDM_SetHwvadSignalFilterConfig(PDM_Type *base, bool enableMaxBlock, uint32_t signalGain)
 {
-    uint32_t signalConfig = base->VAD0_SCONFIG;
+	uint32_t signalConfig = base->VAD0_SCONFIG;
 
-    signalConfig &= ~(PDM_VAD0_SCONFIG_VADSMAXEN_MASK | PDM_VAD0_SCONFIG_VADSGAIN_MASK);
-    signalConfig |= (PDM_VAD0_SCONFIG_VADSMAXEN(enableMaxBlock) | PDM_VAD0_SCONFIG_VADSGAIN(signalGain)) |
-                    PDM_VAD0_SCONFIG_VADSFILEN_MASK;
-    base->VAD0_SCONFIG = signalConfig;
+	signalConfig &= ~(PDM_VAD0_SCONFIG_VADSMAXEN_MASK | PDM_VAD0_SCONFIG_VADSGAIN_MASK);
+	signalConfig |= (PDM_VAD0_SCONFIG_VADSMAXEN(enableMaxBlock) | PDM_VAD0_SCONFIG_VADSGAIN(signalGain)) |
+	        PDM_VAD0_SCONFIG_VADSFILEN_MASK;
+	base->VAD0_SCONFIG = signalConfig;
 }
 
 /*!
@@ -797,13 +760,13 @@ void PDM_SetHwvadSignalFilterConfig(PDM_Type *base, bool enableMaxBlock, uint32_
  */
 void PDM_SetHwvadNoiseFilterConfig(PDM_Type *base, const pdm_hwvad_noise_filter_t *config)
 {
-    assert(config != NULL);
+	assert(config != NULL);
 
-    base->VAD0_NCONFIG =
-        (PDM_VAD0_NCONFIG_VADNFILAUTO(config->enableAutoNoiseFilter) |
-         PDM_VAD0_NCONFIG_VADNOREN(config->enableNoiseDetectOR) | PDM_VAD0_NCONFIG_VADNMINEN(config->enableNoiseMin) |
-         PDM_VAD0_NCONFIG_VADNDECEN(config->enableNoiseDecimation) |
-         PDM_VAD0_NCONFIG_VADNFILADJ(config->noiseFilterAdjustment) | PDM_VAD0_NCONFIG_VADNGAIN(config->noiseGain));
+	base->VAD0_NCONFIG =
+	        (PDM_VAD0_NCONFIG_VADNFILAUTO(config->enableAutoNoiseFilter) |
+	                PDM_VAD0_NCONFIG_VADNOREN(config->enableNoiseDetectOR) | PDM_VAD0_NCONFIG_VADNMINEN(config->enableNoiseMin) |
+	                PDM_VAD0_NCONFIG_VADNDECEN(config->enableNoiseDecimation) |
+	                PDM_VAD0_NCONFIG_VADNFILADJ(config->noiseFilterAdjustment) | PDM_VAD0_NCONFIG_VADNGAIN(config->noiseGain));
 }
 
 /*!
@@ -814,32 +777,32 @@ void PDM_SetHwvadNoiseFilterConfig(PDM_Type *base, const pdm_hwvad_noise_filter_
  */
 void PDM_SetHwvadZeroCrossDetectorConfig(PDM_Type *base, const pdm_hwvad_zero_cross_detector_t *config)
 {
-    assert(config != NULL);
+	assert(config != NULL);
 
-    uint32_t zcd = (base->VAD0_ZCD & (~(PDM_VAD0_ZCD_VADZCDTH_MASK | PDM_VAD0_ZCD_VADZCDADJ_MASK |
-                                        PDM_VAD0_ZCD_VADZCDAUTO_MASK | PDM_VAD0_ZCD_VADZCDAND_MASK)));
+	uint32_t zcd = (base->VAD0_ZCD & (~(PDM_VAD0_ZCD_VADZCDTH_MASK | PDM_VAD0_ZCD_VADZCDADJ_MASK |
+	                                PDM_VAD0_ZCD_VADZCDAUTO_MASK | PDM_VAD0_ZCD_VADZCDAND_MASK)));
 
-    zcd |= (PDM_VAD0_ZCD_VADZCDTH(config->threshold) | PDM_VAD0_ZCD_VADZCDADJ(config->adjustmentThreshold) |
-            PDM_VAD0_ZCD_VADZCDAUTO(config->enableAutoThreshold) | PDM_VAD0_ZCD_VADZCDAND(config->zcdAnd)) |
-           PDM_VAD0_ZCD_VADZCDEN_MASK;
+	zcd |= (PDM_VAD0_ZCD_VADZCDTH(config->threshold) | PDM_VAD0_ZCD_VADZCDADJ(config->adjustmentThreshold) |
+	                PDM_VAD0_ZCD_VADZCDAUTO(config->enableAutoThreshold) | PDM_VAD0_ZCD_VADZCDAND(config->zcdAnd)) |
+	        PDM_VAD0_ZCD_VADZCDEN_MASK;
 
-    base->VAD0_ZCD = zcd;
+	base->VAD0_ZCD = zcd;
 }
 
 #if defined(PDM)
 void PDM_EVENT_DriverIRQHandler(void);
 void PDM_EVENT_DriverIRQHandler(void)
 {
-    assert(s_pdmHandle[0] != NULL);
-    s_pdmIsr(PDM, s_pdmHandle[0]);
-    SDK_ISR_EXIT_BARRIER;
+	assert(s_pdmHandle[0] != NULL);
+	s_pdmIsr(PDM, s_pdmHandle[0]);
+	SDK_ISR_EXIT_BARRIER;
 }
 #elif defined(PDM0)
 void PDM_EVENT_DriverIRQHandler(void);
 void PDM_EVENT_DriverIRQHandler(void)
 {
-    assert(s_pdmHandle[0]);
-    s_pdmIsr(PDM0, s_pdmHandle[0]);
-    SDK_ISR_EXIT_BARRIER;
+	assert(s_pdmHandle[0]);
+	s_pdmIsr(PDM0, s_pdmHandle[0]);
+	SDK_ISR_EXIT_BARRIER;
 }
 #endif

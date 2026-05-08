@@ -53,120 +53,110 @@
  */
 
 void arm_shift_q7(
-  const q7_t * pSrc,
+        const q7_t *pSrc,
         int8_t shiftBits,
-        q7_t * pDst,
+        q7_t *pDst,
         uint32_t blockSize)
 {
-        uint32_t blkCnt;                               /* Loop counter */
-        uint8_t sign = (shiftBits & 0x80);             /* Sign of shiftBits */
+	uint32_t blkCnt;                               /* Loop counter */
+	uint8_t sign = (shiftBits & 0x80);             /* Sign of shiftBits */
 
 #if defined (ARM_MATH_LOOPUNROLL)
 
 #if defined (ARM_MATH_DSP)
-  q7_t in1,  in2,  in3,  in4;                    /* Temporary input variables */
+	q7_t in1,  in2,  in3,  in4;                    /* Temporary input variables */
 #endif
 
-  /* Loop unrolling: Compute 4 outputs at a time */
-  blkCnt = blockSize >> 2U;
+	/* Loop unrolling: Compute 4 outputs at a time */
+	blkCnt = blockSize >> 2U;
 
-  /* If the shift value is positive then do right shift else left shift */
-  if (sign == 0U)
-  {
-    while (blkCnt > 0U)
-    {
-      /* C = A << shiftBits */
+	/* If the shift value is positive then do right shift else left shift */
+	if (sign == 0U) {
+		while (blkCnt > 0U) {
+			/* C = A << shiftBits */
 
 #if defined (ARM_MATH_DSP)
-      /* Read 4 inputs */
-      in1 = *pSrc++;
-      in2 = *pSrc++;
-      in3 = *pSrc++;
-      in4 = *pSrc++;
+			/* Read 4 inputs */
+			in1 = *pSrc++;
+			in2 = *pSrc++;
+			in3 = *pSrc++;
+			in4 = *pSrc++;
 
-    /* Pack and store result in destination buffer (in single write) */
-      write_q7x4_ia (&pDst, __PACKq7(__SSAT((in1 << shiftBits), 8),
-                                     __SSAT((in2 << shiftBits), 8),
-                                     __SSAT((in3 << shiftBits), 8),
-                                     __SSAT((in4 << shiftBits), 8) ));
+			/* Pack and store result in destination buffer (in single write) */
+			write_q7x4_ia(&pDst, __PACKq7(__SSAT((in1 << shiftBits), 8),
+			                __SSAT((in2 << shiftBits), 8),
+			                __SSAT((in3 << shiftBits), 8),
+			                __SSAT((in4 << shiftBits), 8)));
 #else
-      *pDst++ = (q7_t) __SSAT(((q15_t) *pSrc++ << shiftBits), 8);
-      *pDst++ = (q7_t) __SSAT(((q15_t) *pSrc++ << shiftBits), 8);
-      *pDst++ = (q7_t) __SSAT(((q15_t) *pSrc++ << shiftBits), 8);
-      *pDst++ = (q7_t) __SSAT(((q15_t) *pSrc++ << shiftBits), 8);
+			*pDst++ = (q7_t) __SSAT(((q15_t) * pSrc++ << shiftBits), 8);
+			*pDst++ = (q7_t) __SSAT(((q15_t) * pSrc++ << shiftBits), 8);
+			*pDst++ = (q7_t) __SSAT(((q15_t) * pSrc++ << shiftBits), 8);
+			*pDst++ = (q7_t) __SSAT(((q15_t) * pSrc++ << shiftBits), 8);
 #endif
 
-      /* Decrement loop counter */
-      blkCnt--;
-    }
-  }
-  else
-  {
-    while (blkCnt > 0U)
-    {
-      /* C = A >> shiftBits */
+			/* Decrement loop counter */
+			blkCnt--;
+		}
+	} else {
+		while (blkCnt > 0U) {
+			/* C = A >> shiftBits */
 
 #if defined (ARM_MATH_DSP)
-      /* Read 4 inputs */
-      in1 = *pSrc++;
-      in2 = *pSrc++;
-      in3 = *pSrc++;
-      in4 = *pSrc++;
+			/* Read 4 inputs */
+			in1 = *pSrc++;
+			in2 = *pSrc++;
+			in3 = *pSrc++;
+			in4 = *pSrc++;
 
-    /* Pack and store result in destination buffer (in single write) */
-      write_q7x4_ia (&pDst, __PACKq7((in1 >> -shiftBits),
-                                     (in2 >> -shiftBits),
-                                     (in3 >> -shiftBits),
-                                     (in4 >> -shiftBits) ));
+			/* Pack and store result in destination buffer (in single write) */
+			write_q7x4_ia(&pDst, __PACKq7((in1 >> -shiftBits),
+			                (in2 >> -shiftBits),
+			                (in3 >> -shiftBits),
+			                (in4 >> -shiftBits)));
 #else
-      *pDst++ = (*pSrc++ >> -shiftBits);
-      *pDst++ = (*pSrc++ >> -shiftBits);
-      *pDst++ = (*pSrc++ >> -shiftBits);
-      *pDst++ = (*pSrc++ >> -shiftBits);
+			*pDst++ = (*pSrc++ >> -shiftBits);
+			*pDst++ = (*pSrc++ >> -shiftBits);
+			*pDst++ = (*pSrc++ >> -shiftBits);
+			*pDst++ = (*pSrc++ >> -shiftBits);
 #endif
 
-      /* Decrement loop counter */
-      blkCnt--;
-    }
-  }
+			/* Decrement loop counter */
+			blkCnt--;
+		}
+	}
 
-  /* Loop unrolling: Compute remaining outputs */
-  blkCnt = blockSize % 0x4U;
+	/* Loop unrolling: Compute remaining outputs */
+	blkCnt = blockSize % 0x4U;
 
 #else
 
-  /* Initialize blkCnt with number of samples */
-  blkCnt = blockSize;
+	/* Initialize blkCnt with number of samples */
+	blkCnt = blockSize;
 
 #endif /* #if defined (ARM_MATH_LOOPUNROLL) */
 
-  /* If the shift value is positive then do right shift else left shift */
-  if (sign == 0U)
-  {
-    while (blkCnt > 0U)
-    {
-      /* C = A << shiftBits */
+	/* If the shift value is positive then do right shift else left shift */
+	if (sign == 0U) {
+		while (blkCnt > 0U) {
+			/* C = A << shiftBits */
 
-      /* Shift input and store result in destination buffer. */
-      *pDst++ = (q7_t) __SSAT(((q15_t) *pSrc++ << shiftBits), 8);
+			/* Shift input and store result in destination buffer. */
+			*pDst++ = (q7_t) __SSAT(((q15_t) * pSrc++ << shiftBits), 8);
 
-      /* Decrement loop counter */
-      blkCnt--;
-    }
-  }
-  else
-  {
-    while (blkCnt > 0U)
-    {
-      /* C = A >> shiftBits */
+			/* Decrement loop counter */
+			blkCnt--;
+		}
+	} else {
+		while (blkCnt > 0U) {
+			/* C = A >> shiftBits */
 
-      /* Shift input and store result in destination buffer. */
-      *pDst++ = (*pSrc++ >> -shiftBits);
+			/* Shift input and store result in destination buffer. */
+			*pDst++ = (*pSrc++ >> -shiftBits);
 
-      /* Decrement loop counter */
-      blkCnt--;
-    }
-  }
+			/* Decrement loop counter */
+			blkCnt--;
+		}
+	}
 
 }
 

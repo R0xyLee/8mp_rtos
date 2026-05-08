@@ -119,12 +119,12 @@ int32_t rpmsg_queue_destroy(struct rpmsg_lite_instance *rpmsg_lite_dev, rpmsg_qu
  * @see rpmsg_queue_recv_nocopy
  */
 int32_t rpmsg_queue_recv(struct rpmsg_lite_instance *rpmsg_lite_dev,
-                         rpmsg_queue_handle q,
-                         uint32_t *src,
-                         char *data,
-                         uint32_t maxlen,
-                         uint32_t *len,
-                         uint32_t timeout);
+        rpmsg_queue_handle q,
+        uint32_t *src,
+        char *data,
+        uint32_t maxlen,
+        uint32_t *len,
+        uint32_t timeout);
 
 /*!
  * @brief
@@ -152,11 +152,11 @@ int32_t rpmsg_queue_recv(struct rpmsg_lite_instance *rpmsg_lite_dev,
  * @see rpmsg_queue_recv
  */
 int32_t rpmsg_queue_recv_nocopy(struct rpmsg_lite_instance *rpmsg_lite_dev,
-                                rpmsg_queue_handle q,
-                                uint32_t *src,
-                                char **data,
-                                uint32_t *len,
-                                uint32_t timeout);
+        rpmsg_queue_handle q,
+        uint32_t *src,
+        char **data,
+        uint32_t *len,
+        uint32_t timeout);
 
 /*!
  * @brief This function frees a buffer previously returned by rpmsg_queue_recv_nocopy().

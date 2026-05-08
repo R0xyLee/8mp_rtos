@@ -158,18 +158,17 @@
 /*! @brief codec type
  * @anchor _codec_type
  */
-enum
-{
-    kCODEC_WM8904,   /*!< wm8904 */
-    kCODEC_WM8960,   /*!< wm8960 */
-    kCODEC_WM8524,   /*!< wm8524 */
-    kCODEC_SGTL5000, /*!< sgtl5000 */
-    kCODEC_DA7212,   /*!< da7212 */
-    kCODEC_CS42888,  /*!< CS42888 */
-    kCODEC_AK4497,   /*!< AK4497 */
-    kCODEC_AK4458,   /*!< ak4458 */
-    kCODEC_TFA9XXX,  /*!< tfa9xxx */
-    kCODEC_TFA9896,  /*!< tfa9896 */
+enum {
+	kCODEC_WM8904,   /*!< wm8904 */
+	kCODEC_WM8960,   /*!< wm8960 */
+	kCODEC_WM8524,   /*!< wm8524 */
+	kCODEC_SGTL5000, /*!< sgtl5000 */
+	kCODEC_DA7212,   /*!< da7212 */
+	kCODEC_CS42888,  /*!< CS42888 */
+	kCODEC_AK4497,   /*!< AK4497 */
+	kCODEC_AK4458,   /*!< ak4458 */
+	kCODEC_TFA9XXX,  /*!< tfa9xxx */
+	kCODEC_TFA9896,  /*!< tfa9896 */
 };
 /*******************************************************************************
  * API

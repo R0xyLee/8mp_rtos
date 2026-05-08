@@ -15,10 +15,9 @@
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
-typedef enum
-{
-    APP_SRTM_StateRun = 0x0U,
-    APP_SRTM_StateLinkedUp,
+typedef enum {
+	APP_SRTM_StateRun = 0x0U,
+	APP_SRTM_StateLinkedUp,
 } app_srtm_state_t;
 
 #define APP_SRTM_SAI      (I2S3)

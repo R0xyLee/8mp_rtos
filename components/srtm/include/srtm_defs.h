@@ -136,25 +136,24 @@ extern int SRTM_DEBUG_MESSAGE_FUNC(const char *fmt_s, ...);
 #define SRTM_NO_WAIT (0x0U)
 
 /*! @brief SRTM error code */
-typedef enum _srtm_status
-{
-    SRTM_Status_Success = 0x00U, /*!< Success */
-    SRTM_Status_Error,           /*!< Failed */
+typedef enum _srtm_status {
+	SRTM_Status_Success = 0x00U, /*!< Success */
+	SRTM_Status_Error,           /*!< Failed */
 
-    SRTM_Status_InvalidParameter, /*!< Invalid parameter */
-    SRTM_Status_InvalidMessage,   /*!< Invalid message */
-    SRTM_Status_InvalidState,     /*!< Operate in invalid state */
-    SRTM_Status_OutOfMemory,      /*!< Memory allocation failed */
-    SRTM_Status_Timeout,          /*!< Timeout when waiting for an event */
-    SRTM_Status_ListAddFailed,    /*!< Cannot add to list as node already in another list */
-    SRTM_Status_ListRemoveFailed, /*!< Cannot remove from list as node not in list */
+	SRTM_Status_InvalidParameter, /*!< Invalid parameter */
+	SRTM_Status_InvalidMessage,   /*!< Invalid message */
+	SRTM_Status_InvalidState,     /*!< Operate in invalid state */
+	SRTM_Status_OutOfMemory,      /*!< Memory allocation failed */
+	SRTM_Status_Timeout,          /*!< Timeout when waiting for an event */
+	SRTM_Status_ListAddFailed,    /*!< Cannot add to list as node already in another list */
+	SRTM_Status_ListRemoveFailed, /*!< Cannot remove from list as node not in list */
 
-    SRTM_Status_TransferTimeout,  /*!< Transfer timeout */
-    SRTM_Status_TransferNotAvail, /*!< Transfer failed due to peer core not ready */
-    SRTM_Status_TransferFailed,   /*!< Transfer failed due to communication failure */
+	SRTM_Status_TransferTimeout,  /*!< Transfer timeout */
+	SRTM_Status_TransferNotAvail, /*!< Transfer failed due to peer core not ready */
+	SRTM_Status_TransferFailed,   /*!< Transfer failed due to communication failure */
 
-    SRTM_Status_ServiceNotFound,    /*!< Cannot find service for a request/notification */
-    SRTM_Status_ServiceVerMismatch, /*!< Service version cannot support the request/notification */
+	SRTM_Status_ServiceNotFound,    /*!< Cannot find service for a request/notification */
+	SRTM_Status_ServiceVerMismatch, /*!< Service version cannot support the request/notification */
 } srtm_status_t;
 
 /**
@@ -210,11 +209,10 @@ typedef struct _srtm_service *srtm_service_t;
 /**
  * @brief SRTM version fields
  */
-typedef struct _srtm_version
-{
-    uint8_t major;  /*!< Major */
-    uint8_t minor;  /*!< Minor */
-    uint8_t bugfix; /*!< Bug fix */
+typedef struct _srtm_version {
+	uint8_t major;  /*!< Major */
+	uint8_t minor;  /*!< Minor */
+	uint8_t bugfix; /*!< Bug fix */
 } srtm_version_t;
 
 /*******************************************************************************
@@ -227,7 +225,7 @@ typedef struct _srtm_version
  */
 static inline uint32_t SRTM_GetVersion(void)
 {
-    return SRTM_MAKE_VERSION(SRTM_VERSION_MAJOR, SRTM_VERSION_MINOR, SRTM_VERSION_BUGFIX);
+	return SRTM_MAKE_VERSION(SRTM_VERSION_MAJOR, SRTM_VERSION_MINOR, SRTM_VERSION_BUGFIX);
 }
 
 /*! @} */

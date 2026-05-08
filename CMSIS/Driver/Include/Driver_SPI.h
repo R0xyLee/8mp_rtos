@@ -128,10 +128,11 @@ extern "C"
 \brief SPI Status
 */
 typedef volatile struct _ARM_SPI_STATUS {
-  uint32_t busy       : 1;              ///< Transmitter/Receiver busy flag
-  uint32_t data_lost  : 1;              ///< Data lost: Receive overflow / Transmit underflow (cleared on start of transfer operation)
-  uint32_t mode_fault : 1;              ///< Mode fault detected; optional (cleared on start of transfer operation)
-  uint32_t reserved   : 29;
+	uint32_t busy       : 1;              ///< Transmitter/Receiver busy flag
+uint32_t data_lost  :
+	1;              ///< Data lost: Receive overflow / Transmit underflow (cleared on start of transfer operation)
+	uint32_t mode_fault : 1;              ///< Mode fault detected; optional (cleared on start of transfer operation)
+	uint32_t reserved   : 29;
 } ARM_SPI_STATUS;
 
 
@@ -206,18 +207,18 @@ typedef volatile struct _ARM_SPI_STATUS {
   \return      none
 */
 
-typedef void (*ARM_SPI_SignalEvent_t) (uint32_t event);  ///< Pointer to \ref ARM_SPI_SignalEvent : Signal SPI Event.
+typedef void (*ARM_SPI_SignalEvent_t)(uint32_t event);   ///< Pointer to \ref ARM_SPI_SignalEvent : Signal SPI Event.
 
 
 /**
 \brief SPI Driver Capabilities.
 */
 typedef struct _ARM_SPI_CAPABILITIES {
-  uint32_t simplex          : 1;        ///< supports Simplex Mode (Master and Slave)
-  uint32_t ti_ssi           : 1;        ///< supports TI Synchronous Serial Interface
-  uint32_t microwire        : 1;        ///< supports Microwire Interface
-  uint32_t event_mode_fault : 1;        ///< Signal Mode Fault event: \ref ARM_SPI_EVENT_MODE_FAULT
-  uint32_t reserved         : 28;       ///< Reserved (must be zero)
+	uint32_t simplex          : 1;        ///< supports Simplex Mode (Master and Slave)
+	uint32_t ti_ssi           : 1;        ///< supports TI Synchronous Serial Interface
+	uint32_t microwire        : 1;        ///< supports Microwire Interface
+	uint32_t event_mode_fault : 1;        ///< Signal Mode Fault event: \ref ARM_SPI_EVENT_MODE_FAULT
+	uint32_t reserved         : 28;       ///< Reserved (must be zero)
 } ARM_SPI_CAPABILITIES;
 
 
@@ -225,19 +226,29 @@ typedef struct _ARM_SPI_CAPABILITIES {
 \brief Access structure of the SPI Driver.
 */
 typedef struct _ARM_DRIVER_SPI {
-  ARM_DRIVER_VERSION   (*GetVersion)      (void);                             ///< Pointer to \ref ARM_SPI_GetVersion : Get driver version.
-  ARM_SPI_CAPABILITIES (*GetCapabilities) (void);                             ///< Pointer to \ref ARM_SPI_GetCapabilities : Get driver capabilities.
-  int32_t              (*Initialize)      (ARM_SPI_SignalEvent_t cb_event);   ///< Pointer to \ref ARM_SPI_Initialize : Initialize SPI Interface.
-  int32_t              (*Uninitialize)    (void);                             ///< Pointer to \ref ARM_SPI_Uninitialize : De-initialize SPI Interface.
-  int32_t              (*PowerControl)    (ARM_POWER_STATE state);            ///< Pointer to \ref ARM_SPI_PowerControl : Control SPI Interface Power.
-  int32_t              (*Send)            (const void *data, uint32_t num);   ///< Pointer to \ref ARM_SPI_Send : Start sending data to SPI Interface.
-  int32_t              (*Receive)         (      void *data, uint32_t num);   ///< Pointer to \ref ARM_SPI_Receive : Start receiving data from SPI Interface.
-  int32_t              (*Transfer)        (const void *data_out,
-                                                 void *data_in,
-                                           uint32_t    num);                  ///< Pointer to \ref ARM_SPI_Transfer : Start sending/receiving data to/from SPI.
-  uint32_t             (*GetDataCount)    (void);                             ///< Pointer to \ref ARM_SPI_GetDataCount : Get transferred data count.
-  int32_t              (*Control)         (uint32_t control, uint32_t arg);   ///< Pointer to \ref ARM_SPI_Control : Control SPI Interface.
-  ARM_SPI_STATUS       (*GetStatus)       (void);                             ///< Pointer to \ref ARM_SPI_GetStatus : Get SPI status.
+	ARM_DRIVER_VERSION(*GetVersion)(
+	        void);                                      ///< Pointer to \ref ARM_SPI_GetVersion : Get driver version.
+	ARM_SPI_CAPABILITIES(*GetCapabilities)(
+	        void);                               ///< Pointer to \ref ARM_SPI_GetCapabilities : Get driver capabilities.
+	int32_t (*Initialize)(ARM_SPI_SignalEvent_t
+	        cb_event);                      ///< Pointer to \ref ARM_SPI_Initialize : Initialize SPI Interface.
+	int32_t (*Uninitialize)(
+	        void);                                              ///< Pointer to \ref ARM_SPI_Uninitialize : De-initialize SPI Interface.
+	int32_t (*PowerControl)(ARM_POWER_STATE
+	        state);                             ///< Pointer to \ref ARM_SPI_PowerControl : Control SPI Interface Power.
+	int32_t (*Send)(const void *data, uint32_t
+	        num);                            ///< Pointer to \ref ARM_SPI_Send : Start sending data to SPI Interface.
+	int32_t (*Receive)(void *data, uint32_t
+	        num);                               ///< Pointer to \ref ARM_SPI_Receive : Start receiving data from SPI Interface.
+	int32_t (*Transfer)(const void *data_out,
+	        void *data_in,
+	        uint32_t    num);                  ///< Pointer to \ref ARM_SPI_Transfer : Start sending/receiving data to/from SPI.
+	uint32_t (*GetDataCount)(
+	        void);                                             ///< Pointer to \ref ARM_SPI_GetDataCount : Get transferred data count.
+	int32_t (*Control)(uint32_t control,
+	        uint32_t arg);                         ///< Pointer to \ref ARM_SPI_Control : Control SPI Interface.
+	ARM_SPI_STATUS(*GetStatus)(
+	        void);                                           ///< Pointer to \ref ARM_SPI_GetStatus : Get SPI status.
 } const ARM_DRIVER_SPI;
 
 #ifdef  __cplusplus

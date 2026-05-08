@@ -31,95 +31,89 @@
 #endif
 
 /*! @brief Error codes for the UART driver. */
-enum
-{
-    kStatus_UART_TxBusy              = MAKE_STATUS(kStatusGroup_IUART, 0), /*!< Transmitter is busy. */
-    kStatus_UART_RxBusy              = MAKE_STATUS(kStatusGroup_IUART, 1), /*!< Receiver is busy. */
-    kStatus_UART_TxIdle              = MAKE_STATUS(kStatusGroup_IUART, 2), /*!< UART transmitter is idle. */
-    kStatus_UART_RxIdle              = MAKE_STATUS(kStatusGroup_IUART, 3), /*!< UART receiver is idle. */
-    kStatus_UART_TxWatermarkTooLarge = MAKE_STATUS(kStatusGroup_IUART, 4), /*!< TX FIFO watermark too large  */
-    kStatus_UART_RxWatermarkTooLarge = MAKE_STATUS(kStatusGroup_IUART, 5), /*!< RX FIFO watermark too large  */
-    kStatus_UART_FlagCannotClearManually =
-        MAKE_STATUS(kStatusGroup_IUART, 6),                                /*!< UART flag can't be manually cleared. */
-    kStatus_UART_Error               = MAKE_STATUS(kStatusGroup_IUART, 7), /*!< Error happens on UART. */
-    kStatus_UART_RxRingBufferOverrun = MAKE_STATUS(kStatusGroup_IUART, 8), /*!< UART RX software ring buffer overrun. */
-    kStatus_UART_RxHardwareOverrun   = MAKE_STATUS(kStatusGroup_IUART, 9), /*!< UART RX receiver overrun. */
-    kStatus_UART_NoiseError          = MAKE_STATUS(kStatusGroup_IUART, 10), /*!< UART noise error. */
-    kStatus_UART_FramingError        = MAKE_STATUS(kStatusGroup_IUART, 11), /*!< UART framing error. */
-    kStatus_UART_ParityError         = MAKE_STATUS(kStatusGroup_IUART, 12), /*!< UART parity error. */
-    kStatus_UART_BaudrateNotSupport =
-        MAKE_STATUS(kStatusGroup_IUART, 13), /*!< Baudrate is not support in current clock source */
-    kStatus_UART_BreakDetect = MAKE_STATUS(kStatusGroup_IUART, 14), /*!< Receiver detect BREAK signal */
-    kStatus_UART_Timeout     = MAKE_STATUS(kStatusGroup_IUART, 15), /*!< UART times out. */
+enum {
+	kStatus_UART_TxBusy              = MAKE_STATUS(kStatusGroup_IUART, 0), /*!< Transmitter is busy. */
+	kStatus_UART_RxBusy              = MAKE_STATUS(kStatusGroup_IUART, 1), /*!< Receiver is busy. */
+	kStatus_UART_TxIdle              = MAKE_STATUS(kStatusGroup_IUART, 2), /*!< UART transmitter is idle. */
+	kStatus_UART_RxIdle              = MAKE_STATUS(kStatusGroup_IUART, 3), /*!< UART receiver is idle. */
+	kStatus_UART_TxWatermarkTooLarge = MAKE_STATUS(kStatusGroup_IUART, 4), /*!< TX FIFO watermark too large  */
+	kStatus_UART_RxWatermarkTooLarge = MAKE_STATUS(kStatusGroup_IUART, 5), /*!< RX FIFO watermark too large  */
+	kStatus_UART_FlagCannotClearManually =
+	        MAKE_STATUS(kStatusGroup_IUART, 6),                                /*!< UART flag can't be manually cleared. */
+	kStatus_UART_Error               = MAKE_STATUS(kStatusGroup_IUART, 7), /*!< Error happens on UART. */
+	kStatus_UART_RxRingBufferOverrun = MAKE_STATUS(kStatusGroup_IUART, 8), /*!< UART RX software ring buffer overrun. */
+	kStatus_UART_RxHardwareOverrun   = MAKE_STATUS(kStatusGroup_IUART, 9), /*!< UART RX receiver overrun. */
+	kStatus_UART_NoiseError          = MAKE_STATUS(kStatusGroup_IUART, 10), /*!< UART noise error. */
+	kStatus_UART_FramingError        = MAKE_STATUS(kStatusGroup_IUART, 11), /*!< UART framing error. */
+	kStatus_UART_ParityError         = MAKE_STATUS(kStatusGroup_IUART, 12), /*!< UART parity error. */
+	kStatus_UART_BaudrateNotSupport =
+	        MAKE_STATUS(kStatusGroup_IUART, 13), /*!< Baudrate is not support in current clock source */
+	kStatus_UART_BreakDetect = MAKE_STATUS(kStatusGroup_IUART, 14), /*!< Receiver detect BREAK signal */
+	kStatus_UART_Timeout     = MAKE_STATUS(kStatusGroup_IUART, 15), /*!< UART times out. */
 };
 
 /*! @brief UART data bits count. */
-typedef enum _uart_data_bits
-{
-    kUART_SevenDataBits = 0x0U, /*!< Seven data bit */
-    kUART_EightDataBits = 0x1U, /*!< Eight data bit */
+typedef enum _uart_data_bits {
+	kUART_SevenDataBits = 0x0U, /*!< Seven data bit */
+	kUART_EightDataBits = 0x1U, /*!< Eight data bit */
 } uart_data_bits_t;
 
 /*! @brief UART parity mode. */
-typedef enum _uart_parity_mode
-{
-    kUART_ParityDisabled = 0x0U, /*!< Parity disabled */
-    kUART_ParityEven     = 0x2U, /*!< Even error check is selected */
-    kUART_ParityOdd      = 0x3U, /*!< Odd error check is selected */
+typedef enum _uart_parity_mode {
+	kUART_ParityDisabled = 0x0U, /*!< Parity disabled */
+	kUART_ParityEven     = 0x2U, /*!< Even error check is selected */
+	kUART_ParityOdd      = 0x3U, /*!< Odd error check is selected */
 } uart_parity_mode_t;
 
 /*! @brief UART stop bit count. */
-typedef enum _uart_stop_bit_count
-{
-    kUART_OneStopBit = 0x0U, /*!< One stop bit */
-    kUART_TwoStopBit = 0x1U, /*!< Two stop bits */
+typedef enum _uart_stop_bit_count {
+	kUART_OneStopBit = 0x0U, /*!< One stop bit */
+	kUART_TwoStopBit = 0x1U, /*!< Two stop bits */
 } uart_stop_bit_count_t;
 
 /*! @brief UART idle condition detect. */
-typedef enum _uart_idle_condition
-{
-    kUART_IdleFor4Frames  = 0x0U, /*!< Idle for more than 4 frames */
-    kUART_IdleFor8Frames  = 0x1U, /*!< Idle for more than 8 frames */
-    kUART_IdleFor16Frames = 0x2U, /*!< Idle for more than 16 frames */
-    kUART_IdleFor32Frames = 0x3U, /*!< Idle for more than 32 frames */
+typedef enum _uart_idle_condition {
+	kUART_IdleFor4Frames  = 0x0U, /*!< Idle for more than 4 frames */
+	kUART_IdleFor8Frames  = 0x1U, /*!< Idle for more than 8 frames */
+	kUART_IdleFor16Frames = 0x2U, /*!< Idle for more than 16 frames */
+	kUART_IdleFor32Frames = 0x3U, /*!< Idle for more than 32 frames */
 } uart_idle_condition_t;
 
 /*! @brief This structure contains the settings for all of the UART interrupt configurations. */
-enum _uart_interrupt_enable
-{
-    kUART_AutoBaudEnable    = 0x1U,         /* !< Automatic baud rate detection Interrupt Enable. */
-    kUART_TxReadyEnable     = (0X1U << 1),  /* !< transmitter ready Interrupt Enable. */
-    kUART_IdleEnable        = (0x1U << 2),  /* !< IDLE Interrupt Enable. */
-    kUART_RxReadyEnable     = (0x1U << 3),  /* !< Receiver Ready Interrupt Enable. */
-    kUART_TxEmptyEnable     = (0x1U << 4),  /* !< Transmitter Empty Interrupt Enable. */
-    kUART_RtsDeltaEnable    = (0x1U << 5),  /* !< RTS Delta Interrupt Enable. */
-    kUART_EscapeEnable      = (0x1U << 8),  /* !< Escape Sequence Interrupt Enable. */
-    kUART_RtsEnable         = (0x1U << 9),  /* !< Request to Send Interrupt Enable. */
-    kUART_AgingTimerEnable  = (0x1U << 10), /* !< Aging Timer Interrupt Enable. */
-    kUART_DtrEnable         = (0x1U << 12), /* !< Data Terminal Ready Interrupt Enable. */
-    kUART_ParityErrorEnable = (0x1U << 13), /* !< Parity Error Interrupt Enable.  */
-    kUART_FrameErrorEnable  = (0x1U << 14), /* !< Frame Error Interrupt Enable. */
-    kUART_DcdEnable         = (0x1U << 15), /* !< Data Carrier Detect Interrupt Enable. */
-    kUART_RiEnable          = (0x1U << 16), /* !< Ring Indicator Interrupt Enable. */
-    kUART_RxDsEnable        = (0x1U << 17), /* !< Receive Status Interrupt Enable. */
-    kUART_tAirWakeEnable    = (0x1U << 18), /* !< Asynchronous IR WAKE Interrupt Enable. */
-    kUART_AwakeEnable       = (0x1U << 19), /* !< Asynchronous WAKE Interrupt Enable. */
-    kUART_DtrDeltaEnable    = (0x1U << 20), /* !< Data Terminal Ready Delta Interrupt Enable. */
-    kUART_AutoBaudCntEnable = (0x1U << 21), /* !< Auto-baud Counter Interrupt Enable. */
-    kUART_IrEnable          = (0X1U << 24), /* !< Serial Infrared Interrupt Enable. */
-    kUART_WakeEnable        = (0X1U << 25), /* !< WAKE Interrupt Enable. */
-    kUART_TxCompleteEnable  = (0X1U << 26), /* !< TransmitComplete Interrupt Enable. */
-    kUART_BreakDetectEnable = (0X1U << 27), /* !< BREAK Condition Detected Interrupt Enable. */
-    kUART_RxOverrunEnable   = (0X1U << 28), /* !< Receiver Overrun Interrupt Enable. */
-    kUART_RxDataReadyEnable = (0X1U << 29), /* !< Receive Data Ready Interrupt Enable. */
-    kUART_RxDmaIdleEnable   = (0X1U << 30), /* !< Receive DMA IDLE detect Interrupt Enable. */
-    kUART_AllInterruptsEnable =
-        kUART_AutoBaudEnable | kUART_TxReadyEnable | kUART_IdleEnable | kUART_RxReadyEnable | kUART_TxEmptyEnable |
-        kUART_RtsDeltaEnable | kUART_EscapeEnable | kUART_RtsEnable | kUART_AgingTimerEnable | kUART_DtrEnable |
-        kUART_ParityErrorEnable | kUART_FrameErrorEnable | kUART_DcdEnable | kUART_RiEnable | kUART_RxDsEnable |
-        kUART_tAirWakeEnable | kUART_AwakeEnable | kUART_DtrDeltaEnable | kUART_AutoBaudCntEnable | kUART_IrEnable |
-        kUART_WakeEnable | kUART_TxCompleteEnable | kUART_BreakDetectEnable | kUART_RxOverrunEnable |
-        kUART_RxDataReadyEnable | kUART_RxDmaIdleEnable,
+enum _uart_interrupt_enable {
+	kUART_AutoBaudEnable    = 0x1U,         /* !< Automatic baud rate detection Interrupt Enable. */
+	kUART_TxReadyEnable     = (0X1U << 1),  /* !< transmitter ready Interrupt Enable. */
+	kUART_IdleEnable        = (0x1U << 2),  /* !< IDLE Interrupt Enable. */
+	kUART_RxReadyEnable     = (0x1U << 3),  /* !< Receiver Ready Interrupt Enable. */
+	kUART_TxEmptyEnable     = (0x1U << 4),  /* !< Transmitter Empty Interrupt Enable. */
+	kUART_RtsDeltaEnable    = (0x1U << 5),  /* !< RTS Delta Interrupt Enable. */
+	kUART_EscapeEnable      = (0x1U << 8),  /* !< Escape Sequence Interrupt Enable. */
+	kUART_RtsEnable         = (0x1U << 9),  /* !< Request to Send Interrupt Enable. */
+	kUART_AgingTimerEnable  = (0x1U << 10), /* !< Aging Timer Interrupt Enable. */
+	kUART_DtrEnable         = (0x1U << 12), /* !< Data Terminal Ready Interrupt Enable. */
+	kUART_ParityErrorEnable = (0x1U << 13), /* !< Parity Error Interrupt Enable.  */
+	kUART_FrameErrorEnable  = (0x1U << 14), /* !< Frame Error Interrupt Enable. */
+	kUART_DcdEnable         = (0x1U << 15), /* !< Data Carrier Detect Interrupt Enable. */
+	kUART_RiEnable          = (0x1U << 16), /* !< Ring Indicator Interrupt Enable. */
+	kUART_RxDsEnable        = (0x1U << 17), /* !< Receive Status Interrupt Enable. */
+	kUART_tAirWakeEnable    = (0x1U << 18), /* !< Asynchronous IR WAKE Interrupt Enable. */
+	kUART_AwakeEnable       = (0x1U << 19), /* !< Asynchronous WAKE Interrupt Enable. */
+	kUART_DtrDeltaEnable    = (0x1U << 20), /* !< Data Terminal Ready Delta Interrupt Enable. */
+	kUART_AutoBaudCntEnable = (0x1U << 21), /* !< Auto-baud Counter Interrupt Enable. */
+	kUART_IrEnable          = (0X1U << 24), /* !< Serial Infrared Interrupt Enable. */
+	kUART_WakeEnable        = (0X1U << 25), /* !< WAKE Interrupt Enable. */
+	kUART_TxCompleteEnable  = (0X1U << 26), /* !< TransmitComplete Interrupt Enable. */
+	kUART_BreakDetectEnable = (0X1U << 27), /* !< BREAK Condition Detected Interrupt Enable. */
+	kUART_RxOverrunEnable   = (0X1U << 28), /* !< Receiver Overrun Interrupt Enable. */
+	kUART_RxDataReadyEnable = (0X1U << 29), /* !< Receive Data Ready Interrupt Enable. */
+	kUART_RxDmaIdleEnable   = (0X1U << 30), /* !< Receive DMA IDLE detect Interrupt Enable. */
+	kUART_AllInterruptsEnable =
+	        kUART_AutoBaudEnable | kUART_TxReadyEnable | kUART_IdleEnable | kUART_RxReadyEnable | kUART_TxEmptyEnable |
+	        kUART_RtsDeltaEnable | kUART_EscapeEnable | kUART_RtsEnable | kUART_AgingTimerEnable | kUART_DtrEnable |
+	        kUART_ParityErrorEnable | kUART_FrameErrorEnable | kUART_DcdEnable | kUART_RiEnable | kUART_RxDsEnable |
+	        kUART_tAirWakeEnable | kUART_AwakeEnable | kUART_DtrDeltaEnable | kUART_AutoBaudCntEnable | kUART_IrEnable |
+	        kUART_WakeEnable | kUART_TxCompleteEnable | kUART_BreakDetectEnable | kUART_RxOverrunEnable |
+	        kUART_RxDataReadyEnable | kUART_RxDmaIdleEnable,
 };
 
 /*!
@@ -127,67 +121,64 @@ enum _uart_interrupt_enable
  *
  * This provides constants for the UART status flags for use in the UART functions.
  */
-enum
-{
-    kUART_RxCharReadyFlag         = 0x0000000FU, /*!< Rx Character Ready Flag. */
-    kUART_RxErrorFlag             = 0x0000000EU, /*!< Rx Error Detect Flag. */
-    kUART_RxOverrunErrorFlag      = 0x0000000DU, /*!< Rx Overrun Flag. */
-    kUART_RxFrameErrorFlag        = 0x0000000CU, /*!< Rx Frame Error Flag. */
-    kUART_RxBreakDetectFlag       = 0x0000000BU, /*!< Rx Break Detect Flag. */
-    kUART_RxParityErrorFlag       = 0x0000000AU, /*!< Rx Parity Error Flag. */
-    kUART_ParityErrorFlag         = 0x0094000FU, /*!< Parity Error Interrupt Flag. */
-    kUART_RtsStatusFlag           = 0x0094000EU, /*!< RTS_B Pin Status Flag. */
-    kUART_TxReadyFlag             = 0x0094000DU, /*!< Transmitter Ready Interrupt/DMA Flag. */
-    kUART_RtsDeltaFlag            = 0x0094000CU, /*!< RTS Delta Flag. */
-    kUART_EscapeFlag              = 0x0094000BU, /*!< Escape Sequence Interrupt Flag. */
-    kUART_FrameErrorFlag          = 0x0094000AU, /*!< Frame Error Interrupt Flag. */
-    kUART_RxReadyFlag             = 0x00940009U, /*!< Receiver Ready Interrupt/DMA Flag. */
-    kUART_AgingTimerFlag          = 0x00940008U, /*!< Aging Timer Interrupt Flag. */
-    kUART_DtrDeltaFlag            = 0x00940007U, /*!< DTR Delta Flag. */
-    kUART_RxDsFlag                = 0x00940006U, /*!< Receiver IDLE Interrupt Flag. */
-    kUART_tAirWakeFlag            = 0x00940005U, /*!< Asynchronous IR WAKE Interrupt Flag. */
-    kUART_AwakeFlag               = 0x00940004U, /*!< Asynchronous WAKE Interrupt Flag. */
-    kUART_Rs485SlaveAddrMatchFlag = 0x00940003U, /*!< RS-485 Slave Address Detected Interrupt Flag. */
-    kUART_AutoBaudFlag            = 0x0098000FU, /*!< Automatic Baud Rate Detect Complete Flag. */
-    kUART_TxEmptyFlag             = 0x0098000EU, /*!< Transmit Buffer FIFO Empty. */
-    kUART_DtrFlag                 = 0x0098000DU, /*!< DTR edge triggered interrupt flag. */
-    kUART_IdleFlag                = 0x0098000CU, /*!< Idle Condition Flag. */
-    kUART_AutoBaudCntStopFlag     = 0x0098000BU, /*!< Auto-baud Counter Stopped Flag. */
-    kUART_RiDeltaFlag             = 0x0098000AU, /*!< Ring Indicator Delta Flag. */
-    kUART_RiFlag                  = 0x00980009U, /*!< Ring Indicator Input Flag. */
-    kUART_IrFlag                  = 0x00980008U, /*!< Serial Infrared Interrupt Flag. */
-    kUART_WakeFlag                = 0x00980007U, /*!< Wake Flag. */
-    kUART_DcdDeltaFlag            = 0x00980006U, /*!< Data Carrier Detect Delta Flag. */
-    kUART_DcdFlag                 = 0x00980005U, /*!< Data Carrier Detect Input Flag. */
-    kUART_RtsFlag                 = 0x00980004U, /*!< RTS Edge Triggered Interrupt Flag. */
-    kUART_TxCompleteFlag          = 0x00980003U, /*!< Transmitter Complete Flag. */
-    kUART_BreakDetectFlag         = 0x00980002U, /*!< BREAK Condition Detected Flag. */
-    kUART_RxOverrunFlag           = 0x00980001U, /*!< Overrun Error Flag. */
-    kUART_RxDataReadyFlag         = 0x00980000U, /*!< Receive Data Ready Flag. */
+enum {
+	kUART_RxCharReadyFlag         = 0x0000000FU, /*!< Rx Character Ready Flag. */
+	kUART_RxErrorFlag             = 0x0000000EU, /*!< Rx Error Detect Flag. */
+	kUART_RxOverrunErrorFlag      = 0x0000000DU, /*!< Rx Overrun Flag. */
+	kUART_RxFrameErrorFlag        = 0x0000000CU, /*!< Rx Frame Error Flag. */
+	kUART_RxBreakDetectFlag       = 0x0000000BU, /*!< Rx Break Detect Flag. */
+	kUART_RxParityErrorFlag       = 0x0000000AU, /*!< Rx Parity Error Flag. */
+	kUART_ParityErrorFlag         = 0x0094000FU, /*!< Parity Error Interrupt Flag. */
+	kUART_RtsStatusFlag           = 0x0094000EU, /*!< RTS_B Pin Status Flag. */
+	kUART_TxReadyFlag             = 0x0094000DU, /*!< Transmitter Ready Interrupt/DMA Flag. */
+	kUART_RtsDeltaFlag            = 0x0094000CU, /*!< RTS Delta Flag. */
+	kUART_EscapeFlag              = 0x0094000BU, /*!< Escape Sequence Interrupt Flag. */
+	kUART_FrameErrorFlag          = 0x0094000AU, /*!< Frame Error Interrupt Flag. */
+	kUART_RxReadyFlag             = 0x00940009U, /*!< Receiver Ready Interrupt/DMA Flag. */
+	kUART_AgingTimerFlag          = 0x00940008U, /*!< Aging Timer Interrupt Flag. */
+	kUART_DtrDeltaFlag            = 0x00940007U, /*!< DTR Delta Flag. */
+	kUART_RxDsFlag                = 0x00940006U, /*!< Receiver IDLE Interrupt Flag. */
+	kUART_tAirWakeFlag            = 0x00940005U, /*!< Asynchronous IR WAKE Interrupt Flag. */
+	kUART_AwakeFlag               = 0x00940004U, /*!< Asynchronous WAKE Interrupt Flag. */
+	kUART_Rs485SlaveAddrMatchFlag = 0x00940003U, /*!< RS-485 Slave Address Detected Interrupt Flag. */
+	kUART_AutoBaudFlag            = 0x0098000FU, /*!< Automatic Baud Rate Detect Complete Flag. */
+	kUART_TxEmptyFlag             = 0x0098000EU, /*!< Transmit Buffer FIFO Empty. */
+	kUART_DtrFlag                 = 0x0098000DU, /*!< DTR edge triggered interrupt flag. */
+	kUART_IdleFlag                = 0x0098000CU, /*!< Idle Condition Flag. */
+	kUART_AutoBaudCntStopFlag     = 0x0098000BU, /*!< Auto-baud Counter Stopped Flag. */
+	kUART_RiDeltaFlag             = 0x0098000AU, /*!< Ring Indicator Delta Flag. */
+	kUART_RiFlag                  = 0x00980009U, /*!< Ring Indicator Input Flag. */
+	kUART_IrFlag                  = 0x00980008U, /*!< Serial Infrared Interrupt Flag. */
+	kUART_WakeFlag                = 0x00980007U, /*!< Wake Flag. */
+	kUART_DcdDeltaFlag            = 0x00980006U, /*!< Data Carrier Detect Delta Flag. */
+	kUART_DcdFlag                 = 0x00980005U, /*!< Data Carrier Detect Input Flag. */
+	kUART_RtsFlag                 = 0x00980004U, /*!< RTS Edge Triggered Interrupt Flag. */
+	kUART_TxCompleteFlag          = 0x00980003U, /*!< Transmitter Complete Flag. */
+	kUART_BreakDetectFlag         = 0x00980002U, /*!< BREAK Condition Detected Flag. */
+	kUART_RxOverrunFlag           = 0x00980001U, /*!< Overrun Error Flag. */
+	kUART_RxDataReadyFlag         = 0x00980000U, /*!< Receive Data Ready Flag. */
 };
 
 /*! @brief UART configuration structure. */
-typedef struct _uart_config
-{
-    uint32_t baudRate_Bps;              /*!< UART baud rate. */
-    uart_parity_mode_t parityMode;      /*!< Parity error check mode of this module. */
-    uart_data_bits_t dataBitsCount;     /*!< Data bits count, eight (default), seven */
-    uart_stop_bit_count_t stopBitCount; /*!< Number of stop bits in one frame. */
-    uint8_t txFifoWatermark;            /*!< TX FIFO watermark */
-    uint8_t rxFifoWatermark;            /*!< RX FIFO watermark */
-    uint8_t rxRTSWatermark; /*!< RX RTS watermark, RX FIFO data count being larger than this triggers RTS deassertion */
-    bool enableAutoBaudRate; /*!< Enable automatic baud rate detection */
-    bool enableTx;           /*!< Enable TX */
-    bool enableRx;           /*!< Enable RX */
-    bool enableRxRTS;        /*!< RX RTS enable */
-    bool enableTxCTS;        /*!< TX CTS enable */
+typedef struct _uart_config {
+	uint32_t baudRate_Bps;              /*!< UART baud rate. */
+	uart_parity_mode_t parityMode;      /*!< Parity error check mode of this module. */
+	uart_data_bits_t dataBitsCount;     /*!< Data bits count, eight (default), seven */
+	uart_stop_bit_count_t stopBitCount; /*!< Number of stop bits in one frame. */
+	uint8_t txFifoWatermark;            /*!< TX FIFO watermark */
+	uint8_t rxFifoWatermark;            /*!< RX FIFO watermark */
+	uint8_t rxRTSWatermark; /*!< RX RTS watermark, RX FIFO data count being larger than this triggers RTS deassertion */
+	bool enableAutoBaudRate; /*!< Enable automatic baud rate detection */
+	bool enableTx;           /*!< Enable TX */
+	bool enableRx;           /*!< Enable RX */
+	bool enableRxRTS;        /*!< RX RTS enable */
+	bool enableTxCTS;        /*!< TX CTS enable */
 } uart_config_t;
 
 /*! @brief UART transfer structure. */
-typedef struct _uart_transfer
-{
-    uint8_t *data;   /*!< The buffer of data to be transfer.*/
-    size_t dataSize; /*!< The byte count to be transfer. */
+typedef struct _uart_transfer {
+	uint8_t *data;   /*!< The buffer of data to be transfer.*/
+	size_t dataSize; /*!< The byte count to be transfer. */
 } uart_transfer_t;
 
 /*! @brief Forward declaration of the handle typedef. */
@@ -197,25 +188,24 @@ typedef struct _uart_handle uart_handle_t;
 typedef void (*uart_transfer_callback_t)(UART_Type *base, uart_handle_t *handle, status_t status, void *userData);
 
 /*! @brief UART handle structure. */
-struct _uart_handle
-{
-    uint8_t *volatile txData;   /*!< Address of remaining data to send. */
-    volatile size_t txDataSize; /*!< Size of the remaining data to send. */
-    size_t txDataSizeAll;       /*!< Size of the data to send out. */
-    uint8_t *volatile rxData;   /*!< Address of remaining data to receive. */
-    volatile size_t rxDataSize; /*!< Size of the remaining data to receive. */
-    size_t rxDataSizeAll;       /*!< Size of the data to receive. */
+struct _uart_handle {
+	uint8_t *volatile txData;   /*!< Address of remaining data to send. */
+	volatile size_t txDataSize; /*!< Size of the remaining data to send. */
+	size_t txDataSizeAll;       /*!< Size of the data to send out. */
+	uint8_t *volatile rxData;   /*!< Address of remaining data to receive. */
+	volatile size_t rxDataSize; /*!< Size of the remaining data to receive. */
+	size_t rxDataSizeAll;       /*!< Size of the data to receive. */
 
-    uint8_t *rxRingBuffer;              /*!< Start address of the receiver ring buffer. */
-    size_t rxRingBufferSize;            /*!< Size of the ring buffer. */
-    volatile uint16_t rxRingBufferHead; /*!< Index for the driver to store received data into ring buffer. */
-    volatile uint16_t rxRingBufferTail; /*!< Index for the user to get data from the ring buffer. */
+	uint8_t *rxRingBuffer;              /*!< Start address of the receiver ring buffer. */
+	size_t rxRingBufferSize;            /*!< Size of the ring buffer. */
+	volatile uint16_t rxRingBufferHead; /*!< Index for the driver to store received data into ring buffer. */
+	volatile uint16_t rxRingBufferTail; /*!< Index for the user to get data from the ring buffer. */
 
-    uart_transfer_callback_t callback; /*!< Callback function. */
-    void *userData;                    /*!< UART callback function parameter.*/
+	uart_transfer_callback_t callback; /*!< Callback function. */
+	void *userData;                    /*!< UART callback function parameter.*/
 
-    volatile uint8_t txState; /*!< TX transfer state. */
-    volatile uint8_t rxState; /*!< RX transfer state */
+	volatile uint8_t txState; /*!< TX transfer state. */
+	volatile uint8_t rxState; /*!< RX transfer state */
 };
 /*******************************************************************************
  * API
@@ -248,10 +238,9 @@ uint32_t UART_GetInstance(UART_Type *base);
  */
 static inline void UART_SoftwareReset(UART_Type *base)
 {
-    base->UCR2 &= ~UART_UCR2_SRST_MASK;
-    while ((base->UCR2 & UART_UCR2_SRST_MASK) == 0U)
-    {
-    }
+	base->UCR2 &= ~UART_UCR2_SRST_MASK;
+	while ((base->UCR2 & UART_UCR2_SRST_MASK) == 0U) {
+	}
 }
 
 /* @} */
@@ -340,7 +329,7 @@ status_t UART_SetBaudRate(UART_Type *base, uint32_t baudRate_Bps, uint32_t srcCl
  */
 static inline void UART_Enable(UART_Type *base)
 {
-    base->UCR1 |= UART_UCR1_UARTEN_MASK;
+	base->UCR1 |= UART_UCR1_UARTEN_MASK;
 }
 
 /*!
@@ -351,7 +340,7 @@ static inline void UART_Enable(UART_Type *base)
  */
 static inline void UART_SetIdleCondition(UART_Type *base, uart_idle_condition_t condition)
 {
-    base->UCR1 = (base->UCR1 & ~UART_UCR1_ICD_MASK) | UART_UCR1_ICD(condition);
+	base->UCR1 = (base->UCR1 & ~UART_UCR1_ICD_MASK) | UART_UCR1_ICD(condition);
 }
 
 /*!
@@ -361,7 +350,7 @@ static inline void UART_SetIdleCondition(UART_Type *base, uart_idle_condition_t 
  */
 static inline void UART_Disable(UART_Type *base)
 {
-    base->UCR1 &= ~UART_UCR1_UARTEN_MASK;
+	base->UCR1 &= ~UART_UCR1_UARTEN_MASK;
 }
 
 /* @} */
@@ -468,14 +457,11 @@ uint32_t UART_GetEnabledInterrupts(UART_Type *base);
  */
 static inline void UART_EnableTx(UART_Type *base, bool enable)
 {
-    if (enable)
-    {
-        base->UCR2 |= UART_UCR2_TXEN_MASK;
-    }
-    else
-    {
-        base->UCR2 &= ~UART_UCR2_TXEN_MASK;
-    }
+	if (enable) {
+		base->UCR2 |= UART_UCR2_TXEN_MASK;
+	} else {
+		base->UCR2 &= ~UART_UCR2_TXEN_MASK;
+	}
 }
 
 /*!
@@ -488,14 +474,11 @@ static inline void UART_EnableTx(UART_Type *base, bool enable)
  */
 static inline void UART_EnableRx(UART_Type *base, bool enable)
 {
-    if (enable)
-    {
-        base->UCR2 |= UART_UCR2_RXEN_MASK;
-    }
-    else
-    {
-        base->UCR2 &= ~UART_UCR2_RXEN_MASK;
-    }
+	if (enable) {
+		base->UCR2 |= UART_UCR2_RXEN_MASK;
+	} else {
+		base->UCR2 &= ~UART_UCR2_RXEN_MASK;
+	}
 }
 
 /*!
@@ -510,7 +493,7 @@ static inline void UART_EnableRx(UART_Type *base, bool enable)
  */
 static inline void UART_WriteByte(UART_Type *base, uint8_t data)
 {
-    base->UTXD = (uint32_t)data & UART_UTXD_TX_DATA_MASK;
+	base->UTXD = (uint32_t)data & UART_UTXD_TX_DATA_MASK;
 }
 
 /*!
@@ -525,7 +508,7 @@ static inline void UART_WriteByte(UART_Type *base, uint8_t data)
  */
 static inline uint8_t UART_ReadByte(UART_Type *base)
 {
-    return (uint8_t)((base->URXD & UART_URXD_RX_DATA_MASK) >> UART_URXD_RX_DATA_SHIFT);
+	return (uint8_t)((base->URXD & UART_URXD_RX_DATA_MASK) >> UART_URXD_RX_DATA_SHIFT);
 }
 
 /*!
@@ -580,9 +563,9 @@ status_t UART_ReadBlocking(UART_Type *base, uint8_t *data, size_t length);
  * @param userData The parameter of the callback function.
  */
 void UART_TransferCreateHandle(UART_Type *base,
-                               uart_handle_t *handle,
-                               uart_transfer_callback_t callback,
-                               void *userData);
+        uart_handle_t *handle,
+        uart_transfer_callback_t callback,
+        void *userData);
 
 /*!
  * @brief Sets up the RX ring buffer.
@@ -695,9 +678,9 @@ status_t UART_TransferGetSendCount(UART_Type *base, uart_handle_t *handle, uint3
  * @retval kStatus_InvalidArgument Invalid argument.
  */
 status_t UART_TransferReceiveNonBlocking(UART_Type *base,
-                                         uart_handle_t *handle,
-                                         uart_transfer_t *xfer,
-                                         size_t *receivedBytes);
+        uart_handle_t *handle,
+        uart_transfer_t *xfer,
+        size_t *receivedBytes);
 
 /*!
  * @brief Aborts the interrupt-driven data receiving.
@@ -753,16 +736,13 @@ void UART_TransferHandleIRQ(UART_Type *base, uart_handle_t *handle);
  */
 static inline void UART_EnableTxDMA(UART_Type *base, bool enable)
 {
-    assert(base != NULL);
+	assert(base != NULL);
 
-    if (enable)
-    {
-        base->UCR1 |= UART_UCR1_TXDMAEN_MASK;
-    }
-    else
-    {
-        base->UCR1 &= ~UART_UCR1_TXDMAEN_MASK;
-    }
+	if (enable) {
+		base->UCR1 |= UART_UCR1_TXDMAEN_MASK;
+	} else {
+		base->UCR1 &= ~UART_UCR1_TXDMAEN_MASK;
+	}
 }
 
 /*!
@@ -777,16 +757,13 @@ static inline void UART_EnableTxDMA(UART_Type *base, bool enable)
  */
 static inline void UART_EnableRxDMA(UART_Type *base, bool enable)
 {
-    assert(base != NULL);
+	assert(base != NULL);
 
-    if (enable)
-    {
-        base->UCR1 |= UART_UCR1_RXDMAEN_MASK;
-    }
-    else
-    {
-        base->UCR1 &= ~UART_UCR1_RXDMAEN_MASK;
-    }
+	if (enable) {
+		base->UCR1 |= UART_UCR1_RXDMAEN_MASK;
+	} else {
+		base->UCR1 &= ~UART_UCR1_RXDMAEN_MASK;
+	}
 }
 
 /*@}*/
@@ -806,8 +783,8 @@ static inline void UART_EnableRxDMA(UART_Type *base, bool enable)
  */
 static inline void UART_SetTxFifoWatermark(UART_Type *base, uint8_t watermark)
 {
-    assert((watermark >= 2U) && ((int32_t)watermark <= (int32_t)FSL_FEATURE_IUART_FIFO_SIZEn(base)));
-    base->UFCR = (base->UFCR & ~UART_UFCR_TXTL_MASK) | UART_UFCR_TXTL(watermark);
+	assert((watermark >= 2U) && ((int32_t)watermark <= (int32_t)FSL_FEATURE_IUART_FIFO_SIZEn(base)));
+	base->UFCR = (base->UFCR & ~UART_UFCR_TXTL_MASK) | UART_UFCR_TXTL(watermark);
 }
 
 /*!
@@ -821,8 +798,8 @@ static inline void UART_SetTxFifoWatermark(UART_Type *base, uint8_t watermark)
  */
 static inline void UART_SetRxRTSWatermark(UART_Type *base, uint8_t watermark)
 {
-    assert((int32_t)watermark <= (int32_t)FSL_FEATURE_IUART_FIFO_SIZEn(base));
-    base->UCR4 = (base->UCR4 & ~UART_UCR4_CTSTL_MASK) | UART_UCR4_CTSTL(watermark);
+	assert((int32_t)watermark <= (int32_t)FSL_FEATURE_IUART_FIFO_SIZEn(base));
+	base->UCR4 = (base->UCR4 & ~UART_UCR4_CTSTL_MASK) | UART_UCR4_CTSTL(watermark);
 }
 
 /*!
@@ -835,8 +812,8 @@ static inline void UART_SetRxRTSWatermark(UART_Type *base, uint8_t watermark)
  */
 static inline void UART_SetRxFifoWatermark(UART_Type *base, uint8_t watermark)
 {
-    assert((int32_t)watermark <= (int32_t)FSL_FEATURE_IUART_FIFO_SIZEn(base));
-    base->UFCR = (base->UFCR & ~UART_UFCR_RXTL_MASK) | UART_UFCR_RXTL(watermark);
+	assert((int32_t)watermark <= (int32_t)FSL_FEATURE_IUART_FIFO_SIZEn(base));
+	base->UFCR = (base->UFCR & ~UART_UFCR_RXTL_MASK) | UART_UFCR_RXTL(watermark);
 }
 
 /*@}*/
@@ -857,19 +834,16 @@ static inline void UART_SetRxFifoWatermark(UART_Type *base, uint8_t watermark)
  */
 static inline void UART_EnableAutoBaudRate(UART_Type *base, bool enable)
 {
-    if (enable)
-    {
-        /* When ADET=0 and ADBR=1, automatic baud rate detection starts */
-        /* Enable automatic baud rate detection */
-        base->UCR1 |= UART_UCR1_ADBR_MASK;
-        /* Clear ADET brfore start automatic baud rate detection*/
-        base->USR2 |= UART_USR2_ADET_MASK;
-    }
-    else
-    {
-        /* Disable automatic baud rate detection */
-        base->UCR1 &= ~UART_UCR1_ADBR_MASK;
-    }
+	if (enable) {
+		/* When ADET=0 and ADBR=1, automatic baud rate detection starts */
+		/* Enable automatic baud rate detection */
+		base->UCR1 |= UART_UCR1_ADBR_MASK;
+		/* Clear ADET brfore start automatic baud rate detection*/
+		base->USR2 |= UART_USR2_ADET_MASK;
+	} else {
+		/* Disable automatic baud rate detection */
+		base->UCR1 &= ~UART_UCR1_ADBR_MASK;
+	}
 }
 /*!
  * @brief This function is used to read if the automatic baud rate detection
@@ -881,15 +855,12 @@ static inline void UART_EnableAutoBaudRate(UART_Type *base, bool enable)
  */
 static inline bool UART_IsAutoBaudRateComplete(UART_Type *base)
 {
-    if ((UART_USR2_ACST_MASK & base->USR2) != 0U)
-    {
-        base->USR2 |= UART_USR2_ACST_MASK;
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+	if ((UART_USR2_ACST_MASK & base->USR2) != 0U) {
+		base->USR2 |= UART_USR2_ACST_MASK;
+		return true;
+	} else {
+		return false;
+	}
 }
 
 #ifdef __cplusplus

@@ -45,21 +45,19 @@ static const clock_ip_name_t s_pwmClock[] = PWM_CLOCKS;
  ******************************************************************************/
 static uint32_t PWM_GetInstance(PWM_Type *base)
 {
-    uint32_t instance;
-    uint32_t pwmArrayCount = (sizeof(s_pwmBases) / sizeof(s_pwmBases[0]));
+	uint32_t instance;
+	uint32_t pwmArrayCount = (sizeof(s_pwmBases) / sizeof(s_pwmBases[0]));
 
-    /* Find the instance index from base address mappings. */
-    for (instance = 0; instance < pwmArrayCount; instance++)
-    {
-        if (s_pwmBases[instance] == base)
-        {
-            break;
-        }
-    }
+	/* Find the instance index from base address mappings. */
+	for (instance = 0; instance < pwmArrayCount; instance++) {
+		if (s_pwmBases[instance] == base) {
+			break;
+		}
+	}
 
-    assert(instance < pwmArrayCount);
+	assert(instance < pwmArrayCount);
 
-    return instance;
+	return instance;
 }
 
 /*!
@@ -74,22 +72,22 @@ static uint32_t PWM_GetInstance(PWM_Type *base)
  */
 status_t PWM_Init(PWM_Type *base, const pwm_config_t *config)
 {
-    assert(config);
+	assert(config);
 
 #if !(defined(FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL) && FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL)
-    /* Ungate PWM clock */
-    CLOCK_EnableClock(s_pwmClock[PWM_GetInstance(base)]);
+	/* Ungate PWM clock */
+	CLOCK_EnableClock(s_pwmClock[PWM_GetInstance(base)]);
 #endif /* FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL */
 
-    /* Setup the PWM operation */
-    base->PWMCR = (PWM_PWMCR_REPEAT(config->sampleRepeat) | PWM_PWMCR_PRESCALER(config->prescale) |
-                   PWM_PWMCR_CLKSRC(config->clockSource) | PWM_PWMCR_POUTC(config->outputConfig) |
-                   PWM_PWMCR_HCTR(config->halfWordSwap) | PWM_PWMCR_BCTR(config->byteSwap) |
-                   PWM_PWMCR_STOPEN(config->enableStopMode) | PWM_PWMCR_DBGEN(config->enableDebugMode) |
-                   PWM_PWMCR_WAITEN(config->enableWaitMode) | PWM_PWMCR_DOZEN(config->enableDozeMode) |
-                   PWM_PWMCR_FWM(config->fifoWater));
+	/* Setup the PWM operation */
+	base->PWMCR = (PWM_PWMCR_REPEAT(config->sampleRepeat) | PWM_PWMCR_PRESCALER(config->prescale) |
+	                PWM_PWMCR_CLKSRC(config->clockSource) | PWM_PWMCR_POUTC(config->outputConfig) |
+	                PWM_PWMCR_HCTR(config->halfWordSwap) | PWM_PWMCR_BCTR(config->byteSwap) |
+	                PWM_PWMCR_STOPEN(config->enableStopMode) | PWM_PWMCR_DBGEN(config->enableDebugMode) |
+	                PWM_PWMCR_WAITEN(config->enableWaitMode) | PWM_PWMCR_DOZEN(config->enableDozeMode) |
+	                PWM_PWMCR_FWM(config->fifoWater));
 
-    return kStatus_Success;
+	return kStatus_Success;
 }
 
 /*!
@@ -99,12 +97,12 @@ status_t PWM_Init(PWM_Type *base, const pwm_config_t *config)
  */
 void PWM_Deinit(PWM_Type *base)
 {
-    /* Set clock source to none to disable counter */
-    base->PWMCR &= ~(PWM_PWMCR_CLKSRC_MASK);
+	/* Set clock source to none to disable counter */
+	base->PWMCR &= ~(PWM_PWMCR_CLKSRC_MASK);
 
 #if !(defined(FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL) && FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL)
-    /* Gate the PWM clock */
-    CLOCK_DisableClock(s_pwmClock[PWM_GetInstance(base)]);
+	/* Gate the PWM clock */
+	CLOCK_DisableClock(s_pwmClock[PWM_GetInstance(base)]);
 #endif /* FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL */
 }
 
@@ -129,31 +127,31 @@ void PWM_Deinit(PWM_Type *base)
  */
 void PWM_GetDefaultConfig(pwm_config_t *config)
 {
-    assert(config);
+	assert(config);
 
-    /* Initializes the configure structure to zero. */
-    (void)memset(config, 0, sizeof(*config));
+	/* Initializes the configure structure to zero. */
+	(void)memset(config, 0, sizeof(*config));
 
-    /* Stop mode disabled */
-    config->enableStopMode = false;
-    /* Doze mode disabled */
-    config->enableDozeMode = false;
-    /* Wait mode disabled */
-    config->enableWaitMode = false;
-    /* Debug mode disabled */
-    config->enableDebugMode = false;
-    /* Choose low frequency clock to control counter operation */
-    config->clockSource = kPWM_LowFrequencyClock;
-    /* PWM clock devide by (config->prescale + 1) */
-    config->prescale = 0U;
-    /* Output pin is set at rollover and cleared at comparison */
-    config->outputConfig = kPWM_SetAtRolloverAndClearAtcomparison;
-    /* FIFO empty flag is set when there are more than or equal to 2 empty slots in FIFO */
-    config->fifoWater = kPWM_FIFOWaterMark_2;
-    /* Use each sample once */
-    config->sampleRepeat = kPWM_EachSampleOnce;
-    /* byte ordering remains the same */
-    config->byteSwap = kPWM_ByteNoSwap;
-    /* Half word swapping does not take place */
-    config->halfWordSwap = kPWM_HalfWordNoSwap;
+	/* Stop mode disabled */
+	config->enableStopMode = false;
+	/* Doze mode disabled */
+	config->enableDozeMode = false;
+	/* Wait mode disabled */
+	config->enableWaitMode = false;
+	/* Debug mode disabled */
+	config->enableDebugMode = false;
+	/* Choose low frequency clock to control counter operation */
+	config->clockSource = kPWM_LowFrequencyClock;
+	/* PWM clock devide by (config->prescale + 1) */
+	config->prescale = 0U;
+	/* Output pin is set at rollover and cleared at comparison */
+	config->outputConfig = kPWM_SetAtRolloverAndClearAtcomparison;
+	/* FIFO empty flag is set when there are more than or equal to 2 empty slots in FIFO */
+	config->fifoWater = kPWM_FIFOWaterMark_2;
+	/* Use each sample once */
+	config->sampleRepeat = kPWM_EachSampleOnce;
+	/* byte ordering remains the same */
+	config->byteSwap = kPWM_ByteNoSwap;
+	/* Half word swapping does not take place */
+	config->halfWordSwap = kPWM_HalfWordNoSwap;
 }

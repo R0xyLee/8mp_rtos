@@ -31,11 +31,12 @@ __attribute__((section(".resource_table")))
 #endif
 
 const uint32_t resource_table[] = {
-    /* Version */
-    1,
+	/* Version */
+	1,
 
-    /* Number of table entries - resource table empty */
-    0,
+	/* Number of table entries - resource table empty */
+	0,
 
-    /* reserved fields */
-    0, 0};
+	/* reserved fields */
+	0, 0
+};

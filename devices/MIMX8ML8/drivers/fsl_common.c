@@ -9,10 +9,9 @@
 #include "fsl_common.h"
 #define SDK_MEM_MAGIC_NUMBER 12345U
 
-typedef struct _mem_align_control_block
-{
-    uint16_t identifier; /*!< Identifier for the memory control block. */
-    uint16_t offset;     /*!< offset from aligned address to real address */
+typedef struct _mem_align_control_block {
+	uint16_t identifier; /*!< Identifier for the memory control block. */
+	uint16_t offset;     /*!< offset from aligned address to real address */
 } mem_align_cb_t;
 
 /* Component ID definition, used by tools. */
@@ -28,49 +27,47 @@ uint32_t InstallIRQHandler(IRQn_Type irq, uint32_t irqHandler)
 #undef __VECTOR_TABLE
 #endif
 
-/* Addresses for VECTOR_TABLE and VECTOR_RAM come from the linker file */
+	/* Addresses for VECTOR_TABLE and VECTOR_RAM come from the linker file */
 #if defined(__CC_ARM) || defined(__ARMCC_VERSION)
-    extern uint32_t Image$$VECTOR_ROM$$Base[];
-    extern uint32_t Image$$VECTOR_RAM$$Base[];
-    extern uint32_t Image$$RW_m_data$$Base[];
+	extern uint32_t Image$$VECTOR_ROM$$Base[];
+	extern uint32_t Image$$VECTOR_RAM$$Base[];
+	extern uint32_t Image$$RW_m_data$$Base[];
 
 #define __VECTOR_TABLE          Image$$VECTOR_ROM$$Base
 #define __VECTOR_RAM            Image$$VECTOR_RAM$$Base
 #define __RAM_VECTOR_TABLE_SIZE (((uint32_t)Image$$RW_m_data$$Base - (uint32_t)Image$$VECTOR_RAM$$Base))
 #elif defined(__ICCARM__)
-    extern uint32_t __RAM_VECTOR_TABLE_SIZE[];
-    extern uint32_t __VECTOR_TABLE[];
-    extern uint32_t __VECTOR_RAM[];
+	extern uint32_t __RAM_VECTOR_TABLE_SIZE[];
+	extern uint32_t __VECTOR_TABLE[];
+	extern uint32_t __VECTOR_RAM[];
 #elif defined(__GNUC__)
-    extern uint32_t __VECTOR_TABLE[];
-    extern uint32_t __VECTOR_RAM[];
-    extern uint32_t __RAM_VECTOR_TABLE_SIZE_BYTES[];
-    uint32_t __RAM_VECTOR_TABLE_SIZE = (uint32_t)(__RAM_VECTOR_TABLE_SIZE_BYTES);
+	extern uint32_t __VECTOR_TABLE[];
+	extern uint32_t __VECTOR_RAM[];
+	extern uint32_t __RAM_VECTOR_TABLE_SIZE_BYTES[];
+	uint32_t __RAM_VECTOR_TABLE_SIZE = (uint32_t)(__RAM_VECTOR_TABLE_SIZE_BYTES);
 #endif /* defined(__CC_ARM) || defined(__ARMCC_VERSION) */
-    uint32_t n;
-    uint32_t ret;
-    uint32_t irqMaskValue;
+	uint32_t n;
+	uint32_t ret;
+	uint32_t irqMaskValue;
 
-    irqMaskValue = DisableGlobalIRQ();
-    if (SCB->VTOR != (uint32_t)__VECTOR_RAM)
-    {
-        /* Copy the vector table from ROM to RAM */
-        for (n = 0; n < ((uint32_t)__RAM_VECTOR_TABLE_SIZE) / sizeof(uint32_t); n++)
-        {
-            __VECTOR_RAM[n] = __VECTOR_TABLE[n];
-        }
-        /* Point the VTOR to the position of vector table */
-        SCB->VTOR = (uint32_t)__VECTOR_RAM;
-    }
+	irqMaskValue = DisableGlobalIRQ();
+	if (SCB->VTOR != (uint32_t)__VECTOR_RAM) {
+		/* Copy the vector table from ROM to RAM */
+		for (n = 0; n < ((uint32_t)__RAM_VECTOR_TABLE_SIZE) / sizeof(uint32_t); n++) {
+			__VECTOR_RAM[n] = __VECTOR_TABLE[n];
+		}
+		/* Point the VTOR to the position of vector table */
+		SCB->VTOR = (uint32_t)__VECTOR_RAM;
+	}
 
-    ret = __VECTOR_RAM[(int32_t)irq + 16];
-    /* make sure the __VECTOR_RAM is noncachable */
-    __VECTOR_RAM[(int32_t)irq + 16] = irqHandler;
+	ret = __VECTOR_RAM[(int32_t)irq + 16];
+	/* make sure the __VECTOR_RAM is noncachable */
+	__VECTOR_RAM[(int32_t)irq + 16] = irqHandler;
 
-    EnableGlobalIRQ(irqMaskValue);
-    SDK_ISR_EXIT_BARRIER;
+	EnableGlobalIRQ(irqMaskValue);
+	SDK_ISR_EXIT_BARRIER;
 
-    return ret;
+	return ret;
 }
 #endif /* ENABLE_RAM_VECTOR_TABLE. */
 #endif /* __GIC_PRIO_BITS. */
@@ -91,34 +88,32 @@ uint32_t InstallIRQHandler(IRQn_Type irq, uint32_t irqHandler)
 
 void EnableDeepSleepIRQ(IRQn_Type interrupt)
 {
-    uint32_t intNumber = (uint32_t)interrupt;
+	uint32_t intNumber = (uint32_t)interrupt;
 
-    uint32_t index = 0;
+	uint32_t index = 0;
 
-    while (intNumber >= 32u)
-    {
-        index++;
-        intNumber -= 32u;
-    }
+	while (intNumber >= 32u) {
+		index++;
+		intNumber -= 32u;
+	}
 
-    SYSCON->STARTERSET[index] = 1UL << intNumber;
-    (void)EnableIRQ(interrupt); /* also enable interrupt at NVIC */
+	SYSCON->STARTERSET[index] = 1UL << intNumber;
+	(void)EnableIRQ(interrupt); /* also enable interrupt at NVIC */
 }
 
 void DisableDeepSleepIRQ(IRQn_Type interrupt)
 {
-    uint32_t intNumber = (uint32_t)interrupt;
+	uint32_t intNumber = (uint32_t)interrupt;
 
-    (void)DisableIRQ(interrupt); /* also disable interrupt at NVIC */
-    uint32_t index = 0;
+	(void)DisableIRQ(interrupt); /* also disable interrupt at NVIC */
+	uint32_t index = 0;
 
-    while (intNumber >= 32u)
-    {
-        index++;
-        intNumber -= 32u;
-    }
+	while (intNumber >= 32u) {
+		index++;
+		intNumber -= 32u;
+	}
 
-    SYSCON->STARTERCLR[index] = 1UL << intNumber;
+	SYSCON->STARTERCLR[index] = 1UL << intNumber;
 }
 #endif /* FSL_FEATURE_SYSCON_STARTER_DISCONTINUOUS */
 #endif /* FSL_FEATURE_POWERLIB_EXTEND */
@@ -126,48 +121,44 @@ void DisableDeepSleepIRQ(IRQn_Type interrupt)
 
 void *SDK_Malloc(size_t size, size_t alignbytes)
 {
-    mem_align_cb_t *p_cb = NULL;
-    uint32_t alignedsize = SDK_SIZEALIGN(size, alignbytes) + alignbytes + sizeof(mem_align_cb_t);
-    union
-    {
-        void *pointer_value;
-        uint32_t unsigned_value;
-    } p_align_addr, p_addr;
+	mem_align_cb_t *p_cb = NULL;
+	uint32_t alignedsize = SDK_SIZEALIGN(size, alignbytes) + alignbytes + sizeof(mem_align_cb_t);
+	union {
+		void *pointer_value;
+		uint32_t unsigned_value;
+	} p_align_addr, p_addr;
 
-    p_addr.pointer_value = malloc(alignedsize);
+	p_addr.pointer_value = malloc(alignedsize);
 
-    if (p_addr.pointer_value == NULL)
-    {
-        return NULL;
-    }
+	if (p_addr.pointer_value == NULL) {
+		return NULL;
+	}
 
-    p_align_addr.unsigned_value = SDK_SIZEALIGN(p_addr.unsigned_value + sizeof(mem_align_cb_t), alignbytes);
+	p_align_addr.unsigned_value = SDK_SIZEALIGN(p_addr.unsigned_value + sizeof(mem_align_cb_t), alignbytes);
 
-    p_cb             = (mem_align_cb_t *)(p_align_addr.unsigned_value - 4U);
-    p_cb->identifier = SDK_MEM_MAGIC_NUMBER;
-    p_cb->offset     = (uint16_t)(p_align_addr.unsigned_value - p_addr.unsigned_value);
+	p_cb             = (mem_align_cb_t *)(p_align_addr.unsigned_value - 4U);
+	p_cb->identifier = SDK_MEM_MAGIC_NUMBER;
+	p_cb->offset     = (uint16_t)(p_align_addr.unsigned_value - p_addr.unsigned_value);
 
-    return p_align_addr.pointer_value;
+	return p_align_addr.pointer_value;
 }
 
 void SDK_Free(void *ptr)
 {
-    union
-    {
-        void *pointer_value;
-        uint32_t unsigned_value;
-    } p_free;
-    p_free.pointer_value = ptr;
-    mem_align_cb_t *p_cb = (mem_align_cb_t *)(p_free.unsigned_value - 4U);
+	union {
+		void *pointer_value;
+		uint32_t unsigned_value;
+	} p_free;
+	p_free.pointer_value = ptr;
+	mem_align_cb_t *p_cb = (mem_align_cb_t *)(p_free.unsigned_value - 4U);
 
-    if (p_cb->identifier != SDK_MEM_MAGIC_NUMBER)
-    {
-        return;
-    }
+	if (p_cb->identifier != SDK_MEM_MAGIC_NUMBER) {
+		return;
+	}
 
-    p_free.unsigned_value = p_free.unsigned_value - p_cb->offset;
+	p_free.unsigned_value = p_free.unsigned_value - p_cb->offset;
 
-    free(p_free.pointer_value);
+	free(p_free.pointer_value);
 }
 
 /*!
@@ -178,36 +169,34 @@ void SDK_Free(void *ptr)
 #if defined(SDK_DELAY_USE_DWT) && defined(DWT)
 static void enableCpuCycleCounter(void)
 {
-    /* Make sure the DWT trace fucntion is enabled. */
-    if (CoreDebug_DEMCR_TRCENA_Msk != (CoreDebug_DEMCR_TRCENA_Msk & CoreDebug->DEMCR))
-    {
-        CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
-    }
+	/* Make sure the DWT trace fucntion is enabled. */
+	if (CoreDebug_DEMCR_TRCENA_Msk != (CoreDebug_DEMCR_TRCENA_Msk & CoreDebug->DEMCR)) {
+		CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
+	}
 
-    /* CYCCNT not supported on this device. */
-    assert(DWT_CTRL_NOCYCCNT_Msk != (DWT->CTRL & DWT_CTRL_NOCYCCNT_Msk));
+	/* CYCCNT not supported on this device. */
+	assert(DWT_CTRL_NOCYCCNT_Msk != (DWT->CTRL & DWT_CTRL_NOCYCCNT_Msk));
 
-    /* Read CYCCNT directly if CYCCENT has already been enabled, otherwise enable CYCCENT first. */
-    if (DWT_CTRL_CYCCNTENA_Msk != (DWT_CTRL_CYCCNTENA_Msk & DWT->CTRL))
-    {
-        DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
-    }
+	/* Read CYCCNT directly if CYCCENT has already been enabled, otherwise enable CYCCENT first. */
+	if (DWT_CTRL_CYCCNTENA_Msk != (DWT_CTRL_CYCCNTENA_Msk & DWT->CTRL)) {
+		DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
+	}
 }
 
 static uint32_t getCpuCycleCount(void)
 {
-    return DWT->CYCCNT;
+	return DWT->CYCCNT;
 }
 #elif defined __XCC__
 extern uint32_t xthal_get_ccount(void);
 static void enableCpuCycleCounter(void)
 {
-    /* do nothing */
+	/* do nothing */
 }
 
 static uint32_t getCpuCycleCount(void)
 {
-    return xthal_get_ccount();
+	return xthal_get_ccount();
 }
 #endif
 
@@ -217,11 +206,11 @@ static uint32_t getCpuCycleCount(void)
 /* clang-format off */
 __ASM static void DelayLoop(uint32_t count)
 {
-loop
-    SUBS R0, R0, #1
-    CMP  R0, #0
-    BNE  loop
-    BX   LR
+	loop
+	SUBS R0, R0, #1
+	CMP  R0, #0
+	BNE  loop
+	BX   LR
 }
 /* clang-format on */
 #elif defined(__ARMCC_VERSION) || defined(__ICCARM__) || defined(__GNUC__)
@@ -229,17 +218,17 @@ loop
  * use SUB and CMP here for compatibility */
 static void DelayLoop(uint32_t count)
 {
-    __ASM volatile("    MOV    R0, %0" : : "r"(count));
-    __ASM volatile(
-        "loop:                          \n"
+	__ASM volatile("    MOV    R0, %0" : : "r"(count));
+	__ASM volatile(
+	        "loop:                          \n"
 #if defined(__GNUC__) && !defined(__ARMCC_VERSION)
-        "    SUB    R0, R0, #1          \n"
+	        "    SUB    R0, R0, #1          \n"
 #else
-        "    SUBS   R0, R0, #1          \n"
+	        "    SUBS   R0, R0, #1          \n"
 #endif
-        "    CMP    R0, #0              \n"
+	        "    CMP    R0, #0              \n"
 
-        "    BNE    loop                \n");
+	        "    BNE    loop                \n");
 }
 #endif /* defined(__CC_ARM) */
 #endif /* (!defined(SDK_DELAY_USE_DWT)) || (!defined(DWT)) */
@@ -256,41 +245,38 @@ static void DelayLoop(uint32_t count)
  */
 void SDK_DelayAtLeastUs(uint32_t delayTime_us, uint32_t coreClock_Hz)
 {
-    assert(0U != delayTime_us);
-    uint64_t count = USEC_TO_COUNT(delayTime_us, coreClock_Hz);
-    assert(count <= UINT32_MAX);
+	assert(0U != delayTime_us);
+	uint64_t count = USEC_TO_COUNT(delayTime_us, coreClock_Hz);
+	assert(count <= UINT32_MAX);
 
 #if defined(SDK_DELAY_USE_DWT) && defined(DWT) || (defined __XCC__) /* Use DWT for better accuracy */
 
-    enableCpuCycleCounter();
-    /* Calculate the count ticks. */
-    count += getCpuCycleCount();
+	enableCpuCycleCounter();
+	/* Calculate the count ticks. */
+	count += getCpuCycleCount();
 
-    if (count > UINT32_MAX)
-    {
-        count -= UINT32_MAX;
-        /* Wait for cyccnt overflow. */
-        while (count < getCpuCycleCount())
-        {
-        }
-    }
+	if (count > UINT32_MAX) {
+		count -= UINT32_MAX;
+		/* Wait for cyccnt overflow. */
+		while (count < getCpuCycleCount()) {
+		}
+	}
 
-    /* Wait for cyccnt reach count value. */
-    while (count > getCpuCycleCount())
-    {
-    }
+	/* Wait for cyccnt reach count value. */
+	while (count > getCpuCycleCount()) {
+	}
 #else
-    /* Divide value may be different in various environment to ensure delay is precise.
-     * Every loop count includes three instructions, due to Cortex-M7 sometimes executes
-     * two instructions in one period, through test here set divide 1.5. Other M cores use
-     * divide 4. By the way, divide 1.5 or 4 could let the count lose precision, but it does
-     * not matter because other instructions outside while loop is enough to fill the time.
-     */
+	/* Divide value may be different in various environment to ensure delay is precise.
+	 * Every loop count includes three instructions, due to Cortex-M7 sometimes executes
+	 * two instructions in one period, through test here set divide 1.5. Other M cores use
+	 * divide 4. By the way, divide 1.5 or 4 could let the count lose precision, but it does
+	 * not matter because other instructions outside while loop is enough to fill the time.
+	 */
 #if (__CORTEX_M == 7)
-    count = count / 3U * 2U;
+	count = count / 3U * 2U;
 #else
-    count = count / 4U;
+	count = count / 4U;
 #endif
-    DelayLoop((uint32_t)count);
+	DelayLoop((uint32_t)count);
 #endif /* defined(SDK_DELAY_USE_DWT) && defined(DWT) || (defined __XCC__) */
 }

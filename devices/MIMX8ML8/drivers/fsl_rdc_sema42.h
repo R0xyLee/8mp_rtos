@@ -121,9 +121,9 @@ void RDC_SEMA42_Lock(RDC_SEMAPHORE_Type *base, uint8_t gateNum, uint8_t masterIn
  */
 static inline void RDC_SEMA42_Unlock(RDC_SEMAPHORE_Type *base, uint8_t gateNum)
 {
-    assert(gateNum < RDC_SEMA42_GATE_COUNT);
+	assert(gateNum < RDC_SEMA42_GATE_COUNT);
 
-    RDC_SEMA42_GATEn(base, gateNum) = 0U;
+	RDC_SEMA42_GATEn(base, gateNum) = 0U;
 }
 
 /*!
@@ -137,11 +137,11 @@ static inline void RDC_SEMA42_Unlock(RDC_SEMAPHORE_Type *base, uint8_t gateNum)
  */
 static inline int32_t RDC_SEMA42_GetLockMasterIndex(RDC_SEMAPHORE_Type *base, uint8_t gateNum)
 {
-    assert(gateNum < RDC_SEMA42_GATE_COUNT);
+	assert(gateNum < RDC_SEMA42_GATE_COUNT);
 
-    uint8_t regGate = RDC_SEMA42_GATEn(base, gateNum);
+	uint8_t regGate = RDC_SEMA42_GATEn(base, gateNum);
 
-    return (int32_t)((uint8_t)(regGate & RDC_SEMAPHORE_GATE_GTFSM_MASK)) - 1;
+	return (int32_t)((uint8_t)(regGate & RDC_SEMAPHORE_GATE_GTFSM_MASK)) - 1;
 }
 
 /*!
@@ -180,7 +180,7 @@ status_t RDC_SEMA42_ResetGate(RDC_SEMAPHORE_Type *base, uint8_t gateNum);
  */
 static inline status_t RDC_SEMA42_ResetAllGates(RDC_SEMAPHORE_Type *base)
 {
-    return RDC_SEMA42_ResetGate(base, RDC_SEMA42_GATE_NUM_RESET_ALL);
+	return RDC_SEMA42_ResetGate(base, RDC_SEMA42_GATE_NUM_RESET_ALL);
 }
 
 #if defined(__cplusplus)

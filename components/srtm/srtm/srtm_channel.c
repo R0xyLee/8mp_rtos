@@ -28,32 +28,32 @@
  ******************************************************************************/
 void SRTM_Channel_Destroy(srtm_channel_t channel)
 {
-    assert(channel);
-    assert(channel->destroy);
+	assert(channel);
+	assert(channel->destroy);
 
-    channel->destroy(channel);
+	channel->destroy(channel);
 }
 
 srtm_status_t SRTM_Channel_Start(srtm_channel_t channel)
 {
-    assert(channel);
-    assert(channel->start);
+	assert(channel);
+	assert(channel->start);
 
-    return channel->start(channel);
+	return channel->start(channel);
 }
 
 srtm_status_t SRTM_Channel_Stop(srtm_channel_t channel)
 {
-    assert(channel);
-    assert(channel->stop);
+	assert(channel);
+	assert(channel->stop);
 
-    return channel->stop(channel);
+	return channel->stop(channel);
 }
 
 srtm_status_t SRTM_Channel_SendData(srtm_channel_t channel, void *data, uint32_t len)
 {
-    assert(channel);
-    assert(channel->sendData);
+	assert(channel);
+	assert(channel->sendData);
 
-    return channel->sendData(channel, data, len);
+	return channel->sendData(channel, data, len);
 }

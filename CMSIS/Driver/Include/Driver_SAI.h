@@ -184,12 +184,12 @@ extern "C"
 \brief SAI Status
 */
 typedef volatile struct _ARM_SAI_STATUS {
-  uint32_t tx_busy          : 1;        ///< Transmitter busy flag
-  uint32_t rx_busy          : 1;        ///< Receiver busy flag
-  uint32_t tx_underflow     : 1;        ///< Transmit data underflow detected (cleared on start of next send operation)
-  uint32_t rx_overflow      : 1;        ///< Receive data overflow detected (cleared on start of next receive operation)
-  uint32_t frame_error      : 1;        ///< Sync Frame error detected (cleared on start of next send/receive operation)
-  uint32_t reserved         : 27;
+	uint32_t tx_busy          : 1;        ///< Transmitter busy flag
+	uint32_t rx_busy          : 1;        ///< Receiver busy flag
+	uint32_t tx_underflow     : 1;        ///< Transmit data underflow detected (cleared on start of next send operation)
+	uint32_t rx_overflow      : 1;        ///< Receive data overflow detected (cleared on start of next receive operation)
+	uint32_t frame_error      : 1;        ///< Sync Frame error detected (cleared on start of next send/receive operation)
+	uint32_t reserved         : 27;
 } ARM_SAI_STATUS;
 
 
@@ -262,25 +262,25 @@ typedef volatile struct _ARM_SAI_STATUS {
   \return      none
 */
 
-typedef void (*ARM_SAI_SignalEvent_t) (uint32_t event);  ///< Pointer to \ref ARM_SAI_SignalEvent : Signal SAI Event.
+typedef void (*ARM_SAI_SignalEvent_t)(uint32_t event);   ///< Pointer to \ref ARM_SAI_SignalEvent : Signal SAI Event.
 
 
 /**
 \brief SAI Driver Capabilities.
 */
 typedef struct _ARM_SAI_CAPABILITIES {
-  uint32_t asynchronous          : 1;   ///< supports asynchronous Transmit/Receive
-  uint32_t synchronous           : 1;   ///< supports synchronous Transmit/Receive
-  uint32_t protocol_user         : 1;   ///< supports user defined Protocol
-  uint32_t protocol_i2s          : 1;   ///< supports I2S Protocol
-  uint32_t protocol_justified    : 1;   ///< supports MSB/LSB justified Protocol
-  uint32_t protocol_pcm          : 1;   ///< supports PCM short/long frame Protocol
-  uint32_t protocol_ac97         : 1;   ///< supports AC'97 Protocol
-  uint32_t mono_mode             : 1;   ///< supports Mono mode
-  uint32_t companding            : 1;   ///< supports Companding
-  uint32_t mclk_pin              : 1;   ///< supports MCLK (Master Clock) pin
-  uint32_t event_frame_error     : 1;   ///< supports Frame error event: \ref ARM_SAI_EVENT_FRAME_ERROR
-  uint32_t reserved              : 21;  ///< Reserved (must be zero)
+	uint32_t asynchronous          : 1;   ///< supports asynchronous Transmit/Receive
+	uint32_t synchronous           : 1;   ///< supports synchronous Transmit/Receive
+	uint32_t protocol_user         : 1;   ///< supports user defined Protocol
+	uint32_t protocol_i2s          : 1;   ///< supports I2S Protocol
+	uint32_t protocol_justified    : 1;   ///< supports MSB/LSB justified Protocol
+	uint32_t protocol_pcm          : 1;   ///< supports PCM short/long frame Protocol
+	uint32_t protocol_ac97         : 1;   ///< supports AC'97 Protocol
+	uint32_t mono_mode             : 1;   ///< supports Mono mode
+	uint32_t companding            : 1;   ///< supports Companding
+	uint32_t mclk_pin              : 1;   ///< supports MCLK (Master Clock) pin
+	uint32_t event_frame_error     : 1;   ///< supports Frame error event: \ref ARM_SAI_EVENT_FRAME_ERROR
+	uint32_t reserved              : 21;  ///< Reserved (must be zero)
 } ARM_SAI_CAPABILITIES;
 
 
@@ -288,17 +288,28 @@ typedef struct _ARM_SAI_CAPABILITIES {
 \brief Access structure of the SAI Driver.
 */
 typedef struct _ARM_DRIVER_SAI {
-  ARM_DRIVER_VERSION   (*GetVersion)      (void);                                            ///< Pointer to \ref ARM_SAI_GetVersion : Get driver version.
-  ARM_SAI_CAPABILITIES (*GetCapabilities) (void);                                            ///< Pointer to \ref ARM_SAI_GetCapabilities : Get driver capabilities.
-  int32_t              (*Initialize)      (ARM_SAI_SignalEvent_t cb_event);                  ///< Pointer to \ref ARM_SAI_Initialize : Initialize SAI Interface.
-  int32_t              (*Uninitialize)    (void);                                            ///< Pointer to \ref ARM_SAI_Uninitialize : De-initialize SAI Interface.
-  int32_t              (*PowerControl)    (ARM_POWER_STATE state);                           ///< Pointer to \ref ARM_SAI_PowerControl : Control SAI Interface Power.
-  int32_t              (*Send)            (const void *data, uint32_t num);                  ///< Pointer to \ref ARM_SAI_Send : Start sending data to SAI Interface.
-  int32_t              (*Receive)         (      void *data, uint32_t num);                  ///< Pointer to \ref ARM_SAI_Receive : Start receiving data from SAI Interface.
-  uint32_t             (*GetTxCount)      (void);                                            ///< Pointer to \ref ARM_SAI_GetTxCount : Get transmitted data count.
-  uint32_t             (*GetRxCount)      (void);                                            ///< Pointer to \ref ARM_SAI_GetRxCount : Get received data count.
-  int32_t              (*Control)         (uint32_t control, uint32_t arg1, uint32_t arg2);  ///< Pointer to \ref ARM_SAI_Control : Control SAI Interface.
-  ARM_SAI_STATUS       (*GetStatus)       (void);                                            ///< Pointer to \ref ARM_SAI_GetStatus : Get SAI status.
+	ARM_DRIVER_VERSION(*GetVersion)(
+	        void);                                                     ///< Pointer to \ref ARM_SAI_GetVersion : Get driver version.
+	ARM_SAI_CAPABILITIES(*GetCapabilities)(
+	        void);                                              ///< Pointer to \ref ARM_SAI_GetCapabilities : Get driver capabilities.
+	int32_t (*Initialize)(ARM_SAI_SignalEvent_t
+	        cb_event);                                     ///< Pointer to \ref ARM_SAI_Initialize : Initialize SAI Interface.
+	int32_t (*Uninitialize)(
+	        void);                                                             ///< Pointer to \ref ARM_SAI_Uninitialize : De-initialize SAI Interface.
+	int32_t (*PowerControl)(ARM_POWER_STATE
+	        state);                                            ///< Pointer to \ref ARM_SAI_PowerControl : Control SAI Interface Power.
+	int32_t (*Send)(const void *data, uint32_t
+	        num);                                           ///< Pointer to \ref ARM_SAI_Send : Start sending data to SAI Interface.
+	int32_t (*Receive)(void *data, uint32_t
+	        num);                                              ///< Pointer to \ref ARM_SAI_Receive : Start receiving data from SAI Interface.
+	uint32_t (*GetTxCount)(
+	        void);                                                              ///< Pointer to \ref ARM_SAI_GetTxCount : Get transmitted data count.
+	uint32_t (*GetRxCount)(
+	        void);                                                              ///< Pointer to \ref ARM_SAI_GetRxCount : Get received data count.
+	int32_t (*Control)(uint32_t control, uint32_t arg1,
+	        uint32_t arg2);                        ///< Pointer to \ref ARM_SAI_Control : Control SAI Interface.
+	ARM_SAI_STATUS(*GetStatus)(
+	        void);                                                          ///< Pointer to \ref ARM_SAI_GetStatus : Get SAI status.
 } const ARM_DRIVER_SAI;
 
 #ifdef  __cplusplus
