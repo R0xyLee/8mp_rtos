@@ -9,4 +9,11 @@
 **/armgcc/release/
 **/armgcc/debug/      # 如果有debug目录也可以加上
 
+**/armgcc/ddr_debug/
+**/armgcc/ddr_release/
+**/armgcc/flash_debug/
+**/armgcc/flash_release/
+**/armgcc/debug/
+**/armgcc/release/
+
 OK8MP_RTOS_BIN/
