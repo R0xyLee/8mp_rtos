@@ -1,3 +1,10 @@
+OK8MP Linux remoteproc adaptation
+--------------------------------
+Use the linux_remoteproc/ build through arm-sdk/tools/build_m7.sh.
+Build, deployment, UART4 logs and validation are documented in
+../../../../../doc/amp/OK8MP-AMP.rst (relative to this example directory).
+The legacy armgcc instructions below do not describe Linux-loaded AMP.
+
 Overview
 ========
 The Multicore RPMsg-Lite string echo project is a simple demonstration program that uses the

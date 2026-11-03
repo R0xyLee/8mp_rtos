@@ -21,7 +21,11 @@
 extern "C" {
 #endif
 
+#ifdef OK8MP_LINUX_REMOTEPROC
+#define NO_RESOURCE_ENTRIES (2)
+#else
 #define NO_RESOURCE_ENTRIES (1)
+#endif
 #define RSC_VDEV_FEATURE_NS (1) /* Support name service announcement */
 
 	/* Resource table for the given remote */
@@ -36,6 +40,9 @@ extern "C" {
 		struct fw_rsc_vdev user_vdev;
 		struct fw_rsc_vdev_vring user_vring0;
 		struct fw_rsc_vdev_vring user_vring1;
+#ifdef OK8MP_LINUX_REMOTEPROC
+		struct fw_rsc_trace trace;
+#endif
 	} METAL_PACKED_END;
 
 	/*

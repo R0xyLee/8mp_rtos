@@ -15,6 +15,9 @@
 #include "rsc_table.h"
 #include "rpmsg_lite.h"
 #include <string.h>
+#ifdef OK8MP_LINUX_REMOTEPROC
+#include "amp_platform.h"
+#endif
 
 #define NUM_VRINGS 0x02
 
@@ -42,6 +45,9 @@ const struct remote_resource_table resources = {
 	/* Offsets of rsc entries */
 	{
 		offsetof(struct remote_resource_table, user_vdev),
+#ifdef OK8MP_LINUX_REMOTEPROC
+		offsetof(struct remote_resource_table, trace),
+#endif
 	},
 
 	/* SRTM virtio device entry */
@@ -60,15 +66,13 @@ const struct remote_resource_table resources = {
 	/* Vring rsc entry - part of vdev rsc entry */
 	{VDEV0_VRING_BASE, VRING_ALIGN, RL_BUFFER_COUNT, 0, 0},
 	{VDEV0_VRING_BASE + VRING_SIZE, VRING_ALIGN, RL_BUFFER_COUNT, 1, 0},
+#ifdef OK8MP_LINUX_REMOTEPROC
+	{RSC_TRACE, (uint32_t)amp_trace, AMP_TRACE_SIZE, 0, "m7-uart4-log"},
+#endif
 };
 
 void copyResourceTable(void)
 {
-	/*
-	 * Resource table should be copied to VDEV0_VRING_BASE + RESOURCE_TABLE_OFFSET.
-	 * VDEV0_VRING_BASE is temperorily kept for backward compatibility, will be
-	 * removed in future release
-	 */
-	memcpy((void *)VDEV0_VRING_BASE, &resources, sizeof(resources));
+	/* Linux has already initialized vring0 when remoteproc loads this ELF. */
 	memcpy((void *)(VDEV0_VRING_BASE + RESOURCE_TABLE_OFFSET), &resources, sizeof(resources));
 }

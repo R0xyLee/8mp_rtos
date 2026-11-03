@@ -60,7 +60,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define configNUM_THREAD_LOCAL_STORAGE_POINTERS 5
 
 /* Used memory allocation (heap_x.c) */
-#define configFRTOS_MEMORY_SCHEME               3
+#define configFRTOS_MEMORY_SCHEME               4
 /* Tasks.c additions (e.g. Thread Aware Debug capability) */
 #define configINCLUDE_FREERTOS_TASK_C_ADDITIONS_H 1
 
@@ -73,7 +73,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 /* Hook function related definitions. */
 #define configUSE_IDLE_HOOK                     0
 #define configUSE_TICK_HOOK                     0
+#ifdef OK8MP_LINUX_REMOTEPROC
+#define configCHECK_FOR_STACK_OVERFLOW          2
+#else
 #define configCHECK_FOR_STACK_OVERFLOW          0
+#endif
 #define configUSE_MALLOC_FAILED_HOOK            0
 #define configUSE_DAEMON_TASK_STARTUP_HOOK      0
 
@@ -95,7 +99,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define configTIMER_QUEUE_LENGTH                10
 #define configTIMER_TASK_STACK_DEPTH            (configMINIMAL_STACK_SIZE * 2)
 
+#ifdef OK8MP_LINUX_REMOTEPROC
+#ifndef __ASSEMBLER__
+#include <stdint.h>
+void amp_assert_failed(const char *file, uint32_t line);
+#endif
+#define configASSERT_BOOL(x) do { if ((x) == 0) amp_assert_failed(__FILE__, __LINE__); } while (0)
+#else
 #define configASSERT_BOOL(x) if(( x) == 0) {taskDISABLE_INTERRUPTS(); for (;;);}
+#endif
 #define configASSERT(x) configASSERT_BOOL((x)!=0)
 
 /* Optional functions - most linkers will remove unused functions anyway. */
@@ -108,7 +120,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define INCLUDE_vTaskDelay                      1
 #define INCLUDE_xTaskGetSchedulerState          1
 #define INCLUDE_xTaskGetCurrentTaskHandle       1
-#define INCLUDE_uxTaskGetStackHighWaterMark     0
+#define INCLUDE_uxTaskGetStackHighWaterMark     1
 #define INCLUDE_xTaskGetIdleTaskHandle          0
 #define INCLUDE_eTaskGetState                   0
 #define INCLUDE_xEventGroupSetBitFromISR        1
