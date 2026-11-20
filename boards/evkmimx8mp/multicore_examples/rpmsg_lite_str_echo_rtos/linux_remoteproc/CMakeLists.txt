@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.16)
 project(ok8mp_m7_rpmsg C ASM)
 
+option(OK8MP_RPMSG_TTY "Use the upstream Linux RPMsg TTY service name" OFF)
+
 get_filename_component(MCUX_SDK_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../../../../.." ABSOLUTE)
 set(example ${CMAKE_CURRENT_SOURCE_DIR}/..)
 
@@ -16,6 +18,7 @@ target_include_directories(${MCUX_SDK_PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOUR
 target_compile_definitions(${MCUX_SDK_PROJECT_NAME} PRIVATE
     CPU_MIMX8ML8DVNLZ FSL_RTOS_FREE_RTOS SDK_DEBUGCONSOLE=2
     OK8MP_LINUX_REMOTEPROC=1
+    $<$<BOOL:${OK8MP_RPMSG_TTY}>:OK8MP_RPMSG_TTY>
     __STARTUP_CLEAR_BSS __STARTUP_INITIALIZE_NONCACHEDATA)
 target_compile_options(${MCUX_SDK_PROJECT_NAME} PRIVATE
     -mcpu=cortex-m7 -mthumb -mfpu=fpv5-sp-d16 -mfloat-abi=hard

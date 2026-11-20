@@ -26,7 +26,16 @@
 #define APP_PHASE(value) ((void)0)
 #endif
 
+#ifdef OK8MP_RPMSG_TTY
+#define RPMSG_LITE_NS_ANNOUNCE_STRING "rpmsg-tty"
+#define VIRTIO_CONFIG_S_DRIVER_OK 0x04U
+
+/* Linux i.MX remoteproc keeps the negotiated resource table in shared DDR. */
+static const volatile struct remote_resource_table *const host_resources =
+    (const volatile struct remote_resource_table *)(VDEV0_VRING_BASE + RESOURCE_TABLE_OFFSET);
+#else
 #define RPMSG_LITE_NS_ANNOUNCE_STRING "rpmsg-virtual-tty-channel-1"
+#endif
 #ifndef LOCAL_EPT_ADDR
 #define LOCAL_EPT_ADDR 30U
 #endif
@@ -51,8 +60,17 @@ static void app_task(void *param)
                                   RL_PLATFORM_IMX8MP_M7_USER_LINK_ID, RL_NO_FLAGS);
     configASSERT(rpmsg != NULL);
     APP_PHASE(6);
-    while (!rpmsg_lite_is_link_up(rpmsg))
+    while (!rpmsg_lite_is_link_up(rpmsg)) {
+#ifdef OK8MP_RPMSG_TTY
+        /* Linux can kick the first queue before RPMsg-Lite installs its ISR. */
+        if (host_resources->user_vdev.status & VIRTIO_CONFIG_S_DRIVER_OK) {
+            __DMB();
+            virtqueue_notification(rpmsg->tvq);
+            break;
+        }
+#endif
         vTaskDelay(pdMS_TO_TICKS(1));
+    }
     APP_PHASE(7);
 
     queue = rpmsg_queue_create(rpmsg);
@@ -116,7 +134,9 @@ int main(void)
     BOARD_BootClockRUN();
     BOARD_InitDebugConsole();
 #endif
+#ifndef OK8MP_RPMSG_TTY
     copyResourceTable();
+#endif
     configASSERT(xTaskCreate(app_task, "rpmsg-echo", 768, NULL,
                              tskIDLE_PRIORITY + 1, &app_task_handle) == pdPASS);
     configASSERT(xTaskCreate(heartbeat_task, "heartbeat", 768, NULL,
